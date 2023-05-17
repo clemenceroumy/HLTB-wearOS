@@ -1,11 +1,14 @@
 package com.croumy.hltb_wearos.presentation.data
 
-import com.croumy.hltb_wearos.presentation.models.GameListResponse
+import com.croumy.hltb_wearos.presentation.models.api.GameListResponse
+import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 class HLTBService {
     private val okHttpClient = OkHttpClient.Builder().build()
@@ -18,13 +21,13 @@ class HLTBService {
         .create(AuthRestApi::class.java)
 
     interface AuthRestApi {
-        @GET("user/304670/games/list")
-        suspend fun getGames(): Response<GameListResponse>
+        @POST("user/304670/games/list")
+        suspend fun getGames(@Body request: GameRequest): Response<GameListResponse>
     }
 
 
     suspend fun getGames(): GameListResponse? {
-        val response = retrofit.getGames()
+        val response = retrofit.getGames(GameRequest())
 
         if (response.isSuccessful && response.body() != null) {
             return response.body()!!

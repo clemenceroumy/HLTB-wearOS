@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
-import com.croumy.hltb_wearos.presentation.ui.HomeScreen
+import com.croumy.hltb_wearos.presentation.ui.home.HomeScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {

@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.models
+package com.croumy.hltb_wearos.presentation.models.api
 
 data class GameListResponse(
     val data: GameList,
@@ -53,4 +53,6 @@ data class Game(
     val comp_all: Int,
     val comp_all_g: Int,
     val review_score_g: Int
-)
+) {
+    val picture: String get() = "https://howlongtobeat.com/games/$game_image"
+}
