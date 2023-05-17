@@ -23,11 +23,14 @@ class HLTBService {
     interface AuthRestApi {
         @POST("user/304670/games/list")
         suspend fun getGames(@Body request: GameRequest): Response<GameListResponse>
+
+        /*@GET("user")
+        suspend fun getUser(): Response<String>*/
     }
 
 
-    suspend fun getGames(): GameListResponse? {
-        val response = retrofit.getGames(GameRequest())
+    suspend fun getGames(gameRequest: GameRequest): GameListResponse? {
+        val response = retrofit.getGames(gameRequest)
 
         if (response.isSuccessful && response.body() != null) {
             return response.body()!!
