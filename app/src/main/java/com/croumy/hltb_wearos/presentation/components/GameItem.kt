@@ -28,9 +28,9 @@ import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 
 @Composable
-fun GameItem(game: Game) {
+fun GameItem(game: Game, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(Dimensions.lSize)
             .background(MaterialTheme.colors.surface, CircleShape)

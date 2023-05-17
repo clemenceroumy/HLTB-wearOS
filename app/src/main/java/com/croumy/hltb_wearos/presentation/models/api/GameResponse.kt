@@ -1,5 +1,9 @@
 package com.croumy.hltb_wearos.presentation.models.api
 
+import com.soywiz.klock.Time
+import com.soywiz.klock.milliseconds
+import com.soywiz.klock.seconds
+
 data class GameListResponse(
     val data: GameList,
 )
@@ -55,4 +59,5 @@ data class Game(
     val review_score_g: Int
 ) {
     val picture: String get() = "https://howlongtobeat.com/games/$game_image"
+    val timePlayed get() = Time(invested_pro.seconds)
 }

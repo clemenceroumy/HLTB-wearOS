@@ -53,6 +53,7 @@ dependencies {
     val compose_version = "1.4.2"
     val wear_compose_version = "1.1.2"
     val hilt_version = "2.46"
+    val klock_version = "2.2.0"
 
     // CORE
     implementation("androidx.core:core-ktx:1.10.0")
@@ -88,6 +89,10 @@ dependencies {
     // Shimmer
     implementation("com.valentinilk.shimmer:compose-shimmer:1.0.4")
 
+    //Date
+    implementation("com.soywiz.korlibs.klock:klock:$klock_version")
+
+    // Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
     debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")

@@ -2,6 +2,7 @@ package com.croumy.hltb_wearos.presentation.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
@@ -48,7 +49,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    navigateToGame: (Int) -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
@@ -117,7 +119,10 @@ fun HomeScreen(
                         }
                     } else {
                         items(viewModel.games.value) { game ->
-                            GameItem(game)
+                            GameItem(
+                                game,
+                                modifier = Modifier.clickable { navigateToGame(game.id) }
+                            )
                         }
                     }
                 }
