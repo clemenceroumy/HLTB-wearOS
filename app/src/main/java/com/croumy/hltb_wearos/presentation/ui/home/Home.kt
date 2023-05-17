@@ -61,12 +61,10 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
-    LaunchedEffect(currentCategory.value) {
-        viewModel.getGames(currentCategory.value)
-    }
-
     LaunchedEffect(pagerState.currentPage) {
         currentCategory.value = categories[pagerState.currentPage]
+        viewModel.getGames(currentCategory.value)
+
         listState.scrollToItem(0)
     }
 
@@ -85,8 +83,9 @@ fun HomeScreen(
                 Spacer(Modifier.height(Dimensions.mPadding))
                 Row(
                     Modifier
+                        .padding(bottom = Dimensions.xxsPadding)
                         .background(currentCategory.value.color, CircleShape)
-                        .padding(horizontal = Dimensions.xsPadding, vertical = Dimensions.xxsPadding),
+                        .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xxsPadding),
                 ) {
                     Text(currentCategory.value.label)
                 }
