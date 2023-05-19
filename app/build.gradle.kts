@@ -68,6 +68,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.1")
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
+    implementation("androidx.compose.material:material-icons-extended:${compose_version}")
     implementation("androidx.wear.compose:compose-material:$wear_compose_version")
     implementation("androidx.wear.compose:compose-foundation:$wear_compose_version")
     implementation("androidx.wear.compose:compose-navigation:$wear_compose_version")

@@ -11,7 +11,7 @@ val Typography = Typography(
     title1 = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
+        fontSize = 25.sp
     ),
     body1 = TextStyle(
         fontFamily = FontFamily.Default,

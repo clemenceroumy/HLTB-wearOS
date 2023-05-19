@@ -19,39 +19,35 @@ import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun LoadingGame() {
-    Scaffold {
-        Column(
-            Modifier.padding(it).fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            // LOADER FOR PLATFORM
-            Box(
-                modifier = Modifier
-                    .height(MaterialTheme.typography.body2.fontSize.value.dp)
-                    .padding(Dimensions.xxsPadding)
-                    .shimmer()
-            )
+    Column(
+        Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        // LOADER FOR PLATFORM
+        Box(
+            modifier = Modifier
+                .shimmer()
+                .fillMaxWidth()
+                .height(MaterialTheme.typography.body2.fontSize.value.dp)
+        )
 
-            //LOADER FOR GAME NAME
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(MaterialTheme.typography.body1.fontSize.value.dp)
-                    .padding(Dimensions.xxsPadding)
-                    .shimmer()
-            )
+        //LOADER FOR GAME NAME
+        Box(
+            modifier = Modifier
+                .shimmer()
+                .fillMaxWidth()
+                .height(MaterialTheme.typography.body1.fontSize.value.dp)
+        )
 
-            //LOADER FOR TIME
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(MaterialTheme.typography.title1.fontSize.value.dp)
-                    .padding(Dimensions.xxsPadding)
-                    .shimmer()
-            )
+        //LOADER FOR TIME
+        Box(
+            modifier = Modifier
+                .shimmer()
+                .fillMaxWidth()
+                .height(MaterialTheme.typography.title1.fontSize.value.dp)
+        )
 
-            Box(Modifier.size(0.dp))
-        }
+        Box(Modifier.size(0.dp))
     }
 }
