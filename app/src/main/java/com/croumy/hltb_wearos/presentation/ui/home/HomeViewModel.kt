@@ -27,8 +27,7 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     suspend fun getGames(category: Categories) {
         isLoading.value = true
         val result = hltbService.getGames(GameRequest().copy(lists = listOf(category.value)))
-        games.value = result?.data?.gamesList ?: emptyList()
-        print(category)
+        games.value = (result?.data?.gamesList ?: emptyList()).sortedBy { it.invested_pro }.reversed()
         isLoading.value = false
     }
 }

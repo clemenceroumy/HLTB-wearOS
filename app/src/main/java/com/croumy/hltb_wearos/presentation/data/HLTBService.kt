@@ -23,9 +23,6 @@ class HLTBService {
     interface AuthRestApi {
         @POST("user/304670/games/list")
         suspend fun getGames(@Body request: GameRequest): Response<GameListResponse>
-
-        /*@GET("user")
-        suspend fun getUser(): Response<String>*/
     }
 
 
