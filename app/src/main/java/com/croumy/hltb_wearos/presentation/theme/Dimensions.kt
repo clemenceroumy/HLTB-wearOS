@@ -22,5 +22,7 @@ class Dimensions {
         val lSize = 70.dp
         val mSize = 50.dp
         val xxsSize = 5.dp
+
+        val xsStrokeSize = 3.dp
     }
 }

@@ -27,7 +27,9 @@ fun NavGraph(navController: NavHostController) {
             NavRoutes.GameDetails.routeWithArgs,
             arguments = listOf(navArgument(NavRoutes.GameDetails.GAME_ID) { type = NavType.IntType })
         ) {
-            GameDetails()
+            GameDetails(
+                onBack = {actions.navigateBack()},
+            )
         }
     }
 }

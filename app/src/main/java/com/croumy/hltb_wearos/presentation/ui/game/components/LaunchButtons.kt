@@ -15,8 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
@@ -25,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.wear.compose.material.MaterialTheme
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
@@ -41,45 +45,97 @@ fun LaunchButtons(
     startTimer: () -> Unit,
     pauseTimer: () -> Unit,
     stopTimer: () -> Unit,
+    cancelTimer: () -> Unit,
+    saveTimer: () -> Unit,
 ) {
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            Modifier
-                .size(mIcon)
-                .background(MaterialTheme.colors.primary, CircleShape)
-                .clip(CircleShape)
-                .clickable {
-                    if (timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED) {
-                        startTimer()
-                    } else if (timer.state == TimerState.STARTED) {
-                        pauseTimer()
-                    }
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            AnimatedContent(targetState = (timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED), label = "") { isInactive ->
-                if (isInactive) {
+        if (timer.state == TimerState.STOPPED || timer.state == TimerState.SAVING) {
+            Box(
+                Modifier
+                    .size(sIcon)
+                    .background(MaterialTheme.colors.surface, CircleShape)
+                    .clip(CircleShape)
+                    .clickable { if (timer.state != TimerState.SAVING) cancelTimer() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(Dimensions.xxsPadding)
+                        .size(sIcon),
+                    tint = Color.White
+                )
+            }
+
+            Box(
+                Modifier
+                    .offset(x = Dimensions.xsPadding)
+                    .size(mIcon)
+                    .background(MaterialTheme.colors.primary, CircleShape)
+                    .clip(CircleShape)
+                    .clickable { if (timer.state != TimerState.SAVING) saveTimer() },
+                contentAlignment = Alignment.Center
+            ) {
+                if (timer.state == TimerState.STOPPED) {
                     Icon(
-                        Icons.Filled.PlayArrow,
+                        Icons.Filled.Check,
                         contentDescription = "",
                         modifier = Modifier
                             .padding(Dimensions.xxsPadding)
                             .size(mIcon),
                         tint = Color.White
                     )
-                } else {
-                    Icon(
-                        Icons.Filled.Pause,
-                        contentDescription = "",
+                } else if (timer.state == TimerState.SAVING) {
+                    CircularProgressIndicator(
                         modifier = Modifier
                             .padding(Dimensions.xsPadding)
                             .size(mIcon),
-                        tint = Color.White
+                        color = Color.White,
+                        strokeWidth = Dimensions.xsStrokeSize,
+                        strokeCap = StrokeCap.Round
                     )
+                }
+            }
+        } else {
+            Box(
+                Modifier
+                    .size(mIcon)
+                    .background(MaterialTheme.colors.primary, CircleShape)
+                    .clip(CircleShape)
+                    .clickable {
+                        if (timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED) {
+                            startTimer()
+                        } else if (timer.state == TimerState.STARTED) {
+                            pauseTimer()
+                        }
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                AnimatedContent(targetState = (timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED), label = "") { isInactive ->
+                    if (isInactive) {
+                        Icon(
+                            Icons.Filled.PlayArrow,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(Dimensions.xxsPadding)
+                                .size(mIcon),
+                            tint = Color.White
+                        )
+                    } else {
+                        Icon(
+                            Icons.Filled.Pause,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(Dimensions.xsPadding)
+                                .size(mIcon),
+                            tint = Color.White
+                        )
+                    }
                 }
             }
         }
@@ -99,7 +155,9 @@ fun LaunchButtons(
                 Icon(
                     Icons.Filled.Stop,
                     contentDescription = "",
-                    modifier = Modifier.padding(Dimensions.xxsPadding).size(sIcon),
+                    modifier = Modifier
+                        .padding(Dimensions.xxsPadding)
+                        .size(sIcon),
                     tint = Color.White
                 )
             }

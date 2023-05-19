@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,12 +32,17 @@ import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.red
 import com.croumy.hltb_wearos.presentation.ui.game.components.LaunchButtons
 import com.croumy.hltb_wearos.presentation.ui.game.components.LoadingGame
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GameDetails(
-    viewModel: GameViewModel = hiltViewModel()
+    viewModel: GameViewModel = hiltViewModel(),
+    onBack: () -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     val game = viewModel.game.value
     val timer = viewModel.timer.value
 
@@ -83,14 +89,15 @@ fun GameDetails(
                     )
                     // TIME INFO
                     AnimatedContent(targetState = timer.state, label = "") {
-                        when(it) {
+                        when (it) {
                             TimerState.IDLE -> Text(game.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
-                            TimerState.STARTED -> Text(timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = false), style = MaterialTheme.typography.title1)
-                            TimerState.PAUSED -> Text(timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = false), style = MaterialTheme.typography.title1)
-                            TimerState.STOPPED -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            TimerState.STARTED, TimerState.PAUSED -> Text(timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = false), style = MaterialTheme.typography.title1)
+                            TimerState.STOPPED, TimerState.SAVING -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(game.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.body2)
                                 Text("+${timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = true)}", style = MaterialTheme.typography.title1)
                             }
+
+                            TimerState.SAVED -> {}
                         }
                     }
                     // BUTTONS
@@ -99,6 +106,13 @@ fun GameDetails(
                         startTimer = { viewModel.startTimer() },
                         pauseTimer = { viewModel.pauseTimer() },
                         stopTimer = { viewModel.stopTimer() },
+                        cancelTimer = { viewModel.cancelTimer() },
+                        saveTimer = {
+                            coroutineScope.launch {
+                                viewModel.saveTimer()
+                                onBack()
+                            }
+                        }
                     )
                 }
             }

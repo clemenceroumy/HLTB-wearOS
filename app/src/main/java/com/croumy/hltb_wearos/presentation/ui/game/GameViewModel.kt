@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameViewModel @Inject constructor(
     val savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
     val gameId: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.GAME_ID) ?: 0
 
     private val hltbService = HLTBService()
@@ -60,6 +60,15 @@ class GameViewModel @Inject constructor(
 
     fun stopTimer() {
         timer.value = timer.value.copy(state = TimerState.STOPPED)
-        // TODO: send data to HLTB
+    }
+
+    fun cancelTimer() {
+        timer.value = Timer()
+    }
+
+    suspend fun saveTimer() {
+        timer.value = timer.value.copy(state = TimerState.SAVING)
+        delay(1000) // TODO: Save to HLTB
+        timer.value = timer.value.copy(state = TimerState.SAVED)
     }
 }

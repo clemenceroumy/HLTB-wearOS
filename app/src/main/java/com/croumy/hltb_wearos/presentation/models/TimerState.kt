@@ -4,5 +4,7 @@ enum class TimerState {
     IDLE,
     STARTED,
     PAUSED,
-    STOPPED
+    STOPPED,
+    SAVING,
+    SAVED
 }
