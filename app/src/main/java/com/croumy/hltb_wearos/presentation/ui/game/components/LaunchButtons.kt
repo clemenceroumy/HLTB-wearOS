@@ -8,12 +8,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -33,10 +31,9 @@ import androidx.wear.compose.material.MaterialTheme
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
-import com.croumy.hltb_wearos.presentation.theme.Dimensions.Companion.lIcon
 import com.croumy.hltb_wearos.presentation.theme.Dimensions.Companion.mIcon
 import com.croumy.hltb_wearos.presentation.theme.Dimensions.Companion.sIcon
-import com.croumy.hltb_wearos.presentation.theme.red
+import com.croumy.hltb_wearos.presentation.theme.Dimensions.Companion.xsIcon
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

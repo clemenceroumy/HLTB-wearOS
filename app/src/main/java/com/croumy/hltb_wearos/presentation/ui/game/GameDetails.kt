@@ -26,6 +26,7 @@ import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.helpers.asString
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
@@ -50,6 +51,7 @@ fun GameDetails(
 
     Scaffold(
         modifier = Modifier.clip(CircleShape),
+        timeText = { TimeText() }
     ) {
         Box {
             CircularProgressIndicator(
@@ -59,6 +61,8 @@ fun GameDetails(
                     .padding(Dimensions.xxsPadding),
                 strokeWidth = Dimensions.xxsSize,
                 indicatorColor = MaterialTheme.colors.secondary,
+                startAngle = -60f,
+                endAngle = 240f,
             )
 
             Column(
