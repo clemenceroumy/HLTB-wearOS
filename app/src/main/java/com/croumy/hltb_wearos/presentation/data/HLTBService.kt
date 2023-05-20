@@ -1,13 +1,15 @@
 package com.croumy.hltb_wearos.presentation.data
 
+import com.croumy.hltb_wearos.BuildConfig
+import SubmitRequest
 import com.croumy.hltb_wearos.presentation.models.api.GameListResponse
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.http.GET
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 
 class HLTBService {
@@ -23,6 +25,9 @@ class HLTBService {
     interface AuthRestApi {
         @POST("user/304670/games/list")
         suspend fun getGames(@Body request: GameRequest): Response<GameListResponse>
+
+        @POST("submit")
+        suspend fun submitTime(@HeaderMap headers: Map<String, String>, @Body request: SubmitRequest): Response<Any>
     }
 
 
@@ -33,6 +38,20 @@ class HLTBService {
             return response.body()!!
         } else {
             throw Exception(response.message())
+        }
+    }
+
+    suspend fun submitTime(submitRequest: SubmitRequest) {
+        val response = retrofit.submitTime(
+            headers = mapOf(
+                "Cookie" to BuildConfig.USER_COOKIE,
+            ),
+            request = submitRequest)
+
+        if (!response.isSuccessful) {
+            throw Exception(response.message())
+        } else {
+            print(response.body())
         }
     }
 }

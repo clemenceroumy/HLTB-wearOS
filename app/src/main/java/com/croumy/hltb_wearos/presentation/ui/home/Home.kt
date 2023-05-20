@@ -121,7 +121,7 @@ fun HomeScreen(
                         items(viewModel.games.value) { game ->
                             GameItem(
                                 game,
-                                modifier = Modifier.clickable { navigateToGame(game.id) }
+                                modifier = Modifier.clickable { navigateToGame(game.game_id) }
                             )
                         }
                     }

@@ -1,5 +1,9 @@
 package com.croumy.hltb_wearos.presentation.ui.game
 
+import General
+import Lists
+import Progress
+import SubmitRequest
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -39,8 +43,9 @@ class GameViewModel @Inject constructor(
 
     suspend fun getGame() {
         isLoading.value = true
+        timer.value = Timer()
         val result = hltbService.getGames(GameRequest().copy(lists = Categories.values().map { it.value }))
-        game.value = result?.data?.gamesList?.firstOrNull { it.id == gameId }
+        game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
         isLoading.value = false
     }
 
@@ -68,7 +73,22 @@ class GameViewModel @Inject constructor(
 
     suspend fun saveTimer() {
         timer.value = timer.value.copy(state = TimerState.SAVING)
-        delay(1000) // TODO: Save to HLTB
+        val body = SubmitRequest(
+            submissionId = game.value!!.id,
+            userId = 304670, // TODO: Get from HLTB
+            gameId = game.value!!.game_id,
+            title = game.value!!.custom_title,
+            platform = game.value!!.platform,
+            storefront = game.value!!.play_storefront,
+            lists = Lists(),
+            general = General(
+                progress = Progress.progressTime(game.value!!.timePlayed, timer.value.time),
+                progressBefore = Progress.fromTime(game.value!!.timePlayed)
+            )
+        )
+        print(body)
+        hltbService.submitTime(body)
         timer.value = timer.value.copy(state = TimerState.SAVED)
+        this.getGame()
     }
 }

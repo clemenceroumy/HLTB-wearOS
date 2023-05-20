@@ -58,7 +58,7 @@ fun GameDetails(
                     .fillMaxSize()
                     .padding(Dimensions.xxsPadding),
                 strokeWidth = Dimensions.xxsSize,
-                indicatorColor = MaterialTheme.colors.primary,
+                indicatorColor = MaterialTheme.colors.secondary,
             )
 
             Column(
@@ -110,7 +110,6 @@ fun GameDetails(
                         saveTimer = {
                             coroutineScope.launch {
                                 viewModel.saveTimer()
-                                onBack()
                             }
                         }
                     )

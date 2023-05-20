@@ -145,7 +145,7 @@ fun LaunchButtons(
                 Modifier
                     .offset(x = Dimensions.xsPadding)
                     .size(sIcon)
-                    .background(red, CircleShape)
+                    .background(MaterialTheme.colors.surface, CircleShape)
                     .clip(CircleShape)
                     .clickable {
                         stopTimer()
