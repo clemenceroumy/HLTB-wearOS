@@ -6,6 +6,7 @@ import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 
 data class Timer(
+    var gameId: Int? = null,
     var state: TimerState = TimerState.IDLE,
     var time: Time = Time(0, 0, 0)
 ) {

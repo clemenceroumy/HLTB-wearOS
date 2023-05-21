@@ -4,11 +4,14 @@ import General
 import Lists
 import Progress
 import SubmitRequest
+import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
@@ -16,10 +19,12 @@ import com.croumy.hltb_wearos.presentation.models.api.Categories
 import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
+import com.croumy.hltb_wearos.presentation.services.TimerService
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.plus
 import com.soywiz.klock.seconds
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale.Category
@@ -27,14 +32,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    val savedStateHandle: SavedStateHandle
+    val appService: AppService,
+    private val savedStateHandle: SavedStateHandle,
+    @ApplicationContext val context: Context,
 ) : ViewModel() {
+    private val serviceIntent = Intent(context, TimerService::class.java)
+
     val gameId: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.GAME_ID) ?: 0
 
     private val hltbService = HLTBService()
 
     val game: MutableState<Game?> = mutableStateOf(null)
-    val timer = mutableStateOf(Timer())
+
     val isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     init {
@@ -43,36 +52,30 @@ class GameViewModel @Inject constructor(
 
     suspend fun getGame() {
         isLoading.value = true
-        timer.value = Timer()
         val result = hltbService.getGames(GameRequest().copy(lists = Categories.values().map { it.value }))
         game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
+        appService.timer.value = appService.timer.value.copy(gameId = game.value?.game_id)
         isLoading.value = false
     }
 
     fun startTimer() {
-        viewModelScope.launch {
-            timer.value = timer.value.copy(state = TimerState.STARTED)
-            while (timer.value.state == TimerState.STARTED) {
-                delay(10)
-                timer.value = timer.value.copy(time = timer.value.time.plus(10.milliseconds))
-            }
-        }
+        context.startForegroundService(serviceIntent)
     }
 
     fun pauseTimer() {
-        timer.value = timer.value.copy(state = TimerState.PAUSED)
+        appService.timer.value = appService.timer.value.copy(state = TimerState.PAUSED)
     }
 
     fun stopTimer() {
-        timer.value = timer.value.copy(state = TimerState.STOPPED)
+        appService.timer.value = appService.timer.value.copy(state = TimerState.STOPPED)
     }
 
     fun cancelTimer() {
-        timer.value = Timer()
+        context.stopService(serviceIntent)
     }
 
     suspend fun saveTimer() {
-        timer.value = timer.value.copy(state = TimerState.SAVING)
+        appService.timer.value = appService.timer.value.copy(state = TimerState.SAVING)
         val body = SubmitRequest(
             submissionId = game.value!!.id,
             userId = 304670, // TODO: Get from HLTB
@@ -82,13 +85,19 @@ class GameViewModel @Inject constructor(
             storefront = game.value!!.play_storefront,
             lists = Lists(),
             general = General(
-                progress = Progress.progressTime(game.value!!.timePlayed, timer.value.time),
+                progress = Progress.progressTime(game.value!!.timePlayed, appService.timer.value.time),
                 progressBefore = Progress.fromTime(game.value!!.timePlayed)
             )
         )
-        print(body)
+
         hltbService.submitTime(body)
-        timer.value = timer.value.copy(state = TimerState.SAVED)
+        appService.timer.value = appService.timer.value.copy(state = TimerState.SAVED)
+
+        // STOP FOREGROUND SERVICE
+        context.stopService(serviceIntent)
+
+        //RESET TIMER AND REFRESH GAME
+        appService.timer.value = Timer()
         this.getGame()
     }
 }

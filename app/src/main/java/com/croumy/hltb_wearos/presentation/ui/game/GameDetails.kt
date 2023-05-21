@@ -45,7 +45,7 @@ fun GameDetails(
     val coroutineScope = rememberCoroutineScope()
 
     val game = viewModel.game.value
-    val timer = viewModel.timer.value
+    val timer = viewModel.appService.timer.value
 
     val progressAnimation = animateFloatAsState(timer.progress, label = "")
 

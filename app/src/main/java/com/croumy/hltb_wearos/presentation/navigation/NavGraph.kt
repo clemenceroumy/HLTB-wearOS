@@ -3,9 +3,13 @@ package com.croumy.hltb_wearos.presentation.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
-import androidx.wear.compose.navigation.composable
+//import androidx.wear.compose.navigation.composable
+import androidx.navigation.compose.composable
+import com.croumy.hltb_wearos.BuildConfig
 import com.croumy.hltb_wearos.presentation.ui.game.GameDetails
 import com.croumy.hltb_wearos.presentation.ui.home.HomeScreen
 
@@ -13,7 +17,7 @@ import com.croumy.hltb_wearos.presentation.ui.home.HomeScreen
 fun NavGraph(navController: NavHostController) {
     val actions = NavActions(navController = navController)
 
-    SwipeDismissableNavHost(
+    NavHost(
         navController = navController,
         startDestination = NavRoutes.Home.route
     ) {
@@ -25,7 +29,10 @@ fun NavGraph(navController: NavHostController) {
 
         composable(
             NavRoutes.GameDetails.routeWithArgs,
-            arguments = listOf(navArgument(NavRoutes.GameDetails.GAME_ID) { type = NavType.IntType })
+            arguments = listOf(navArgument(NavRoutes.GameDetails.GAME_ID) { type = NavType.IntType }),
+            deepLinks = listOf(navDeepLink {
+                uriPattern = "app://${BuildConfig.APPLICATION_ID}/${NavRoutes.GameDetails.routeWithArgs}"
+            }),
         ) {
             GameDetails(
                 onBack = {actions.navigateBack()},
