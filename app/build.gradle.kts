@@ -52,13 +52,13 @@ android {
 
 dependencies {
     implementation("androidx.lifecycle:lifecycle-service:2.6.1")
-    val compose_version = "1.4.2"
+    val compose_version = "1.5.0-alpha04"
     val wear_compose_version = "1.1.2"
     val hilt_version = "2.46"
     val klock_version = "2.2.0"
 
     // CORE
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")

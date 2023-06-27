@@ -34,6 +34,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.ScalingLazyColumn
+import androidx.wear.compose.material.ScalingLazyListState
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.items
@@ -55,28 +56,30 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
 
-    val listState = rememberScalingLazyListState(initialCenterItemIndex = 0)
-    val pagerState = rememberPagerState()
-
     val categories = Categories.values().sortedArray()
     val currentCategory = remember { mutableStateOf(Categories.PLAYING) }
+
+    val listState = remember { mutableStateOf(ScalingLazyListState(initialCenterItemIndex = 0)) }
+    val pagerState = rememberPagerState(initialPage = 0) { categories.size }
 
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
     LaunchedEffect(pagerState.currentPage) {
+        listState.value.scrollToItem(0)
+        listState.value = ScalingLazyListState(initialCenterItemIndex = 0)
+
         currentCategory.value = categories[pagerState.currentPage]
         viewModel.getGames(currentCategory.value)
-
-        listState.scrollToItem(0)
     }
 
     Scaffold(
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
+        positionIndicator = { PositionIndicator(scalingLazyListState = listState.value) },
         timeText = { TimeText() }
     ) {
         HorizontalPager(
-            pageCount = categories.size,
-            state = pagerState
+            state = pagerState,
+            modifier = Modifier.fillMaxSize(),
+            key = { categories[it] }
         ) {
             Column(
                 Modifier.fillMaxSize(),
@@ -92,13 +95,13 @@ fun HomeScreen(
                     Text(currentCategory.value.label)
                 }
                 ScalingLazyColumn(
-                    state = listState,
+                    state = listState.value,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .padding(horizontal = Dimensions.xxsPadding)
                         .onRotaryScrollEvent {
                             coroutineScope.launch {
-                                listState.scrollBy(it.verticalScrollPixels)
+                                listState.value.scrollBy(it.verticalScrollPixels)
                             }
                             true
                         }

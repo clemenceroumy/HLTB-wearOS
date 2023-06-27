@@ -3,7 +3,9 @@ package com.croumy.hltb_wearos.presentation.services
 
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context.POWER_SERVICE
 import android.content.Intent
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleService
@@ -23,6 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 const val CODE_FOREGROUND_SERVICE = 1
 
 @Singleton
@@ -33,6 +36,8 @@ class TimerService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        //val pm = getSystemService(POWER_SERVICE) as PowerManager
+        //val mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "systemService")
 
         MainScope().launch {
             startForegroundNotification()
