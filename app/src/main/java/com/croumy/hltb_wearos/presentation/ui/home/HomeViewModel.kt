@@ -20,10 +20,6 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     val games: MutableState<List<Game>> = mutableStateOf(emptyList())
     val isLoading: MutableState<Boolean> = mutableStateOf(false)
 
-    init {
-        viewModelScope.launch { getGames(Categories.PLAYING) }
-    }
-
     suspend fun getGames(category: Categories) {
         isLoading.value = true
         val result = hltbService.getGames(GameRequest().copy(lists = listOf(category.value)))

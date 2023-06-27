@@ -33,6 +33,7 @@ fun GameItem(game: Game, modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .height(Dimensions.lSize)
             .background(MaterialTheme.colors.surface, CircleShape)
+            .clip(CircleShape)
             .padding(horizontal = Dimensions.xsPadding, vertical = Dimensions.xxsPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
