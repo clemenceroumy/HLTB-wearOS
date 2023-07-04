@@ -14,9 +14,9 @@ class App : Application() {
     }
 
     private fun createChannel() {
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        /*val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(Constants.CHANNEL_ID, "TimerChannel", NotificationManager.IMPORTANCE_LOW)
-        notificationManager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(channel)*/
     }
 
 }

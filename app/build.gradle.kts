@@ -52,36 +52,38 @@ android {
 
 dependencies {
     implementation("androidx.lifecycle:lifecycle-service:2.6.1")
-    val compose_version = "1.5.0-alpha04"
-    val wear_compose_version = "1.1.2"
-    val hilt_version = "2.46"
-    val klock_version = "2.2.0"
+    val composeVersion = "1.5.0-alpha04"
+    val wearComposeVersion = "1.1.2"
+    val hiltVersion = "2.46"
+    val klockVersion = "2.2.0"
 
     // CORE
-    implementation("androidx.core:core-ktx:1.10.1")
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
+    implementation("androidx.core:core-ktx:1.10.1")
+
+    // WEAR OS
+    implementation("androidx.wear:wear:1.2.0")
     implementation("androidx.wear:wear-ongoing:1.0.0")
-    implementation("androidx.core:core:1.10.1")
 
     // COMPOSE
     implementation("androidx.activity:activity-compose:1.7.1")
-    implementation("androidx.compose.ui:ui:$compose_version")
-    implementation("androidx.compose.material:material:$compose_version")
-    implementation("androidx.compose.material:material-icons-extended:${compose_version}")
-    implementation("androidx.wear.compose:compose-material:$wear_compose_version")
-    implementation("androidx.wear.compose:compose-foundation:$wear_compose_version")
-    implementation("androidx.wear.compose:compose-navigation:$wear_compose_version")
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
+    implementation("androidx.wear.compose:compose-material:$wearComposeVersion")
+    implementation("androidx.wear.compose:compose-foundation:$wearComposeVersion")
+    implementation("androidx.wear.compose:compose-navigation:$wearComposeVersion")
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
     //HILT
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
     // Data
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -95,12 +97,12 @@ dependencies {
     implementation("com.valentinilk.shimmer:compose-shimmer:1.0.4")
 
     //Date
-    implementation("com.soywiz.korlibs.klock:klock:$klock_version")
+    implementation("com.soywiz.korlibs.klock:klock:$klockVersion")
 
     // Tests
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
-    debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 }
 
 kapt {

@@ -42,6 +42,8 @@
 
         <service
             android:name=".presentation.services.TimerService"
+            android:enabled="true"
+            android:exported="false"
             android:label="Timer Service"
             />
     </application>
