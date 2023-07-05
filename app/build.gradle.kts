@@ -79,6 +79,7 @@ dependencies {
     implementation("androidx.wear.compose:compose-foundation:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-navigation:$wearComposeVersion")
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.compose.animation:animation:${composeVersion}")
 
     //HILT
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
