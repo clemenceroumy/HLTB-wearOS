@@ -19,7 +19,7 @@ class AppService @Inject constructor() {
         while (timer.value.state == TimerState.STARTED) {
             delay(10)
             timer.value = timer.value.copy(time = timer.value.time.plus(10.milliseconds))
-            Log.i("Tick", "Timer: ${timer.value.time}")
+            //Log.i("Tick", "Timer: ${timer.value.time}")
         }
     }
 }

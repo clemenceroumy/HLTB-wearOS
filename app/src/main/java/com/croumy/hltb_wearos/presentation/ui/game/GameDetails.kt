@@ -1,5 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.game
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
@@ -13,15 +14,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
@@ -36,18 +42,30 @@ import com.croumy.hltb_wearos.presentation.ui.game.components.LoadingGame
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GameDetails(
     viewModel: GameViewModel = hiltViewModel(),
     onBack: () -> Unit,
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     val coroutineScope = rememberCoroutineScope()
 
     val game = viewModel.game.value
     val timer = viewModel.appService.timer.value
 
     val progressAnimation = animateFloatAsState(timer.progress, label = "")
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            Log.i("Game", event.name)
+            if(event == Lifecycle.Event.ON_START) { viewModel.bindService() }
+            if (event == Lifecycle.Event.ON_STOP) { viewModel.unbindService() }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     Scaffold(
         modifier = Modifier.clip(CircleShape),

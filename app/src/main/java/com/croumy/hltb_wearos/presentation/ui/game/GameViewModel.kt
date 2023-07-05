@@ -40,17 +40,17 @@ class GameViewModel @Inject constructor(
 
     private val hltbService = HLTBService()
 
-    private var foregroundOnlyServiceBound = false
-    private var foregroundOnlyWalkingWorkoutService: TimerService? = null
+    var foregroundOnlyServiceBound = false
+    private var foregroundOnlyTimerService: TimerService? = null
     private val foregroundOnlyServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             val binder = service as TimerService.LocalBinder
-            foregroundOnlyWalkingWorkoutService = binder.timerService
+            foregroundOnlyTimerService = binder.timerService
             foregroundOnlyServiceBound = true
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
-            foregroundOnlyWalkingWorkoutService = null
+            foregroundOnlyTimerService = null
             foregroundOnlyServiceBound = false
         }
     }
@@ -60,17 +60,18 @@ class GameViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { getGame() }
+    }
 
-        val serviceIntent = Intent(context.applicationContext, TimerService::class.java)
+    fun bindService() {
+        val serviceIntent = Intent(context, TimerService::class.java)
         context.applicationContext.bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    override fun onCleared() {
+    fun unbindService() {
         if (foregroundOnlyServiceBound) {
-            context.applicationContext.unbindService(foregroundOnlyServiceConnection)
+            context.unbindService(foregroundOnlyServiceConnection)
             foregroundOnlyServiceBound = false
         }
-        super.onCleared()
     }
 
     private suspend fun getGame() {
@@ -82,8 +83,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun startTimer() {
-        foregroundOnlyWalkingWorkoutService?.startTimer()
-        //context.startForegroundService(serviceIntent)
+        foregroundOnlyTimerService?.startTimer()
     }
 
     fun pauseTimer() {
@@ -91,12 +91,10 @@ class GameViewModel @Inject constructor(
     }
 
     fun stopTimer() {
-        //appService.timer.value = appService.timer.value.copy(state = TimerState.STOPPED)
-        foregroundOnlyWalkingWorkoutService?.stopTimer()
+        foregroundOnlyTimerService?.stopTimer()
     }
 
     fun cancelTimer() {
-       // context.stopService(serviceIntent)
         appService.timer.value = Timer()
     }
 
@@ -116,12 +114,8 @@ class GameViewModel @Inject constructor(
             )
         )
 
-        //TODO: UNCOMMENT
-        // hltbService.submitTime(body)
+        hltbService.submitTime(body)
         appService.timer.value = appService.timer.value.copy(state = TimerState.SAVED)
-
-        // STOP FOREGROUND SERVICE
-        //context.stopService(serviceIntent)
 
         //RESET TIMER AND REFRESH GAME
         appService.timer.value = Timer()
