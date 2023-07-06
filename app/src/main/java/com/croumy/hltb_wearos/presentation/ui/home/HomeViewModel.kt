@@ -2,6 +2,7 @@ package com.croumy.hltb_wearos.presentation.ui.home
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.croumy.hltb_wearos.presentation.data.HLTBService
@@ -17,12 +18,19 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(): ViewModel() {
     private val hltbService = HLTBService()
 
-    val games: MutableState<List<Game>> = mutableStateOf(emptyList())
+    private val games: MutableState<List<Game>> = mutableStateOf(emptyList())
     val isLoading: MutableState<Boolean> = mutableStateOf(false)
+    val currentCategory = mutableStateOf(Categories.PLAYING)
 
-    suspend fun getGames(category: Categories) {
+    val gamesByCategory get(): List<Game> = games.value.filter { it.categories.contains(currentCategory.value) }
+
+    init {
+        viewModelScope.launch { getGames() }
+    }
+
+    private suspend fun getGames() {
         isLoading.value = true
-        val result = hltbService.getGames(GameRequest().copy(lists = listOf(category.value)))
+        val result = hltbService.getGames(GameRequest())
         games.value = (result?.data?.gamesList ?: emptyList()).sortedBy { it.invested_pro }.reversed()
         isLoading.value = false
     }

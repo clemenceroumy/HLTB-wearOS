@@ -1,5 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,33 +55,31 @@ fun HomeScreen(
     navigateToGame: (Int) -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val focusRequester = remember { FocusRequester() }
 
     val categories = Categories.values().sortedArray()
-    val currentCategory = remember { mutableStateOf(Categories.PLAYING) }
 
-    val listState = remember { mutableStateOf(ScalingLazyListState(initialCenterItemIndex = 0)) }
-    val pagerState = rememberPagerState(initialPage = 0) { categories.size }
+    val focusRequester = remember { (0..categories.size).map { FocusRequester() }}
+    val listState = remember { mutableStateOf((0..categories.size).map { ScalingLazyListState(initialCenterItemIndex = 0) }) }
+    val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = -0.5f) { categories.size }
 
-    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
     LaunchedEffect(pagerState.currentPage) {
-        listState.value.scrollToItem(0)
-        listState.value = ScalingLazyListState(initialCenterItemIndex = 0)
+        Log.i("HOME", "page changed to ${pagerState.currentPage}")
+        viewModel.currentCategory.value = categories[pagerState.currentPage]
+        focusRequester[pagerState.currentPage].requestFocus()
 
-        currentCategory.value = categories[pagerState.currentPage]
-        viewModel.getGames(currentCategory.value)
+        listState.value[pagerState.currentPage].scrollToItem(0)
     }
 
     Scaffold(
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState.value) },
+        positionIndicator = { PositionIndicator(scalingLazyListState = listState.value[pagerState.currentPage]) },
         timeText = { TimeText() }
     ) {
-        HorizontalPager(
+        /*HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize(),
             key = { categories[it] }
-        ) {
+        ) {*/
             Column(
                 Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -89,23 +88,23 @@ fun HomeScreen(
                 Row(
                     Modifier
                         .padding(bottom = Dimensions.xxsPadding)
-                        .background(currentCategory.value.color, CircleShape)
+                        .background(viewModel.currentCategory.value.color, CircleShape)
                         .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xxsPadding),
                 ) {
-                    Text(currentCategory.value.label)
+                    Text(viewModel.currentCategory.value.label)
                 }
                 ScalingLazyColumn(
-                    state = listState.value,
+                    state = listState.value[pagerState.currentPage],
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Dimensions.xxsPadding)
                         .onRotaryScrollEvent {
                             coroutineScope.launch {
-                                listState.value.scrollBy(it.verticalScrollPixels)
+                                listState.value[pagerState.currentPage].scrollBy(it.verticalScrollPixels)
                             }
                             true
                         }
-                        .focusRequester(focusRequester)
+                        .focusRequester(focusRequester[pagerState.currentPage])
                         .focusable(),
                     verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
                     contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
@@ -121,7 +120,7 @@ fun HomeScreen(
                             )
                         }
                     } else {
-                        items(viewModel.games.value) { game ->
+                        items(viewModel.gamesByCategory) { game ->
                             GameItem(
                                 game,
                                 modifier = Modifier.clickable { navigateToGame(game.game_id) }
@@ -131,7 +130,7 @@ fun HomeScreen(
                 }
             }
         }
-    }
+    //}
 }
 
 @Preview
