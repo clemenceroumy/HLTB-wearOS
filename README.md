@@ -4,7 +4,7 @@
 
 HowLongToBeat on WearOS. 
 Retrieve your HLTB games status by category. 
-Select a game to start a stopwatch and save your timed session on the end of it.
+Select a game to start a stopwatch and save your timed session at the end of it.
 
 ## Configuration
 
