@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
-import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.navigation.NavGraph
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme

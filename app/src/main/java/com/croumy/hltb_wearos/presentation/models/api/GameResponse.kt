@@ -60,4 +60,18 @@ data class Game(
 ) {
     val picture: String get() = "https://howlongtobeat.com/games/$game_image"
     val timePlayed get() = Time(invested_pro.seconds)
+    val categories get(): List<Categories> {
+        val categories: MutableList<Categories> = mutableListOf()
+        when {
+            list_playing == 1 -> categories.add(Categories.PLAYING)
+            list_backlog == 1 -> categories.add(Categories.BACKLOG)
+            list_custom == 1 -> categories.add(Categories.CUSTOM)
+            list_custom2 == 1 -> categories.add(Categories.CUSTOM2)
+            list_custom3 == 1 -> categories.add(Categories.CUSTOM3)
+            list_comp == 1 -> categories.add(Categories.COMPLETED)
+            list_retired == 1 -> categories.add(Categories.RETIRED)
+        }
+
+        return categories
+    }
 }
