@@ -23,7 +23,7 @@ class HLTBService {
         .create(AuthRestApi::class.java)
 
     interface AuthRestApi {
-        @POST("user/304670/games/list")
+        @POST("user/${BuildConfig.USER_ID}/games/list")
         suspend fun getGames(@Body request: GameRequest): Response<GameListResponse>
 
         @POST("submit")

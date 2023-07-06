@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.croumy.hltb_wearos.BuildConfig
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.models.Timer
@@ -102,7 +103,7 @@ class GameViewModel @Inject constructor(
         appService.timer.value = appService.timer.value.copy(state = TimerState.SAVING)
         val body = SubmitRequest(
             submissionId = game.value!!.id,
-            userId = 304670, // TODO: Get from HLTB
+            userId = BuildConfig.USER_ID.toInt(), // TODO: Get from HLTB
             gameId = game.value!!.game_id,
             title = game.value!!.custom_title,
             platform = game.value!!.platform,
