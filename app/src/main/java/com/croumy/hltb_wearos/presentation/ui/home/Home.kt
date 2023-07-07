@@ -19,10 +19,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -61,12 +64,19 @@ fun HomeScreen(
 
     val categories = Categories.values().sortedArray()
 
-    val focusRequester = remember { FocusRequester() }
+    val focusRequester = (categories).map { FocusRequester() }
     val horizontalScrollState = rememberLazyListState()
-    val listState = remember { ScalingLazyListState(initialCenterItemIndex = 0) }
+    val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
+    val listStates = (categories).map { ScalingLazyListState(initialCenterItemIndex = 0)}
+    val currentListState = remember { mutableStateOf(listStates[0]) }
+
+    LaunchedEffect(horizontalFirstVisibleIndex.value) {
+        focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        currentListState.value = listStates[horizontalFirstVisibleIndex.value]
+    }
 
     Scaffold(
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
+        positionIndicator = { PositionIndicator(scalingLazyListState = currentListState.value) },
         timeText = { TimeText() }
     ) {
         LazyRow(
@@ -74,54 +84,50 @@ fun HomeScreen(
             state = horizontalScrollState,
             flingBehavior = rememberSnapFlingBehavior(lazyListState = horizontalScrollState)
         ) {
-            items(categories) { category ->
-                Column(
-                    Modifier
+            itemsIndexed(categories) { index, category ->
+                ScalingLazyColumn(
+                    state = listStates[index],
+                    modifier = Modifier
                         .fillMaxHeight()
-                        .width(screenWidth.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .width(screenWidth.dp)
+                        .padding(horizontal = Dimensions.xxsPadding)
+                        .onRotaryScrollEvent {
+                            coroutineScope.launch {
+                                listStates[index].scrollBy(it.verticalScrollPixels)
+                            }
+                            true
+                        }
+                        .focusRequester(focusRequester[index])
+                        .focusable(),
+                    verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
+                    contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
                 ) {
-                    Spacer(Modifier.height(Dimensions.mPadding))
-                    Row(
-                        Modifier
-                            .padding(bottom = Dimensions.xxsPadding)
-                            .background(category.color, CircleShape)
-                            .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xxsPadding),
-                    ) { Text(category.label) }
+                    item {
+                        Spacer(Modifier.height(Dimensions.mPadding))
+                        Row(
+                            Modifier
+                                .padding(bottom = Dimensions.xxsPadding)
+                                .background(category.color, CircleShape)
+                                .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xxsPadding),
+                        ) { Text(category.label) }
+                    }
 
-                    ScalingLazyColumn(
-                        state = listState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = Dimensions.xxsPadding)
-                            .onRotaryScrollEvent {
-                                coroutineScope.launch {
-                                    listState.scrollBy(it.verticalScrollPixels)
-                                }
-                                true
-                            }
-                            .focusRequester(focusRequester)
-                            .focusable(),
-                        verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
-                        contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
-                    ) {
-                        if (viewModel.isLoading.value) {
-                            items(2) {
-                                Box(
-                                    modifier = Modifier
-                                        .shimmer()
-                                        .height(Dimensions.lSize)
-                                        .fillMaxWidth()
-                                        .background(shimmerColor, CircleShape)
-                                )
-                            }
-                        } else {
-                            items(viewModel.gamesByCategory(category)) { game ->
-                                GameItem(
-                                    game,
-                                    modifier = Modifier.clickable { navigateToGame(game.game_id) }
-                                )
-                            }
+                    if (viewModel.isLoading.value) {
+                        items(2) {
+                            Box(
+                                modifier = Modifier
+                                    .shimmer()
+                                    .height(Dimensions.lSize)
+                                    .fillMaxWidth()
+                                    .background(shimmerColor, CircleShape)
+                            )
+                        }
+                    } else {
+                        items(viewModel.gamesByCategory(category)) { game ->
+                            GameItem(
+                                game,
+                                modifier = Modifier.clickable { navigateToGame(game.game_id) }
+                            )
                         }
                     }
                 }

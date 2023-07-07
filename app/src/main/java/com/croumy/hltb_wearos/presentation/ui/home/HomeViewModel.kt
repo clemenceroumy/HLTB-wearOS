@@ -20,13 +20,12 @@ class HomeViewModel @Inject constructor(): ViewModel() {
 
     private val games: MutableState<List<Game>> = mutableStateOf(emptyList())
     val isLoading: MutableState<Boolean> = mutableStateOf(false)
-    val currentCategory = mutableStateOf(Categories.PLAYING)
 
     init {
         viewModelScope.launch { getGames() }
     }
 
-    fun gamesByCategory(category: Categories): List<Game> = games.value.filter { it.categories.contains(currentCategory.value) }
+    fun gamesByCategory(category: Categories): List<Game> = games.value.filter { it.categories.contains(category) }
 
     private suspend fun getGames() {
         isLoading.value = true
