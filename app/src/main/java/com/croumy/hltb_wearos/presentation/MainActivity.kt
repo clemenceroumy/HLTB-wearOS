@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            //val navController = rememberSwipeDismissableNavController()
             val navController = rememberNavController()
 
             HLTBwearosTheme {
