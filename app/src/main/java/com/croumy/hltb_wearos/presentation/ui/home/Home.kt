@@ -87,6 +87,8 @@ fun HomeScreen(
             flingBehavior = rememberSnapFlingBehavior(lazyListState = horizontalScrollState)
         ) {
             itemsIndexed(categories) { index, category ->
+                val games = viewModel.gamesByCategories[category] ?: emptyList()
+
                 Column(
                    Modifier.width(screenWidth.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -125,7 +127,7 @@ fun HomeScreen(
                                 )
                             }
                         } else {
-                            items(viewModel.gamesByCategory(category)) { game ->
+                            items(games) { game ->
                                 GameItem(
                                     game,
                                     modifier = Modifier.clickable { navigateToGame(game.game_id) }
