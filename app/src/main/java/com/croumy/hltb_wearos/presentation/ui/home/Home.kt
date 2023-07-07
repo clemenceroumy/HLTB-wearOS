@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -80,54 +82,55 @@ fun HomeScreen(
         timeText = { TimeText() }
     ) {
         LazyRow(
-            modifier = Modifier,
+            modifier = Modifier.padding(top = Dimensions.mPadding),
             state = horizontalScrollState,
             flingBehavior = rememberSnapFlingBehavior(lazyListState = horizontalScrollState)
         ) {
             itemsIndexed(categories) { index, category ->
-                ScalingLazyColumn(
-                    state = listStates[index],
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(screenWidth.dp)
-                        .padding(horizontal = Dimensions.xxsPadding)
-                        .onRotaryScrollEvent {
-                            coroutineScope.launch {
-                                listStates[index].scrollBy(it.verticalScrollPixels)
-                            }
-                            true
-                        }
-                        .focusRequester(focusRequester[index])
-                        .focusable(),
-                    verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
-                    contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
+                Column(
+                   Modifier.width(screenWidth.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    item {
-                        Spacer(Modifier.height(Dimensions.mPadding))
-                        Row(
-                            Modifier
-                                .padding(bottom = Dimensions.xxsPadding)
-                                .background(category.color, CircleShape)
-                                .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xxsPadding),
-                        ) { Text(category.label) }
-                    }
+                    Row(
+                        Modifier
+                            .padding(bottom = Dimensions.xxsPadding)
+                            .background(category.color, CircleShape)
+                            .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xxsPadding),
+                    ) { Text(category.label) }
 
-                    if (viewModel.isLoading.value) {
-                        items(2) {
-                            Box(
-                                modifier = Modifier
-                                    .shimmer()
-                                    .height(Dimensions.lSize)
-                                    .fillMaxWidth()
-                                    .background(shimmerColor, CircleShape)
-                            )
-                        }
-                    } else {
-                        items(viewModel.gamesByCategory(category)) { game ->
-                            GameItem(
-                                game,
-                                modifier = Modifier.clickable { navigateToGame(game.game_id) }
-                            )
+                    ScalingLazyColumn(
+                        state = listStates[index],
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = Dimensions.xxsPadding)
+                            .onRotaryScrollEvent {
+                                coroutineScope.launch {
+                                    listStates[index].scrollBy(it.verticalScrollPixels)
+                                }
+                                true
+                            }
+                            .focusRequester(focusRequester[index])
+                            .focusable(),
+                        verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
+                        contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
+                    ) {
+                        if (viewModel.isLoading.value) {
+                            items(2) {
+                                Box(
+                                    modifier = Modifier
+                                        .shimmer()
+                                        .height(Dimensions.lSize)
+                                        .fillMaxWidth()
+                                        .background(shimmerColor, CircleShape)
+                                )
+                            }
+                        } else {
+                            items(viewModel.gamesByCategory(category)) { game ->
+                                GameItem(
+                                    game,
+                                    modifier = Modifier.clickable { navigateToGame(game.game_id) }
+                                )
+                            }
                         }
                     }
                 }
