@@ -35,9 +35,7 @@ class GameViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     @ApplicationContext val context: Context,
 ) : ViewModel() {
-    private val serviceIntent = Intent(context, TimerService::class.java)
-
-    val gameId: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.GAME_ID) ?: 0
+   private val gameId: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.GAME_ID) ?: 0
 
     private val hltbService = HLTBService()
 
