@@ -11,8 +11,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST
+import javax.inject.Inject
 
-class HLTBService {
+class HLTBService @Inject constructor() {
     private val okHttpClient = OkHttpClient.Builder().build()
 
     private val retrofit = Retrofit.Builder()

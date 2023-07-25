@@ -52,13 +52,15 @@ android {
 
 
 dependencies {
-    implementation("androidx.lifecycle:lifecycle-service:2.6.1")
     val composeVersion = "1.5.0-alpha04"
     val wearComposeVersion = "1.1.2"
     val hiltVersion = "2.46"
+    val hiltCoreVersion = "1.0.0"
+    val workVersion = "2.8.0"
     val klockVersion = "2.2.0"
 
     // CORE
+    implementation("androidx.lifecycle:lifecycle-service:2.6.1")
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -82,10 +84,20 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.compose.animation:animation:${composeVersion}")
 
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
+
     //HILT
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    kapt("androidx.hilt:hilt-compiler:$hiltCoreVersion")
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    implementation("androidx.hilt:hilt-common:$hiltCoreVersion")
+    implementation("androidx.hilt:hilt-work:$hiltCoreVersion")
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    implementation("androidx.hilt:hilt-navigation-fragment:$hiltCoreVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltCoreVersion")
 
     // Data
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
