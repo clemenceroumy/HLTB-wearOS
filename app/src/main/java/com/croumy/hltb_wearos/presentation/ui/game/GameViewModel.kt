@@ -88,7 +88,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun pauseTimer() {
-        appService.timer.value = appService.timer.value.copy(state = TimerState.PAUSED)
+        appService.pauseTimer()
     }
 
     fun stopTimer() {

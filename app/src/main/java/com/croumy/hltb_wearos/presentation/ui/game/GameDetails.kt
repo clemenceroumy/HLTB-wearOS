@@ -40,6 +40,7 @@ import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.red
 import com.croumy.hltb_wearos.presentation.ui.game.components.LaunchButtons
 import com.croumy.hltb_wearos.presentation.ui.game.components.LoadingGame
+import com.soywiz.klock.Time
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 

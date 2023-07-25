@@ -114,12 +114,10 @@ class TimerService : LifecycleService() {
         val intent = Intent(applicationContext, TimerService::class.java)
         startService(intent)
 
-        lifecycleScope.launch {
-            appService.startTimer()
-            if (serviceRunningInForeground) {
-                val notification = generateNotification(appService.timer.value.time.toString())
-                notificationManager.notify(NOTIFICATION_ID, notification)
-            }
+        appService.startTimer()
+        if (serviceRunningInForeground) {
+            val notification = generateNotification(appService.timer.value.time.toString())
+            notificationManager.notify(NOTIFICATION_ID, notification)
         }
     }
 
@@ -128,9 +126,7 @@ class TimerService : LifecycleService() {
         timerActive = false
         mWakeLock.release()
 
-        lifecycleScope.launch {
-            appService.timer.value = appService.timer.value.copy(state = TimerState.STOPPED)
-        }
+        appService.stopTimer()
     }
 
     private fun generateNotification(text: String): Notification {
