@@ -24,6 +24,8 @@ import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService
+import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
+import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -73,7 +75,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getGame() {
+    suspend fun getGame() {
         isLoading.value = true
         val result = hltbService.getGames(GameRequest().copy(lists = Categories.values().map { it.value }))
         game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
@@ -94,12 +96,12 @@ class GameViewModel @Inject constructor(
     }
 
     fun cancelTimer() {
-        appService.timer.value = Timer()
+        appService.clearTimer()
     }
 
-    suspend fun saveTimer() {
+     fun saveTimer() {
         appService.timer.value = appService.timer.value.copy(state = TimerState.SAVING)
-        val body = SubmitRequest(
+        appService.submitRequest.value = SubmitRequest(
             submissionId = game.value!!.id,
             userId = BuildConfig.USER_ID.toInt(), // TODO: Get from HLTB
             gameId = game.value!!.game_id,
@@ -113,11 +115,6 @@ class GameViewModel @Inject constructor(
             )
         )
 
-        hltbService.submitTime(body)
-        appService.timer.value = appService.timer.value.copy(state = TimerState.SAVED)
-
-        //RESET TIMER AND REFRESH GAME
-        appService.timer.value = Timer()
-        this.getGame()
+        WorkerHelper.launchWorker<SaveTimeWorker>(context = context, name = "saveTime")
     }
 }
