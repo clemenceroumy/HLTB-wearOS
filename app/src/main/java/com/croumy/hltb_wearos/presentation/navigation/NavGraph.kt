@@ -10,6 +10,7 @@ import androidx.wear.compose.navigation.SwipeDismissableNavHost
 //import androidx.wear.compose.navigation.composable
 import androidx.navigation.compose.composable
 import com.croumy.hltb_wearos.BuildConfig
+import com.croumy.hltb_wearos.presentation.ui.StartApp
 import com.croumy.hltb_wearos.presentation.ui.game.GameDetails
 import com.croumy.hltb_wearos.presentation.ui.home.HomeScreen
 
@@ -19,11 +20,17 @@ fun NavGraph(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Home.route
+        startDestination = NavRoutes.StartApp.route
     ) {
-        composable(NavRoutes.Home.route) {
+        composable(NavRoutes.StartApp.route) {
+            StartApp(
+                navigateToHome = { actions.navigateToHome()}
+            )
+        }
+
+        composable(NavRoutes.StartApp.route) {
             HomeScreen(
-                navigateToGame = {actions.navigateToGameDetails(it)}
+                navigateToGame = { actions.navigateToGameDetails(it)}
             )
         }
 

@@ -6,6 +6,16 @@ HowLongToBeat on WearOS.
 Retrieve your HLTB games status by category. 
 Select a game to start a stopwatch and save your timed session at the end of it.
 
+## Screenshots
+### Display games by categories
+
+![HomePlayingCategory](./documentation/home_playing.png)
+![HomeBacklogCategory](./documentation/home_backlog.png)
+
+### Launch a gaming session
+
+![TimedSession](./documentation/saving_time.gif)
+
 ## Configuration
 
 The app currently work with a cookie retrieved from the website. To make it work with your account, you need to set te following vars in the `local.properties` file : 
