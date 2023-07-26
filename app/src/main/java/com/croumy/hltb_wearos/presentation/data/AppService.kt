@@ -16,7 +16,7 @@ import kotlin.concurrent.fixedRateTimer
 @Singleton
 class AppService @Inject constructor() {
     val timer = mutableStateOf(Timer())
-    var stopwatch: java.util.Timer = java.util.Timer()
+    private var stopwatch: java.util.Timer = java.util.Timer()
     val submitRequest = mutableStateOf<SubmitRequest?>(null)
 
     fun clearTimer() {
@@ -31,7 +31,6 @@ class AppService @Inject constructor() {
 
         stopwatch = fixedRateTimer(initialDelay = 10L, period = 10L) {
             timer.value = timer.value.copy(time = timer.value.time.plus(10.milliseconds))
-            Log.i("Tick", "Timer: ${timer.value.time}")
         }
     }
 
