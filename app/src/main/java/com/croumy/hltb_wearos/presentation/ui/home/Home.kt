@@ -130,6 +130,7 @@ fun HomeScreen(
                             items(games) { game ->
                                 GameItem(
                                     game,
+                                    isRunning = viewModel.appService.timer.value.gameId == game.game_id,
                                     modifier = Modifier.clickable { navigateToGame(game.game_id) }
                                 )
                             }
