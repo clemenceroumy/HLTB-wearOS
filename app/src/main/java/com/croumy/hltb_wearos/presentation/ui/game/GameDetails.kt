@@ -84,13 +84,6 @@ fun GameDetails(
         }
     }
 
-    /* Catch back action to return to home screen (list of games) */
-    BackHandler(enabled = true, onBack = {
-        Log.i("GameDetails", "Back pressed (from Back Handler)")
-        onBack()
-    })
-
-
     Scaffold(
         modifier = Modifier.clip(CircleShape),
         timeText = { TimeText() }
