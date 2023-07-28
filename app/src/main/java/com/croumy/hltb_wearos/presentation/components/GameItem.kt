@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -35,13 +37,14 @@ import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 
 @Composable
-fun GameItem(game: Game, isRunning: Boolean, modifier: Modifier = Modifier) {
+fun GameItem(game: Game, isRunning: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(Dimensions.lSize)
+            .sizeIn(minHeight = Dimensions.lSize)
             .background(MaterialTheme.colors.surface, CircleShape)
             .clip(CircleShape)
+            .clickable(onClick = onClick)
             .padding(horizontal = Dimensions.xsPadding, vertical = Dimensions.xxsPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
