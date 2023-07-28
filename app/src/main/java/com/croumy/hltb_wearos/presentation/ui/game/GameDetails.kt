@@ -61,11 +61,10 @@ fun GameDetails(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val game = viewModel.game.value
     val timer = viewModel.appService.timer.value
 
     val progressAnimation = animateFloatAsState(timer.progress, label = "")
-    val isActiveSession = timer.gameId == game?.game_id || timer.gameId == null
+    val isActiveSession = timer.gameId == viewModel.game.value?.game_id || timer.gameId == null
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -80,6 +79,7 @@ fun GameDetails(
 
     LaunchedEffect(viewModel.appService.timer.value.state) {
         if(viewModel.appService.timer.value.state == TimerState.SAVED) {
+            viewModel.appService.clearTimer()
             coroutineScope.launch { viewModel.getGame() }
         }
     }
@@ -109,18 +109,18 @@ fun GameDetails(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                if (game == null && viewModel.isLoading.value) {
+                if (viewModel.game.value == null && viewModel.isLoading.value) {
                     LoadingGame()
-                } else if (game == null) {
+                } else if (viewModel.game.value == null) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("Can't retrieve game")
                     }
                 } else {
                     //PLATFORM
-                    Text(game.platform, style = MaterialTheme.typography.body2)
+                    Text(viewModel.game.value!!.platform, style = MaterialTheme.typography.body2)
                     // GAME NAME
                     Text(
-                        game.custom_title,
+                        viewModel.game.value!!.custom_title,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
@@ -131,11 +131,11 @@ fun GameDetails(
                     if(isActiveSession) {
                         AnimatedContent(targetState = timer.state, label = "") {
                             when (it) {
-                                TimerState.IDLE -> Text(game.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
+                                TimerState.IDLE -> Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
                                 TimerState.STARTED, TimerState.PAUSED -> Text(timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = false), style = MaterialTheme.typography.title1)
                                 TimerState.STOPPED, TimerState.SAVING -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(game.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.body2)
-                                    Text("+${timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = true)}", style = MaterialTheme.typography.title1)
+                                    Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.body2, textAlign = TextAlign.Center)
+                                    Text("+${timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = true)}", style = MaterialTheme.typography.title1, textAlign = TextAlign.Center)
                                 }
 
                                 TimerState.SAVED -> {}
@@ -148,16 +148,12 @@ fun GameDetails(
                             pauseTimer = { viewModel.pauseTimer() },
                             stopTimer = { viewModel.stopTimer() },
                             cancelTimer = { viewModel.cancelTimer() },
-                            saveTimer = {
-                                coroutineScope.launch {
-                                    viewModel.saveTimer()
-                                }
-                            }
+                            saveTimer = { coroutineScope.launch { viewModel.saveTimer() }}
                         )
                     }
                     // IF SELECTED GAME IS OTHER GAME THAN LAUNCHED GAME
                     else {
-                        Text(game.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
+                        Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
                         Box(
                             Modifier
                                 .background(primary, CircleShape)
