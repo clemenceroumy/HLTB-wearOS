@@ -79,11 +79,11 @@ class GameViewModel @Inject constructor(
         isLoading.value = true
         val result = hltbService.getGames(GameRequest().copy(lists = Categories.values().map { it.value }))
         game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
-        appService.timer.value = appService.timer.value.copy(gameId = game.value?.game_id)
         isLoading.value = false
     }
 
     fun startTimer() {
+        appService.timer.value = appService.timer.value.copy(gameId = game.value?.game_id)
         foregroundOnlyTimerService?.startTimer()
     }
 

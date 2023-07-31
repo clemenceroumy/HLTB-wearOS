@@ -11,19 +11,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,13 +35,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyListState
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.ScalingLazyColumn
-import androidx.wear.compose.material.ScalingLazyListState
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
-import androidx.wear.compose.material.items
 import com.croumy.hltb_wearos.presentation.components.GameItem
 import com.croumy.hltb_wearos.presentation.models.api.Categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
@@ -69,7 +64,7 @@ fun HomeScreen(
     val focusRequester = (categories).map { FocusRequester() }
     val horizontalScrollState = rememberLazyListState()
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
-    val listStates = (categories).map { ScalingLazyListState(initialCenterItemIndex = 0)}
+    val listStates = remember { (categories).map { ScalingLazyListState(initialCenterItemIndex = 0) }}
     val currentListState = remember { mutableStateOf(listStates[0]) }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
@@ -130,7 +125,8 @@ fun HomeScreen(
                             items(games) { game ->
                                 GameItem(
                                     game,
-                                    modifier = Modifier.clickable { navigateToGame(game.game_id) }
+                                    isRunning = viewModel.appService.timer.value.gameId == game.game_id,
+                                    onClick = { navigateToGame(game.game_id) }
                                 )
                             }
                         }

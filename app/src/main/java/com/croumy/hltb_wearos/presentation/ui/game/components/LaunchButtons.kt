@@ -3,6 +3,7 @@ package com.croumy.hltb_wearos.presentation.ui.game.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -91,7 +92,7 @@ fun LaunchButtons(
                     CircularProgressIndicator(
                         modifier = Modifier
                             .padding(Dimensions.xsPadding)
-                            .size(mIcon),
+                            .size(sIcon),
                         color = Color.White,
                         strokeWidth = Dimensions.xsStrokeSize,
                         strokeCap = StrokeCap.Round
@@ -113,8 +114,8 @@ fun LaunchButtons(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                AnimatedContent(targetState = (timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED), label = "") { isInactive ->
-                    if (isInactive) {
+                //AnimatedContent(targetState = (timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED), label = "") { isInactive ->
+                    if ((timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED)) {
                         Icon(
                             Icons.Filled.PlayArrow,
                             contentDescription = "",
@@ -133,11 +134,11 @@ fun LaunchButtons(
                             tint = Color.White
                         )
                     }
-                }
+                //}
             }
         }
 
-        AnimatedVisibility(timer.state == TimerState.PAUSED) {
+        if(timer.state == TimerState.PAUSED) {
             Box(
                 Modifier
                     .offset(x = Dimensions.xsPadding)

@@ -25,7 +25,7 @@ class SaveTimeWorker @AssistedInject constructor(
             hltbService.submitTime(appService.submitRequest.value!!)
 
             appService.timer.value = appService.timer.value.copy(state = TimerState.SAVED)
-            appService.clearTimer()
+            // RESET OF TIMER IN LAUNCH EFFECT IN GAMEDETAILS
 
             Result.success()
         } catch (e: Exception) {

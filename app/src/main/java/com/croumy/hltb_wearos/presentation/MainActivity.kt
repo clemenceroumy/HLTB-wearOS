@@ -3,7 +3,11 @@ package com.croumy.hltb_wearos.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.wear.compose.material.rememberSwipeToDismissBoxState
+import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
+import androidx.wear.compose.navigation.rememberSwipeDismissableNavHostState
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.navigation.NavGraph
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
@@ -20,10 +24,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val navController = rememberNavController()
+            val navController = /*rememberNavController()*/ rememberSwipeDismissableNavController()
+            val swipeBoxState = rememberSwipeToDismissBoxState()
+            val navState = rememberSwipeDismissableNavHostState(swipeBoxState)
+
 
             HLTBwearosTheme {
-                NavGraph(navController = navController)
+                NavGraph(navController = navController, navState = navState)
             }
         }
     }

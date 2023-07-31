@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HLTB</string>
+    <string name="session_already_launched">1 session in progress</string>
 </resources>

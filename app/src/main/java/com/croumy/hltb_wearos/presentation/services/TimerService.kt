@@ -5,8 +5,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.res.Configuration
 import android.os.Binder
 import android.os.IBinder
@@ -140,8 +144,11 @@ class TimerService : LifecycleService() {
             "app://${BuildConfig.APPLICATION_ID}/${route}".toUri(),
             applicationContext,
             MainActivity::class.java
-        )
-        val activityPendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        ).apply {
+            flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val activityPendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
 
         val notificationCompatBuilder =
             NotificationCompat.Builder(applicationContext, Constants.CHANNEL_ID)

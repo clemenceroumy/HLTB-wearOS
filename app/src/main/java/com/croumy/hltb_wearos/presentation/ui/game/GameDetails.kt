@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation.ui.game
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
@@ -10,12 +11,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,10 +39,13 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
+import com.croumy.hltb_wearos.R
 import com.croumy.hltb_wearos.presentation.helpers.asString
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
+import com.croumy.hltb_wearos.presentation.theme.primary
 import com.croumy.hltb_wearos.presentation.theme.red
+import com.croumy.hltb_wearos.presentation.theme.secondary
 import com.croumy.hltb_wearos.presentation.ui.game.components.LaunchButtons
 import com.croumy.hltb_wearos.presentation.ui.game.components.LoadingGame
 import com.soywiz.klock.Time
@@ -53,16 +61,20 @@ fun GameDetails(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val game = viewModel.game.value
     val timer = viewModel.appService.timer.value
 
     val progressAnimation = animateFloatAsState(timer.progress, label = "")
+    val isActiveSession = timer.gameId == viewModel.game.value?.game_id || timer.gameId == null
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             Log.i("Game", event.name)
-            if(event == Lifecycle.Event.ON_START) { viewModel.bindService() }
-            if (event == Lifecycle.Event.ON_STOP) { viewModel.unbindService() }
+            if (event == Lifecycle.Event.ON_START) {
+                viewModel.bindService()
+            }
+            if (event == Lifecycle.Event.ON_STOP) {
+                viewModel.unbindService()
+            }
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -70,7 +82,8 @@ fun GameDetails(
     }
 
     LaunchedEffect(viewModel.appService.timer.value.state) {
-        if(viewModel.appService.timer.value.state == TimerState.SAVED) {
+        if (viewModel.appService.timer.value.state == TimerState.SAVED) {
+            viewModel.appService.clearTimer()
             coroutineScope.launch { viewModel.getGame() }
         }
     }
@@ -81,7 +94,7 @@ fun GameDetails(
     ) {
         Box {
             CircularProgressIndicator(
-                progress = progressAnimation.value,
+                progress = if (isActiveSession) progressAnimation.value else 0f,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.xxsPadding),
@@ -100,49 +113,58 @@ fun GameDetails(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                if (game == null && viewModel.isLoading.value) {
+                if (viewModel.game.value == null && viewModel.isLoading.value) {
                     LoadingGame()
-                } else if (game == null) {
+                } else if (viewModel.game.value == null) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("Can't retrieve game")
                     }
                 } else {
                     //PLATFORM
-                    Text(game.platform, style = MaterialTheme.typography.body2)
+                    Text(viewModel.game.value!!.platform, style = MaterialTheme.typography.body2)
                     // GAME NAME
                     Text(
-                        game.custom_title,
+                        viewModel.game.value!!.custom_title,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
                     )
                     // TIME INFO
-                    AnimatedContent(targetState = timer.state, label = "") {
-                        when (it) {
-                            TimerState.IDLE -> Text(game.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
+                    // IF TIMER IS RUNNING AND SELECTED GAME IS RUNNING GAME OR TIMER IS NOT RUNNING
+                    if (isActiveSession) {
+                        when (timer.state) {
+                            TimerState.IDLE -> Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
                             TimerState.STARTED, TimerState.PAUSED -> Text(timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = false), style = MaterialTheme.typography.title1)
                             TimerState.STOPPED, TimerState.SAVING -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(game.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.body2)
-                                Text("+${timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = true)}", style = MaterialTheme.typography.title1)
+                                Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.body2, textAlign = TextAlign.Center)
+                                Text("+${timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = true)}", style = MaterialTheme.typography.title2, textAlign = TextAlign.Center)
                             }
 
                             TimerState.SAVED -> {}
                         }
+                        // BUTTONS
+                        LaunchButtons(
+                            timer = timer,
+                            startTimer = { viewModel.startTimer() },
+                            pauseTimer = { viewModel.pauseTimer() },
+                            stopTimer = { viewModel.stopTimer() },
+                            cancelTimer = { viewModel.cancelTimer() },
+                            saveTimer = { coroutineScope.launch { viewModel.saveTimer() } }
+                        )
                     }
-                    // BUTTONS
-                    LaunchButtons(
-                        timer = timer,
-                        startTimer = { viewModel.startTimer() },
-                        pauseTimer = { viewModel.pauseTimer() },
-                        stopTimer = { viewModel.stopTimer() },
-                        cancelTimer = { viewModel.cancelTimer() },
-                        saveTimer = {
-                            coroutineScope.launch {
-                                viewModel.saveTimer()
-                            }
+                    // IF SELECTED GAME IS OTHER GAME THAN LAUNCHED GAME
+                    else {
+                        Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
+                        Box(
+                            Modifier
+                                .background(primary, CircleShape)
+                                .padding(Dimensions.xsPadding),
+                        ) {
+                            Text(stringResource(id = R.string.session_already_launched), style = MaterialTheme.typography.body2, color = Color.White)
                         }
-                    )
+                    }
+
                 }
             }
         }

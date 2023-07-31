@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.croumy.hltb_wearos"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.croumy.hltb_wearos"
         minSdk = 30
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         vectorDrawables {
@@ -80,8 +80,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
     implementation("androidx.wear.compose:compose-material:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-foundation:$wearComposeVersion")
-    implementation("androidx.wear.compose:compose-navigation:$wearComposeVersion")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.wear.compose:compose-navigation:1.2.0-rc01")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("androidx.compose.animation:animation:${composeVersion}")
 
 
