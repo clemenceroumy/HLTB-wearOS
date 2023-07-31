@@ -69,8 +69,12 @@ fun GameDetails(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             Log.i("Game", event.name)
-            if(event == Lifecycle.Event.ON_START) { viewModel.bindService() }
-            if (event == Lifecycle.Event.ON_STOP) { viewModel.unbindService() }
+            if (event == Lifecycle.Event.ON_START) {
+                viewModel.bindService()
+            }
+            if (event == Lifecycle.Event.ON_STOP) {
+                viewModel.unbindService()
+            }
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -78,7 +82,7 @@ fun GameDetails(
     }
 
     LaunchedEffect(viewModel.appService.timer.value.state) {
-        if(viewModel.appService.timer.value.state == TimerState.SAVED) {
+        if (viewModel.appService.timer.value.state == TimerState.SAVED) {
             viewModel.appService.clearTimer()
             coroutineScope.launch { viewModel.getGame() }
         }
@@ -90,7 +94,7 @@ fun GameDetails(
     ) {
         Box {
             CircularProgressIndicator(
-                progress = if(isActiveSession) progressAnimation.value else 0f,
+                progress = if (isActiveSession) progressAnimation.value else 0f,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.xxsPadding),
@@ -128,18 +132,16 @@ fun GameDetails(
                     )
                     // TIME INFO
                     // IF TIMER IS RUNNING AND SELECTED GAME IS RUNNING GAME OR TIMER IS NOT RUNNING
-                    if(isActiveSession) {
-                        AnimatedContent(targetState = timer.state, label = "") {
-                            when (it) {
-                                TimerState.IDLE -> Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
-                                TimerState.STARTED, TimerState.PAUSED -> Text(timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = false), style = MaterialTheme.typography.title1)
-                                TimerState.STOPPED, TimerState.SAVING -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.body2, textAlign = TextAlign.Center)
-                                    Text("+${timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = true)}", style = MaterialTheme.typography.title1, textAlign = TextAlign.Center)
-                                }
-
-                                TimerState.SAVED -> {}
+                    if (isActiveSession) {
+                        when (timer.state) {
+                            TimerState.IDLE -> Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.title1)
+                            TimerState.STARTED, TimerState.PAUSED -> Text(timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = false), style = MaterialTheme.typography.title1)
+                            TimerState.STOPPED, TimerState.SAVING -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(viewModel.game.value!!.timePlayed.asString(withStringUnit = true), style = MaterialTheme.typography.body2, textAlign = TextAlign.Center)
+                                Text("+${timer.time.asString(withSeconds = true, withZeros = false, withStringUnit = true)}", style = MaterialTheme.typography.title2, textAlign = TextAlign.Center)
                             }
+
+                            TimerState.SAVED -> {}
                         }
                         // BUTTONS
                         LaunchButtons(
@@ -148,7 +150,7 @@ fun GameDetails(
                             pauseTimer = { viewModel.pauseTimer() },
                             stopTimer = { viewModel.stopTimer() },
                             cancelTimer = { viewModel.cancelTimer() },
-                            saveTimer = { coroutineScope.launch { viewModel.saveTimer() }}
+                            saveTimer = { coroutineScope.launch { viewModel.saveTimer() } }
                         )
                     }
                     // IF SELECTED GAME IS OTHER GAME THAN LAUNCHED GAME
