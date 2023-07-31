@@ -64,7 +64,7 @@ fun HomeScreen(
     val focusRequester = (categories).map { FocusRequester() }
     val horizontalScrollState = rememberLazyListState()
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
-    val listStates = (categories).map { ScalingLazyListState(initialCenterItemIndex = 0) }
+    val listStates = remember { (categories).map { ScalingLazyListState(initialCenterItemIndex = 0) }}
     val currentListState = remember { mutableStateOf(listStates[0]) }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
