@@ -25,11 +25,16 @@ class SaveTimeWorker @AssistedInject constructor(
             hltbService.submitTime(appService.submitRequest.value!!)
 
             appService.timer.value = appService.timer.value.copy(state = TimerState.SAVED)
-            // RESET OF TIMER IN LAUNCH EFFECT IN GAMEDETAILS
+            // RESET OF TIMER IN LAUNCH EFFECT IN GAMEDETAILS.kt
+
+            // SAVE AS LOG IN LOCAL DB
+            appService.saveLog(true)
 
             Result.success()
         } catch (e: Exception) {
             Log.e("SaveTimeWorker", e.message.toString())
+            // SAVE AS LOG IN LOCAL DB (WITH ERROR)
+            appService.saveLog(false)
             Result.failure()
         }
     }

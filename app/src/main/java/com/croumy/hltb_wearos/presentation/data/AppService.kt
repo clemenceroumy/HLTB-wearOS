@@ -1,20 +1,29 @@
 package com.croumy.hltb_wearos.presentation.data
 
 import SubmitRequest
-import android.util.Log
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
+import androidx.room.Room
+import com.croumy.hltb_wearos.presentation.data.database.AppDatabase
+import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
-import com.soywiz.klock.Stopwatch
+import com.soywiz.klock.DateTime
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.plus
-import kotlinx.coroutines.delay
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.concurrent.fixedRateTimer
 
 @Singleton
-class AppService @Inject constructor() {
+class AppService @Inject constructor(@ApplicationContext val applicationContext: Context) {
+    val db = Room.databaseBuilder(
+        applicationContext,
+        AppDatabase::class.java, "database-name"
+    ).build()
+
     val timer = mutableStateOf(Timer())
     private var stopwatch: java.util.Timer = java.util.Timer()
     val submitRequest = mutableStateOf<SubmitRequest?>(null)
@@ -42,5 +51,23 @@ class AppService @Inject constructor() {
      fun stopTimer() {
         stopwatch.cancel()
         timer.value = timer.value.copy(state = TimerState.STOPPED)
+    }
+
+    fun saveLog(uploaded: Boolean) {
+        if(timer.value.gameId == null || submitRequest.value == null) return
+
+        db.logDao().insert(LogEntity(
+            id = 0,
+            gameId = timer.value.gameId!!,
+            submissionId = submitRequest.value!!.submissionId,
+            timePlayed = timer.value.time.encoded.millisecondsLong,
+            date = Date(),
+            saved = uploaded,
+            title = submitRequest.value!!.title,
+            platform = submitRequest.value!!.platform,
+            storefront = submitRequest.value!!.storefront,
+            progress = submitRequest.value!!.general.progress.toTime().encoded.millisecondsLong,
+            progressBefore = submitRequest.value!!.general.progressBefore.toTime().encoded.millisecondsLong
+        ))
     }
 }

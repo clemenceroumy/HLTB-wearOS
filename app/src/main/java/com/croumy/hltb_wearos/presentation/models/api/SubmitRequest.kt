@@ -1,3 +1,4 @@
+import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 import com.soywiz.klock.Time
 import com.soywiz.klock.hours
 import com.soywiz.klock.minutes
@@ -36,6 +37,8 @@ data class Progress(
     val minutes: Int,
     val seconds: Int
 ) {
+    fun toTime(): Time = Time(hours, minutes, seconds)
+
     companion object {
         fun fromTime(time: Time): Progress = Progress(time.hour, time.minute, time.second)
 
