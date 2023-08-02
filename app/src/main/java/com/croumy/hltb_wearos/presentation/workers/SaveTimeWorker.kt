@@ -7,10 +7,12 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
+import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.util.Date
 
 @HiltWorker
 class SaveTimeWorker @AssistedInject constructor(
@@ -20,7 +22,26 @@ class SaveTimeWorker @AssistedInject constructor(
     private val appService: AppService
 ) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
+        val isRetrying = inputData.getString("IS_RETRYING")?.toBoolean() ?: false
+
+        val log = LogEntity(
+            id = 0,
+            gameId = appService.timer.value.gameId!!,
+            submissionId = appService.submitRequest.value!!.submissionId,
+            timePlayed = appService.timer.value.time.encoded.millisecondsLong,
+            date = Date(),
+            saved = false,
+            title = appService.submitRequest.value!!.title,
+            platform = appService.submitRequest.value!!.platform,
+            storefront = appService.submitRequest.value!!.storefront,
+            progress = appService.submitRequest.value!!.general.progress.toTime().encoded.millisecondsLong,
+            progressBefore = appService.submitRequest.value!!.general.progressBefore.toTime().encoded.millisecondsLong
+        )
+
         return try {
+            // TODO: REMOVE ERROR
+            throw Exception("test logs errors")
+
             Log.i("SaveTimeWorker", "Saving time: ${appService.submitRequest.value!!}")
             hltbService.submitTime(appService.submitRequest.value!!)
 
@@ -28,13 +49,16 @@ class SaveTimeWorker @AssistedInject constructor(
             // RESET OF TIMER IN LAUNCH EFFECT IN GAMEDETAILS.kt
 
             // SAVE AS LOG IN LOCAL DB
-            appService.saveLog(true)
+            log.saved = true
+            appService.saveLog(log)
 
             Result.success()
         } catch (e: Exception) {
             Log.e("SaveTimeWorker", e.message.toString())
+            appService.timer.value = appService.timer.value.copy(state = TimerState.ERROR)
+
             // SAVE AS LOG IN LOCAL DB (WITH ERROR)
-            appService.saveLog(false)
+            appService.saveLog(log)
             Result.failure()
         }
     }

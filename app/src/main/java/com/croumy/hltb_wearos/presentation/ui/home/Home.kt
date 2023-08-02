@@ -47,6 +47,7 @@ import com.croumy.hltb_wearos.presentation.models.api.Categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
+import com.croumy.hltb_wearos.presentation.ui.home.logs.LogsScreen
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.launch
 
@@ -62,13 +63,17 @@ fun HomeScreen(
     val categories = Categories.values().sortedArray()
 
     val focusRequester = (categories).map { FocusRequester() }
-    val horizontalScrollState = rememberLazyListState()
-    val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
-    val listStates = remember { (categories).map { ScalingLazyListState(initialCenterItemIndex = 0) }}
+    val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
+    val horizontalFirstVisibleIndex =
+        remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
+    val listStates =
+        remember { (categories).map { ScalingLazyListState(initialCenterItemIndex = 0) } }
     val currentListState = remember { mutableStateOf(listStates[0]) }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        if (horizontalFirstVisibleIndex.value == 0) return@LaunchedEffect
+
+        focusRequester[horizontalFirstVisibleIndex.value - 1].requestFocus()
         currentListState.value = listStates[horizontalFirstVisibleIndex.value]
     }
 
@@ -81,18 +86,27 @@ fun HomeScreen(
             state = horizontalScrollState,
             flingBehavior = rememberSnapFlingBehavior(lazyListState = horizontalScrollState)
         ) {
+            item {
+                LogsScreen(
+                    modifier = Modifier.width(screenWidth.dp)
+                )
+            }
+
             itemsIndexed(categories) { index, category ->
                 val games = viewModel.gamesByCategories[category] ?: emptyList()
 
                 Column(
-                   Modifier.width(screenWidth.dp),
+                    Modifier.width(screenWidth.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
                         Modifier
                             .padding(bottom = Dimensions.xxsPadding)
                             .background(category.color, CircleShape)
-                            .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xxsPadding),
+                            .padding(
+                                horizontal = Dimensions.sPadding,
+                                vertical = Dimensions.xxsPadding
+                            ),
                     ) { Text(category.label) }
 
                     ScalingLazyColumn(

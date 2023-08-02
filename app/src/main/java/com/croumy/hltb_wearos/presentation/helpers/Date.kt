@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation.helpers
 
 import com.soywiz.klock.Time
+import java.util.Date
 
 fun Time.asString(
     withSeconds: Boolean = false,
@@ -17,3 +18,5 @@ fun Time.asString(
         "${if(this.hour > 0) "${this.hour.toString().padStart(2, '0')}$hoursUnit" else ""}${this.minute.toString().padStart(2, '0')}$minutesUnit${this.second.toString().padStart(2, '0')}$secondsUnit"
     }
 }
+
+fun Date.asString() = "${this.day}/${this.month}/${this.year}"

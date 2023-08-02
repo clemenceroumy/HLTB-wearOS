@@ -7,14 +7,14 @@ import java.util.Date
 @Entity
 data class LogEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val gameId: Int,
-    val submissionId: Int,
-    val timePlayed: Long, // AS MILLISECONDS
-    val date: Date,
-    val saved: Boolean,
-    val title: String,
-    val platform: String,
-    val storefront: String,
-    val progress: Long,
-    val progressBefore: Long
+    var gameId: Int,
+    var submissionId: Int,
+    var timePlayed: Long, // AS MILLISECONDS
+    var date: Date,
+    var saved: Boolean,
+    var title: String,
+    var platform: String,
+    var storefront: String,
+    var progress: Long,
+    var progressBefore: Long
 )

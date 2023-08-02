@@ -1,5 +1,6 @@
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 import com.soywiz.klock.Time
+import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.hours
 import com.soywiz.klock.minutes
 import com.soywiz.klock.plus
@@ -41,6 +42,11 @@ data class Progress(
 
     companion object {
         fun fromTime(time: Time): Progress = Progress(time.hour, time.minute, time.second)
+
+        fun fromLong(timeLong: Long): Progress {
+            val time = Time(TimeSpan(timeLong.toDouble()))
+            return Progress(time.hour, time.minute, time.second)
+        }
 
         fun progressTime(time: Time, addedTime: Time): Progress {
             val totalTime = time.plus(addedTime.hour.hours + addedTime.minute.minutes + addedTime.second.seconds)
