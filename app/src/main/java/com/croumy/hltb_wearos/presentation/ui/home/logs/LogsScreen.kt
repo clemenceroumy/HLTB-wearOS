@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ import androidx.wear.compose.material.Text
 import com.croumy.hltb_wearos.R
 import com.croumy.hltb_wearos.presentation.components.LogItem
 import com.croumy.hltb_wearos.presentation.helpers.asString
+import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.soywiz.klock.Time
 import com.soywiz.klock.TimeSpan
@@ -46,6 +48,7 @@ fun LogsScreen(
     modifier: Modifier = Modifier,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+    val coroutineScope = lifecycleOwner.lifecycleScope
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -55,6 +58,13 @@ fun LogsScreen(
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    LaunchedEffect(viewModel.appService.timer.value.state) {
+        if (viewModel.appService.timer.value.state == TimerState.SAVED) {
+            viewModel.appService.clearTimer()
+            coroutineScope.launch { viewModel.getLogs() }
+        }
     }
 
     Box(

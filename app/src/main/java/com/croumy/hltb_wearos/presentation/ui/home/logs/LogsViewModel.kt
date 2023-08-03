@@ -21,7 +21,7 @@ import javax.inject.Inject
 class LogsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val logDao: LogDao,
-    private val appService: AppService
+    val appService: AppService
 ): ViewModel() {
     val logs = mutableStateOf(emptyList<LogEntity>())
     val succeededLogs: List<LogEntity> get() = logs.value.filter { it.saved }

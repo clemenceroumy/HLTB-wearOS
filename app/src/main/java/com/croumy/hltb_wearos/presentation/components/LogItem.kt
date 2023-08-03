@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
@@ -91,15 +92,14 @@ fun LogItem(
         if(!log.saved) Row(
             Modifier
                 .height(rowHeight.value)
-                .fillMaxHeight()
         ) {
             Box(
                 Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .background(secondary, RoundedCornerShape(100, 0, 0, 100))
+                    .background(secondary, RoundedCornerShape(Dimensions.xlRadius, 0.dp, 0.dp, Dimensions.xlRadius))
                     .padding(end = Dimensions.mSize / 2)
-                    .clip(RoundedCornerShape(100, 0, 0, 100))
+                    .clip(RoundedCornerShape(Dimensions.xlRadius, 0.dp, 0.dp, Dimensions.xlRadius))
                     .clickable {
                         onCancel()
                         coroutineScope.launch { swipeState.snapTo("initial") }
@@ -111,9 +111,9 @@ fun LogItem(
                 Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .background(primary, RoundedCornerShape(0, 100, 100, 0))
+                    .background(primary, RoundedCornerShape(0.dp, Dimensions.xlRadius, Dimensions.xlRadius, 0.dp))
                     .padding(start = Dimensions.mSize / 2)
-                    .clip(RoundedCornerShape(0, 100, 100, 0))
+                    .clip(RoundedCornerShape(0.dp, Dimensions.xlRadius, Dimensions.xlRadius, 0.dp))
                     .clickable {
                         onRefresh()
                         coroutineScope.launch { swipeState.snapTo("initial") }
@@ -127,13 +127,14 @@ fun LogItem(
             Modifier
                 .fillMaxSize()
                 .offset(x = animatedOffset.value)
-                .background(MaterialTheme.colors.surface, RoundedCornerShape(100))
-                .clip(RoundedCornerShape(100))
+                .background(MaterialTheme.colors.surface, RoundedCornerShape(Dimensions.xlRadius))
+                .border(1.dp, MaterialTheme.colors.surface, RoundedCornerShape(Dimensions.xlRadius))
+                .clip(RoundedCornerShape(Dimensions.xlRadius))
                 .onGloballyPositioned { coordinates ->
                     if (rowHeight.value == Dimensions.lSize) rowHeight.value =
                         with(density) { coordinates.size.height.toDp() }
                 }
-                .padding(horizontal = Dimensions.mPadding, vertical = Dimensions.sPadding)
+                .padding(horizontal = Dimensions.sPadding, vertical = Dimensions.xsPadding)
                 .swipeable(
                     state = swipeState,
                     anchors = anchors,

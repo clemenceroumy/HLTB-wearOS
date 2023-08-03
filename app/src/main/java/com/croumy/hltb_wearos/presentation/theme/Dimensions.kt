@@ -10,6 +10,7 @@ class Dimensions {
         val xsPadding = 8.dp
         val xxsPadding = 4.dp
 
+        val xlRadius = 30.dp
         val lRadius = 20.dp
         val mRadius = 10.dp
         val sRadius = 5.dp
