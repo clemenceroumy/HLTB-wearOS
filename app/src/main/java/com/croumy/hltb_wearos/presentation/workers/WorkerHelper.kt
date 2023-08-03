@@ -24,7 +24,7 @@ class WorkerHelper {
             MainScope().launch {
                 WorkManager
                     .getInstance(context)
-                    .enqueueUniqueWork(name, ExistingWorkPolicy.APPEND, uploadWorkRequest)
+                    .enqueue(uploadWorkRequest)
             }
         }
 

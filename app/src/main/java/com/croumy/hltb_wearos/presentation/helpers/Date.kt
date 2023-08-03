@@ -1,7 +1,11 @@
 package com.croumy.hltb_wearos.presentation.helpers
 
 import com.soywiz.klock.Time
+import java.text.SimpleDateFormat
 import java.util.Date
+
+const val DATE_FORMAT = "dd/MM/yyyy"
+const val DATETIME_FORMAT = "dd/MM/yyyy HH:mm"
 
 fun Time.asString(
     withSeconds: Boolean = false,
@@ -19,4 +23,6 @@ fun Time.asString(
     }
 }
 
-fun Date.asString() = "${this.day}/${this.month}/${this.year}"
+fun Date.asString(): String {
+    return SimpleDateFormat(DATETIME_FORMAT).format(this)
+}

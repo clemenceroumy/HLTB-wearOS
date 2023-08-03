@@ -56,7 +56,7 @@ dependencies {
     val wearComposeVersion = "1.1.2"
     val hiltVersion = "2.46"
     val hiltCoreVersion = "1.0.0"
-    val workVersion = "2.8.0"
+    val workVersion = "2.8.1"
     val klockVersion = "2.2.0"
     val roomVersion = "2.5.2"
 

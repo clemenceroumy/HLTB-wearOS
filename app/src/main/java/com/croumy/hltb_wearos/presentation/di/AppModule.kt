@@ -3,7 +3,7 @@ package com.croumy.hltb_wearos.presentation.di
 import android.content.Context
 import androidx.room.Room
 import com.croumy.hltb_wearos.presentation.data.database.AppDatabase
-import com.croumy.hltb_wearos.presentation.data.database.Converters
+import com.croumy.hltb_wearos.presentation.data.database.DateConverter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

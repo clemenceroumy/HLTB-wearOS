@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation.ui.home.logs
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,41 +49,37 @@ fun LogsScreen(
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if(event == Lifecycle.Event.ON_START) { viewModel.getLogs() }
+            if (event == Lifecycle.Event.ON_START) {
+                viewModel.getLogs()
+            }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    Column(
-        modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        Modifier.fillMaxSize()
     ) {
-        Row(
-            Modifier
-                .padding(bottom = Dimensions.xxsPadding)
-                .background(Color.Gray, CircleShape)
-                .padding(
-                    horizontal = Dimensions.sPadding,
-                    vertical = Dimensions.xxsPadding
-                ),
-        ) { Text("Logs") }
-
-        ScalingLazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = Dimensions.xxsPadding),
+        Column(
+            modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if(viewModel.logs.value.isEmpty()) {
-                item {
-                    Text(
-                        stringResource(id = R.string.no_logs),
-                        style = MaterialTheme.typography.body1.copy(color = Color.Gray),
-                        modifier = Modifier.padding(bottom = Dimensions.xsPadding)
-                    )
-                }
-            } else {
-                if(viewModel.failedLogs.isNotEmpty()) {
+            Row(
+                Modifier
+                    .padding(bottom = Dimensions.xxsPadding)
+                    .background(Color.Gray, CircleShape)
+                    .padding(
+                        horizontal = Dimensions.sPadding,
+                        vertical = Dimensions.xxsPadding
+                    ),
+            ) { Text("Logs") }
+
+            if (viewModel.logs.value.isNotEmpty()) ScalingLazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = Dimensions.xxsPadding),
+            ) {
+                if (viewModel.failedLogs.isNotEmpty()) {
                     item {
                         Text(
                             stringResource(id = R.string.logs_history_errors),
@@ -91,17 +88,17 @@ fun LogsScreen(
                         )
                     }
                     items(viewModel.failedLogs) { log ->
-                       LogItem(
-                           log,
-                           onRefresh = { viewModel.resend(log) },
-                           onCancel = { viewModel.deleteLog(log) })
+                        LogItem(
+                            log,
+                            onRefresh = { viewModel.resend(log) },
+                            onCancel = { viewModel.deleteLog(log) })
                     }
                     item {
                         Spacer(Modifier.height(Dimensions.xsPadding))
                     }
                 }
 
-                if(viewModel.succeededLogs.isNotEmpty()) {
+                if (viewModel.succeededLogs.isNotEmpty()) {
                     item {
                         Text(
                             stringResource(id = R.string.logs_history),
@@ -110,10 +107,16 @@ fun LogsScreen(
                         )
                     }
                     items(viewModel.succeededLogs) { log ->
-                       LogItem(log)
+                        LogItem(log)
                     }
                 }
             }
         }
+
+        if(viewModel.logs.value.isEmpty()) Text(
+            stringResource(id = R.string.no_logs),
+            style = MaterialTheme.typography.body1.copy(color = Color.Gray),
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
