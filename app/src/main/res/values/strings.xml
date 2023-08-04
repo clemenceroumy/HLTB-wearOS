@@ -2,7 +2,7 @@
     <string name="app_name">HLTB</string>
 
     <string name="session_already_launched">1 session in progress</string>
-    <string name="session_error_upload">Error uploading</string>
+    <string name="session_error_upload">❗️Error uploading</string>
 
     <string name="logs_history">Sessions history</string>
     <string name="logs_history_errors">Not uploaded</string>

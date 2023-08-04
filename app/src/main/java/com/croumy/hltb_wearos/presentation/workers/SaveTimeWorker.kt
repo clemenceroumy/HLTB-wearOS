@@ -48,7 +48,7 @@ class SaveTimeWorker @AssistedInject constructor(
 
             // SAVE AS LOG IN LOCAL DB
             log.saved = true
-            appService.saveLog(log)
+            appService.saveLog(log, isRetrying = isRetrying)
 
             Result.success()
         } catch (e: Exception) {
@@ -56,7 +56,7 @@ class SaveTimeWorker @AssistedInject constructor(
             appService.timer.value = appService.timer.value.copy(state = TimerState.ERROR)
 
             // SAVE AS LOG IN LOCAL DB (WITH ERROR)
-            appService.saveLog(log)
+            appService.saveLog(log, isRetrying = isRetrying)
             Result.failure()
         }
     }

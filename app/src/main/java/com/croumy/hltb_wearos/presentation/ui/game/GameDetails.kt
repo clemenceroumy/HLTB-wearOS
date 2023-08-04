@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.wear.compose.material.CircularProgressIndicator
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
@@ -84,10 +88,10 @@ fun GameDetails(
             coroutineScope.launch { viewModel.getGame() }
         }
         else if (viewModel.appService.timer.value.state == TimerState.ERROR) {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message = context.resources.getString(R.string.session_error_upload))
+            }
             viewModel.appService.clearTimer()
-            snackbarHostState.showSnackbar(
-                message = context.resources.getString(R.string.session_error_upload)
-            )
         }
     }
 
@@ -216,17 +220,19 @@ fun GameDetails(
             hostState = snackbarHostState,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = Dimensions.xxsPadding, vertical = Dimensions.xsPadding),
+                .padding(vertical = Dimensions.sPadding),
             snackbar = {
-                Snackbar(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    backgroundColor = surface,
-                    shape = RoundedCornerShape(Dimensions.sRadius),
-                    elevation = 0.dp
+                Box(
+                    Modifier.background(
+                        MaterialTheme.colors.surface,
+                        CircleShape
+                    ).padding(Dimensions.xsPadding)
                 ) {
-                    androidx.compose.material.Text(
+                    Text(
                         "${snackbarHostState.currentSnackbarData?.message}",
-                        style = MaterialTheme.typography.body2)
+                        style = MaterialTheme.typography.body2,
+                        textAlign = TextAlign.Center,
+                    )
                 }
             }
         )
