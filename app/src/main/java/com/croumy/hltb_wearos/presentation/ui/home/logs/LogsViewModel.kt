@@ -11,6 +11,8 @@ import com.croumy.hltb_wearos.BuildConfig
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
+import com.croumy.hltb_wearos.presentation.helpers.asString
+import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +39,11 @@ class LogsViewModel @Inject constructor(
     }
 
     fun resend(log: LogEntity) {
+        appService.timer.value = appService.timer.value.copy(
+            state = TimerState.SAVING,
+            gameId = log.gameId,
+            time = log.timePlayedTime
+        )
         appService.submitRequest.value = SubmitRequest(
             submissionId = log.submissionId,
             userId = BuildConfig.USER_ID.toInt(), // TODO: Get from HLTB
@@ -53,6 +60,8 @@ class LogsViewModel @Inject constructor(
 
         val data = Data.Builder()
         data.putBoolean("IS_RETRYING", true)
+        data.putInt("LOG_ID", log.id)
+        data.putString("DATE", log.date.asString())
 
         WorkerHelper.launchWorker<SaveTimeWorker>(data = data.build(), context = context, name = "saveTime")
     }

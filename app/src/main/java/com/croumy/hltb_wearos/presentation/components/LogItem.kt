@@ -2,8 +2,13 @@ package com.croumy.hltb_wearos.presentation.components
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateOffsetAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -34,6 +39,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -60,10 +66,19 @@ import kotlinx.coroutines.launch
 @Composable
 fun LogItem(
     log: LogEntity,
+    isLoading: Boolean = false,
     onRefresh: () -> Unit = {},
     onCancel: () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val infiniteTransition = rememberInfiniteTransition(label = "")
+    val rotation = infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+        ), label = ""
+    )
 
     val swipeState = rememberSwipeableState(initialValue = "initial")
     val anchors = mapOf(0f to "left", 0.5f to "initial", 1f to "right")
@@ -85,6 +100,10 @@ fun LogItem(
         previousState.value = swipeState.currentValue
     }
 
+    LaunchedEffect(isLoading) {
+        if(!isLoading) swipeState.snapTo("initial")
+    }
+
     Box(
         Modifier.sizeIn(minHeight = Dimensions.lSize)
     ) {
@@ -97,7 +116,10 @@ fun LogItem(
                 Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .background(secondary, RoundedCornerShape(Dimensions.xlRadius, 0.dp, 0.dp, Dimensions.xlRadius))
+                    .background(
+                        secondary,
+                        RoundedCornerShape(Dimensions.xlRadius, 0.dp, 0.dp, Dimensions.xlRadius)
+                    )
                     .padding(end = Dimensions.mSize / 2)
                     .clip(RoundedCornerShape(Dimensions.xlRadius, 0.dp, 0.dp, Dimensions.xlRadius))
                     .clickable {
@@ -111,15 +133,21 @@ fun LogItem(
                 Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .background(primary, RoundedCornerShape(0.dp, Dimensions.xlRadius, Dimensions.xlRadius, 0.dp))
+                    .background(
+                        primary,
+                        RoundedCornerShape(0.dp, Dimensions.xlRadius, Dimensions.xlRadius, 0.dp)
+                    )
                     .padding(start = Dimensions.mSize / 2)
                     .clip(RoundedCornerShape(0.dp, Dimensions.xlRadius, Dimensions.xlRadius, 0.dp))
-                    .clickable {
-                        onRefresh()
-                        coroutineScope.launch { swipeState.snapTo("initial") }
-                    },
+                    .clickable { onRefresh() },
                 contentAlignment = Alignment.Center
-            ) { Icon(Icons.Filled.Refresh, "retry sending session") }
+            ) {
+                Icon(
+                    Icons.Filled.Refresh,
+                    "retry sending session",
+                    Modifier.rotate(if(isLoading) rotation.value else 0f)
+                )
+            }
         }
 
         // LOG CONTENT
@@ -154,7 +182,7 @@ fun LogItem(
                 )
                 Spacer(Modifier.height(Dimensions.xxsPadding))
                 Text(
-                    text = Time(TimeSpan(log.timePlayed.toDouble())).asString(
+                    text = log.timePlayedTime.asString(
                         withSeconds = true,
                         withZeros = true,
                         withStringUnit = true

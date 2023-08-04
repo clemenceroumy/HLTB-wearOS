@@ -98,8 +98,11 @@ fun LogsScreen(
                         )
                     }
                     items(viewModel.failedLogs) { log ->
+                        val isLoading = viewModel.appService.timer.value.state == TimerState.SAVING
+
                         LogItem(
                             log,
+                            isLoading = isLoading,
                             onRefresh = { viewModel.resend(log) },
                             onCancel = { viewModel.deleteLog(log) })
                     }

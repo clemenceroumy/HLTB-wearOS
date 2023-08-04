@@ -26,3 +26,7 @@ fun Time.asString(
 fun Date.asString(): String {
     return SimpleDateFormat(DATETIME_FORMAT).format(this)
 }
+
+fun String.asDate(): Date {
+    return SimpleDateFormat(DATETIME_FORMAT).parse(this)
+}

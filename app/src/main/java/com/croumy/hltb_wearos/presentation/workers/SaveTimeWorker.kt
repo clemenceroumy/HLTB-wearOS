@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
+import com.croumy.hltb_wearos.presentation.helpers.asDate
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -21,13 +22,16 @@ class SaveTimeWorker @AssistedInject constructor(
     private val appService: AppService
 ) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
-        val isRetrying = inputData.getString("IS_RETRYING")?.toBoolean() ?: false
+        val isRetrying = inputData.getBoolean("IS_RETRYING", false)
+        val logId = inputData.getInt("LOG_ID", 0)
+        val date = inputData.getString("DATE")
+
         val log = LogEntity(
-            id = 0,
+            id = logId,
             gameId = appService.timer.value.gameId!!,
             submissionId = appService.submitRequest.value!!.submissionId,
             timePlayed = appService.timer.value.time.encoded.millisecondsLong,
-            date = Calendar.getInstance().time,
+            date = date?.asDate() ?: Calendar.getInstance().time,
             saved = false,
             title = appService.submitRequest.value!!.title,
             platform = appService.submitRequest.value!!.platform,
@@ -37,9 +41,6 @@ class SaveTimeWorker @AssistedInject constructor(
         )
 
         return try {
-            // TODO: REMOVE ERROR
-            throw Exception("test logs errors")
-
             Log.i("SaveTimeWorker", "Saving time: ${appService.submitRequest.value!!}")
             hltbService.submitTime(appService.submitRequest.value!!)
 
