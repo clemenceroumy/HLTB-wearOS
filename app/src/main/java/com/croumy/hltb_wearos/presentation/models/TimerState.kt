@@ -6,5 +6,6 @@ enum class TimerState {
     PAUSED,
     STOPPED,
     SAVING,
-    SAVED
+    SAVED,
+    ERROR
 }

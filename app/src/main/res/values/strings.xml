@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">HLTB</string>
+
     <string name="session_already_launched">1 session in progress</string>
+    <string name="session_error_upload">❗️Error uploading</string>
+
+    <string name="logs_history">Sessions history</string>
+    <string name="logs_history_errors">Not uploaded</string>
+    <string name="no_logs">No sessions registered yet</string>
+    <string name="logs_clear_all">Clear logs</string>
+    <string name="logs_clear_all_confirm">You will delete all local logs. This will not affect your sessions on HLTB.</string>
 </resources>

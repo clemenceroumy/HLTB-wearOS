@@ -56,8 +56,9 @@ dependencies {
     val wearComposeVersion = "1.1.2"
     val hiltVersion = "2.46"
     val hiltCoreVersion = "1.0.0"
-    val workVersion = "2.8.0"
+    val workVersion = "2.8.1"
     val klockVersion = "2.2.0"
+    val roomVersion = "2.5.2"
 
     // CORE
     implementation("androidx.lifecycle:lifecycle-service:2.6.1")
@@ -103,6 +104,11 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
+    // ROOM
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 
     //Picture
     implementation("io.coil-kt:coil-compose:2.3.0")

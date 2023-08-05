@@ -2,9 +2,13 @@
 
 ⚠️***Current Status*** : WIP
 
+**Next** : login feature via HLTB website.
+
 HowLongToBeat on WearOS. 
-Retrieve your HLTB games status by category. 
-Select a game to start a stopwatch and save your timed session at the end of it.
+- Retrieve your HLTB games status by category. 
+- Select a game to start a stopwatch and save your timed session at the end of it.
+- See an history of your sessions.
+- If an error occurs while sending a session to HLTB, a log is saved locally and you wil be able to try sending it later (or upload it manually to HLTB and remove it from the logs).
 
 ## Screenshots
 ### Display games by categories
@@ -15,6 +19,10 @@ Select a game to start a stopwatch and save your timed session at the end of it.
 ### Launch a gaming session
 
 ![TimedSession](./documentation/saving_time.gif)
+
+### Logs of sessions
+
+![Logs](./documentation/logs.gif)
 
 ## Configuration
 

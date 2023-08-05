@@ -1,6 +1,11 @@
 package com.croumy.hltb_wearos.presentation.helpers
 
 import com.soywiz.klock.Time
+import java.text.SimpleDateFormat
+import java.util.Date
+
+const val DATE_FORMAT = "dd/MM/yyyy"
+const val DATETIME_FORMAT = "dd/MM/yyyy HH:mm"
 
 fun Time.asString(
     withSeconds: Boolean = false,
@@ -16,4 +21,12 @@ fun Time.asString(
     } else {
         "${if(this.hour > 0) "${this.hour.toString().padStart(2, '0')}$hoursUnit" else ""}${this.minute.toString().padStart(2, '0')}$minutesUnit${this.second.toString().padStart(2, '0')}$secondsUnit"
     }
+}
+
+fun Date.asString(): String {
+    return SimpleDateFormat(DATETIME_FORMAT).format(this)
+}
+
+fun String.asDate(): Date {
+    return SimpleDateFormat(DATETIME_FORMAT).parse(this)
 }
