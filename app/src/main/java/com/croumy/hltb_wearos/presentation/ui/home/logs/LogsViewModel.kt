@@ -30,7 +30,7 @@ class LogsViewModel @Inject constructor(
     val failedLogs: List<LogEntity> get() = logs.value.filter { !it.saved }
 
     fun getLogs() {
-        logs.value = logDao.getAll()
+        logs.value = logDao.getAll().sortedBy { it.date }.reversed()
     }
 
     fun deleteLog(log: LogEntity) {

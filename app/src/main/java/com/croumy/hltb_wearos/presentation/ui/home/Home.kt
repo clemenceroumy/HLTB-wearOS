@@ -62,18 +62,16 @@ fun HomeScreen(
 
     val categories = Categories.values().sortedArray()
 
-    val focusRequester = (categories).map { FocusRequester() }
+    val focusRequester = listOf(FocusRequester()).plus((categories).map { FocusRequester() })
     val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
     val horizontalFirstVisibleIndex =
         remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
     val listStates =
-        remember { (categories).map { ScalingLazyListState(initialCenterItemIndex = 0) } }
-    val currentListState = remember { mutableStateOf(listStates[0]) }
+        remember { listOf(ScalingLazyListState(initialCenterItemIndex = 0)).plus((categories).map { ScalingLazyListState(initialCenterItemIndex = 0) }) }
+    val currentListState = remember { mutableStateOf(listStates[1]) }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        if (horizontalFirstVisibleIndex.value == 0) return@LaunchedEffect
-
-        focusRequester[horizontalFirstVisibleIndex.value - 1].requestFocus()
+        focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
         currentListState.value = listStates[horizontalFirstVisibleIndex.value]
     }
 
@@ -88,7 +86,9 @@ fun HomeScreen(
         ) {
             item {
                 LogsScreen(
-                    modifier = Modifier.width(screenWidth.dp)
+                    modifier = Modifier.width(screenWidth.dp),
+                    listState = listStates[0],
+                    focusRequester = focusRequester[0],
                 )
             }
 
@@ -110,17 +110,17 @@ fun HomeScreen(
                     ) { Text(category.label) }
 
                     ScalingLazyColumn(
-                        state = listStates[index],
+                        state = listStates[index + 1],
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = Dimensions.xxsPadding)
                             .onRotaryScrollEvent {
                                 coroutineScope.launch {
-                                    listStates[index].scrollBy(it.verticalScrollPixels)
+                                    listStates[index + 1].scrollBy(it.verticalScrollPixels)
                                 }
                                 true
                             }
-                            .focusRequester(focusRequester[index])
+                            .focusRequester(focusRequester[index + 1])
                             .focusable(),
                         verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
                         contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
