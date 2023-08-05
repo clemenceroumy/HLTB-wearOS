@@ -38,6 +38,11 @@ class LogsViewModel @Inject constructor(
         getLogs()
     }
 
+    fun deleteAllLogs() {
+        logDao.deleteAll()
+        getLogs()
+    }
+
     fun resend(log: LogEntity) {
         appService.timer.value = appService.timer.value.copy(
             state = TimerState.SAVING,

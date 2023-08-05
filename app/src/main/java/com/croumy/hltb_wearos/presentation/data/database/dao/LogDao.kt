@@ -9,7 +9,7 @@ import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 
 @Dao
 interface LogDao {
-    @Query("SELECT * FROM LogEntity")
+    @Query("SELECT * FROM LogEntity LIMIT 100")
     fun getAll(): List<LogEntity>
 
     @Insert
@@ -20,4 +20,7 @@ interface LogDao {
 
     @Delete
     fun delete(log: LogEntity)
+
+    @Query("DELETE FROM LogEntity WHERE saved = TRUE")
+    fun deleteAll()
 }
