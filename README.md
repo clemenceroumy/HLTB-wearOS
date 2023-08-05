@@ -1,4 +1,6 @@
 # HLTB-wearOS
+Based on the website https://howlongtobeat.com/
+
 
 ⚠️***Current Status*** : WIP
 
