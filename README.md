@@ -1,6 +1,7 @@
 # HLTB-wearOS
 
 ⚠️***Current Status*** : WIP
+**Next** : login feature via HLTB website.
 
 HowLongToBeat on WearOS. 
 - Retrieve your HLTB games status by category. 
