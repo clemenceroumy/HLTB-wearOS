@@ -69,10 +69,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.core:core-ktx:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // WEAR OS
     implementation("androidx.wear:wear:1.2.0")
     implementation("androidx.wear:wear-ongoing:1.0.0")
+    implementation("androidx.wear:wear-remote-interactions:1.0.0")
+    implementation("androidx.wear:wear-phone-interactions:1.1.0-alpha03")
+    implementation("androidx.wear:wear-remote-interactions:1.0.0")
 
     // COMPOSE
     implementation("androidx.activity:activity-compose:1.7.1")
