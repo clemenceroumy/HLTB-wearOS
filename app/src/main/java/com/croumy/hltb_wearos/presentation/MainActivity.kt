@@ -16,6 +16,10 @@ import androidx.wear.remote.interactions.RemoteActivityHelper
 import androidx.wear.widget.ConfirmationOverlay
 import androidx.work.await
 import com.croumy.hltb_wearos.presentation.data.AppService
+import com.croumy.hltb_wearos.presentation.data.PreferencesService
+import com.croumy.hltb_wearos.presentation.models.Constants
+import com.croumy.hltb_wearos.presentation.models.Constants.Companion.DATA_LAYER_TOKEN_CHANNEL
+import com.croumy.hltb_wearos.presentation.models.Constants.Companion.PREFERENCES
 import com.croumy.hltb_wearos.presentation.navigation.NavGraph
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.google.android.gms.wearable.CapabilityClient
@@ -37,32 +41,14 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
     // CREATING AN INSTANCE OF THE SERVICE WHEN APP STARTS
     @Inject
     lateinit var appService: AppService
+    @Inject
+    lateinit var preferencesService: PreferencesService
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Wearable.getMessageClient(this).addListener(this)
-
-        val remoteActivityHelper = RemoteActivityHelper(this)
-
-        lifecycleScope.launch {
-            val intent = Intent(Intent.ACTION_VIEW)
-                .addCategory(Intent.CATEGORY_BROWSABLE)
-                .setData(Uri.parse("app://com.croumy.hltbwearos"))
-
-            try {
-                val result = remoteActivityHelper.startRemoteActivity(intent).await()
-                ConfirmationOverlay().showOn(this@MainActivity)
-            } catch (cancellationException: CancellationException) {
-                // Request was cancelled normally
-                throw cancellationException
-            } catch (throwable: Throwable) {
-                print(throwable)
-                ConfirmationOverlay()
-                    .setType(ConfirmationOverlay.FAILURE_ANIMATION)
-                    .showOn(this@MainActivity)
-            }
-        }
 
         setContent {
             val navController = rememberSwipeDismissableNavController()
@@ -86,12 +72,12 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
         Wearable.getMessageClient(this).removeListener(this)
     }
 
-
     override fun onMessageReceived(message: MessageEvent) {
         Log.i("MainActivity", "Message received: ${message.path}")
-        if (message.path == "/hltb_token") {
-            val message = String(message.data)
-            print(message)
+
+        if (message.path == DATA_LAYER_TOKEN_CHANNEL) {
+            val token = String(message.data)
+            preferencesService.token = token
         }
     }
 }

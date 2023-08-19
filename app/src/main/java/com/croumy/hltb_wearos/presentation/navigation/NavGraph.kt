@@ -3,8 +3,6 @@ package com.croumy.hltb_wearos.presentation.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-//import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
@@ -19,7 +17,7 @@ import com.croumy.hltbwearos.BuildConfig
 fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHostState) {
     val actions = NavActions(navController = navController)
 
-    SwipeDismissableNavHost /*NavHost*/(
+    SwipeDismissableNavHost(
         navController = navController,
         startDestination = NavRoutes.StartApp.route,
         state = navState,
@@ -30,7 +28,7 @@ fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHost
             )
         }
 
-        composable(NavRoutes.StartApp.route) {
+        composable(NavRoutes.Home.route) {
             HomeScreen(
                 navigateToGame = { actions.navigateToGameDetails(it)}
             )

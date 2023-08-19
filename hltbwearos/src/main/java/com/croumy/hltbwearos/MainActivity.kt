@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import com.croumy.hltb_wearos.presentation.models.Constants
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
                 Wearable.getMessageClient(this).sendMessage(
                     nodes[0].id,
-                    "/hltb_token",
+                    Constants.DATA_LAYER_TOKEN_CHANNEL,
                     token.toByteArray()
                 ).apply {
                     addOnSuccessListener {
