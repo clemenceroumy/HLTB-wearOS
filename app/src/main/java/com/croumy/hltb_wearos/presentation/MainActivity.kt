@@ -32,7 +32,7 @@ import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 @AndroidEntryPoint
-class MainActivity : FragmentActivity() {
+class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener {
 
     // CREATING AN INSTANCE OF THE SERVICE WHEN APP STARTS
     @Inject
@@ -41,6 +41,7 @@ class MainActivity : FragmentActivity() {
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Wearable.getMessageClient(this).addListener(this)
 
         val remoteActivityHelper = RemoteActivityHelper(this)
 
@@ -72,6 +73,25 @@ class MainActivity : FragmentActivity() {
             HLTBwearosTheme {
                 NavGraph(navController = navController, navState = navState)
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Wearable.getMessageClient(this).addListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Wearable.getMessageClient(this).removeListener(this)
+    }
+
+
+    override fun onMessageReceived(message: MessageEvent) {
+        Log.i("MainActivity", "Message received: ${message.path}")
+        if (message.path == "/hltb_token") {
+            val message = String(message.data)
+            print(message)
         }
     }
 }

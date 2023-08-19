@@ -41,7 +41,6 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
-import com.croumy.hltb_wearos.R
 import com.croumy.hltb_wearos.presentation.helpers.asString
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
@@ -49,6 +48,7 @@ import com.croumy.hltb_wearos.presentation.theme.primary
 import com.croumy.hltb_wearos.presentation.theme.surface
 import com.croumy.hltb_wearos.presentation.ui.game.components.LaunchButtons
 import com.croumy.hltb_wearos.presentation.ui.game.components.LoadingGame
+import com.croumy.hltbwearos.R
 import kotlinx.coroutines.launch
 
 @Composable

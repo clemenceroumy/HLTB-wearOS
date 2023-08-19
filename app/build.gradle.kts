@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.croumy.hltb_wearos"
+    namespace = "com.croumy.hltbwearos"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.croumy.hltb_wearos"
+        applicationId = "com.croumy.hltbwearos"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -62,7 +62,6 @@ dependencies {
 
     // CORE
     implementation("androidx.lifecycle:lifecycle-service:2.6.1")
-    implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
@@ -76,8 +75,8 @@ dependencies {
     implementation("androidx.wear:wear:1.2.0")
     implementation("androidx.wear:wear-ongoing:1.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
-    implementation("androidx.wear:wear-phone-interactions:1.1.0-alpha03")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
+    implementation("com.google.android.gms:play-services-wearable:18.0.0")
 
     // COMPOSE
     implementation("androidx.activity:activity-compose:1.7.1")

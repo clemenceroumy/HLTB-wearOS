@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.croumy.hltb_wearos.BuildConfig
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.models.Timer
@@ -26,6 +25,7 @@ import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
+import com.croumy.hltbwearos.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch

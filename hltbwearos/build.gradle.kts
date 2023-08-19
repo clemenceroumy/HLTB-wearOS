@@ -50,11 +50,12 @@ android {
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.6.1")
     wearApp(project(":app"))
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation("com.google.accompanist:accompanist-webview:0.30.1")
 
     implementation("androidx.core:core-ktx:1.10.1")

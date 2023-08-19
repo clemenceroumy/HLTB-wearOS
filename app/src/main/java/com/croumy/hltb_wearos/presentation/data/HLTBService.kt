@@ -1,9 +1,9 @@
 package com.croumy.hltb_wearos.presentation.data
 
-import com.croumy.hltb_wearos.BuildConfig
 import SubmitRequest
 import com.croumy.hltb_wearos.presentation.models.api.GameListResponse
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
+import com.croumy.hltbwearos.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit

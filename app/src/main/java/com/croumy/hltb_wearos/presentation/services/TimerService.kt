@@ -23,14 +23,14 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
-import com.croumy.hltb_wearos.BuildConfig
-import com.croumy.hltb_wearos.R
 import com.croumy.hltb_wearos.presentation.MainActivity
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.helpers.Constants
 import com.croumy.hltb_wearos.presentation.helpers.Constants.Companion.NOTIFICATION_ID
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
+import com.croumy.hltbwearos.BuildConfig
+import com.croumy.hltbwearos.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

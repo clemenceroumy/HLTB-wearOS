@@ -47,10 +47,10 @@ import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.croumy.hltb_wearos.R
 import com.croumy.hltb_wearos.presentation.components.LogItem
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
+import com.croumy.hltbwearos.R
 import kotlinx.coroutines.launch
 
 @Composable
