@@ -104,7 +104,7 @@ class GameViewModel @Inject constructor(
         appService.timer.value = appService.timer.value.copy(state = TimerState.SAVING)
         appService.submitRequest.value = SubmitRequest(
             submissionId = game.value!!.id,
-            userId = preferencesService.userId!!.toInt(),
+            userId = preferencesService.userId!!,
             gameId = game.value!!.game_id,
             title = game.value!!.custom_title,
             platform = game.value!!.platform,

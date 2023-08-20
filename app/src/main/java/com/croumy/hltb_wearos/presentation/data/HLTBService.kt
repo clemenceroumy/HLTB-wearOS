@@ -36,7 +36,7 @@ class HLTBService @Inject constructor(
         suspend fun getUser(@HeaderMap headers: Map<String, String>): Response<UserResponseData>
 
         @POST("user/{userId}/games/list")
-        suspend fun getGames(@Body request: GameRequest, @Path("userId") userId: String): Response<GameListResponse>
+        suspend fun getGames(@Body request: GameRequest, @Path("userId") userId: Int): Response<GameListResponse>
 
         @POST("submit")
         suspend fun submitTime(@HeaderMap headers: Map<String, String>, @Body request: SubmitRequest): Response<Any>

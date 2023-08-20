@@ -80,11 +80,13 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
 
         if (message.path == DATA_LAYER_TOKEN_CHANNEL) {
             lifecycleScope.launch {
+                // RETRIEVE TOKEN FROM PHONE AND STORE IT IN WATCH
                 val token = String(message.data)
                 preferencesService.token = token
 
+                // RETRIEVE USERID WITH TOKEN AND STORE IT
                 val user = hltbService.getUser()
-                preferencesService.userId = user?.user_id
+                preferencesService.userId = user?.user_id?.toInt()
 
                 // SETTING THE VALUE OF THE FLOW (LISTEN INSIDE StartApp.kt TO REDIRECT TO HOME)
                 appService.isLoggedIn.value = true

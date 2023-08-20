@@ -53,7 +53,7 @@ class LogsViewModel @Inject constructor(
         )
         appService.submitRequest.value = SubmitRequest(
             submissionId = log.submissionId,
-            userId = preferencesService.userId!!.toInt(),
+            userId = preferencesService.userId!!,
             gameId = log.gameId,
             title = log.title,
             platform = log.platform,

@@ -20,9 +20,9 @@ class PreferencesService @Inject constructor(@ApplicationContext val context: Co
             ).apply()
         }
 
-    var userId: String?
-        get() = preferences.getString(Constants.PREFERENCES_USER_ID, null)
-        set(value) = value?.let { preferences.edit().putString(Constants.PREFERENCES_USER_ID, value).apply() } ?: run {
+    var userId: Int?
+        get() = preferences.getInt(Constants.PREFERENCES_USER_ID, 0)
+        set(value) = value?.let { preferences.edit().putInt(Constants.PREFERENCES_USER_ID, value).apply() } ?: run {
             preferences.edit().remove(Constants.PREFERENCES_USER_ID).apply()
         }
 }
