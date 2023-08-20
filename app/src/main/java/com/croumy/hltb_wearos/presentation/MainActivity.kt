@@ -16,6 +16,7 @@ import androidx.wear.remote.interactions.RemoteActivityHelper
 import androidx.wear.widget.ConfirmationOverlay
 import androidx.work.await
 import com.croumy.hltb_wearos.presentation.data.AppService
+import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.DATA_LAYER_TOKEN_CHANNEL
@@ -41,6 +42,8 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
     // CREATING AN INSTANCE OF THE SERVICE WHEN APP STARTS
     @Inject
     lateinit var appService: AppService
+    @Inject
+    lateinit var hltbService: HLTBService
     @Inject
     lateinit var preferencesService: PreferencesService
 
@@ -76,10 +79,17 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
         Log.i("MainActivity", "Message received: ${message.path}")
 
         if (message.path == DATA_LAYER_TOKEN_CHANNEL) {
-            val token = String(message.data)
-            preferencesService.token = token
-            // SETTING THE VALUE OF THE FLOW (LISTEN INSIDE StartApp.kt TO REDIRECT TO HOME)
-            appService.isLoggedIn.value = true
+            lifecycleScope.launch {
+                val token = String(message.data)
+                preferencesService.token = token
+
+                val user = hltbService.getUser()
+                preferencesService.userId = user?.user_id
+
+                // SETTING THE VALUE OF THE FLOW (LISTEN INSIDE StartApp.kt TO REDIRECT TO HOME)
+                appService.isLoggedIn.value = true
+
+            }
         }
     }
 }

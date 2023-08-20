@@ -10,7 +10,7 @@ class Helper {
                 if (keyValue.size == 2) {
                     val cookieKey = keyValue[0]
                     if (cookieKey == searchedKey) {
-                        value = keyValue[1]
+                        value = "$cookieKey=${keyValue[1]}"
                     }
                 }
             }

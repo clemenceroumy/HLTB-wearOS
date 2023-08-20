@@ -1,9 +1,12 @@
 package com.croumy.hltbwearos
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.webkit.CookieManager
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,16 +34,18 @@ class MainActivity : ComponentActivity() {
             suspend fun sendCookie(token: String) {
                 val nodes = Wearable.getNodeClient(this@MainActivity).connectedNodes.await()
 
-                Wearable.getMessageClient(this).sendMessage(
-                    nodes[0].id,
-                    Constants.DATA_LAYER_TOKEN_CHANNEL,
-                    token.toByteArray()
-                ).apply {
-                    addOnSuccessListener {
-                        Log.i("MainActivity", "sendCookie: $token")
-                    }
-                    addOnFailureListener {
-                        Log.i("MainActivity", "sendCookie error: $it")
+                nodes.forEach { node ->
+                    Wearable.getMessageClient(this).sendMessage(
+                        node.id,
+                        Constants.DATA_LAYER_TOKEN_CHANNEL,
+                        token.toByteArray()
+                    ).apply {
+                        addOnSuccessListener {
+                            Log.i("MainActivity", "sendCookie: $token")
+                        }
+                        addOnFailureListener {
+                            Log.i("MainActivity", "sendCookie error: $it")
+                        }
                     }
                 }
             }
@@ -54,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     super.doUpdateVisitedHistory(view, url, isReload)
 
                     val cookie = CookieManager.getInstance().getCookie(url)
-                    val hltbToken = Helper.getCookieValueByKey(cookie, "hltb_alive")
+                    val hltbToken = Uri.decode(Helper.getCookieValueByKey(cookie, "hltb_alive"))
 
                     if (cookie?.isNotEmpty() == true && hltbToken.isNotEmpty()) {
                         lifecycleScope.launch { sendCookie(hltbToken) }
