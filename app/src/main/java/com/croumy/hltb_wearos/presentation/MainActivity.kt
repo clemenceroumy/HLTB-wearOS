@@ -78,6 +78,8 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
         if (message.path == DATA_LAYER_TOKEN_CHANNEL) {
             val token = String(message.data)
             preferencesService.token = token
+            // SETTING THE VALUE OF THE FLOW (LISTEN INSIDE StartApp.kt TO REDIRECT TO HOME)
+            appService.isLoggedIn.value = true
         }
     }
 }

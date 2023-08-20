@@ -21,8 +21,11 @@ import javax.inject.Singleton
 import kotlin.concurrent.fixedRateTimer
 
 @Singleton
-class AppService @Inject constructor(private val logDao: LogDao) {
-    val isLoggedIn = MutableStateFlow(false)
+class AppService @Inject constructor(
+    private val logDao: LogDao,
+    preferencesService: PreferencesService
+) {
+    val isLoggedIn = MutableStateFlow(preferencesService.token != null && preferencesService.token?.isNotEmpty() == true)
 
     val timer = mutableStateOf(Timer())
     private var stopwatch: java.util.Timer = java.util.Timer()
