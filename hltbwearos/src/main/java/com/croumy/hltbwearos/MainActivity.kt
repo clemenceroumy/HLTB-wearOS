@@ -10,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import com.croumy.hltb_wearos.presentation.models.Constants
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
@@ -68,7 +67,15 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier,
                 client = webViewClient,
                 onCreated = {
+                    var started = false
+
                     it.settings.javaScriptEnabled = true
+                    it.setOnScrollChangeListener { _, _, _, _, _ ->
+                        if(!started && it.scrollY > 0) {
+                            it.scrollY = 0
+                            started = true
+                        }
+                    }
                 },
             )
         }

@@ -9,12 +9,11 @@ android {
 
     defaultConfig {
         applicationId = "com.croumy.hltbwearos"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -52,7 +51,6 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     wearApp(project(":app"))
-    implementation(project(":app"))
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
