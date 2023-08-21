@@ -90,7 +90,6 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
 
                 // SETTING THE VALUE OF THE FLOW (LISTEN INSIDE StartApp.kt TO REDIRECT TO HOME)
                 appService.isLoggedIn.value = true
-
             }
         }
     }

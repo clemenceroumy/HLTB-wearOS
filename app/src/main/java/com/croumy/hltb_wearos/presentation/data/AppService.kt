@@ -26,6 +26,7 @@ class AppService @Inject constructor(
     preferencesService: PreferencesService
 ) {
     val isLoggedIn = MutableStateFlow(preferencesService.token != null && preferencesService.token?.isNotEmpty() == true)
+    val isLoggingIn = MutableStateFlow(false)
 
     val timer = mutableStateOf(Timer())
     private var stopwatch: java.util.Timer = java.util.Timer()
