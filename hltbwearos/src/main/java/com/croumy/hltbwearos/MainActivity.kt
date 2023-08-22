@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.SyncAlt
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.Watch
 import androidx.compose.material3.AlertDialog
@@ -26,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.mutableStateOf
@@ -42,20 +46,23 @@ import com.croumy.hltbwearos.ui.theme.HLTBwearosTheme
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
+import com.google.android.gms.wearable.MessageClient
+import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListener {
+    val isSyncing = mutableStateOf(false)
+    val isDone = mutableStateOf(false)
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             val state = rememberWebViewState("https://howlongtobeat.com/login")
-            val isSyncing = remember { mutableStateOf(false) }
-            val isDone = remember { mutableStateOf(false) }
 
             suspend fun sendCookie(token: String) {
                 val nodes = Wearable.getNodeClient(this@MainActivity).connectedNodes.await()
@@ -97,7 +104,24 @@ class MainActivity : ComponentActivity() {
             }
 
             HLTBwearosTheme {
-                if(isSyncing.value) {
+                if(isDone.value) {
+                    AlertDialog(
+                        onDismissRequest = { /*TODO*/ },
+                        icon = { Icon(Icons.Filled.Done, contentDescription = null, tint = MaterialTheme.colorScheme.secondary) },
+                        title = { Text(stringResource(id = R.string.dialog_syncing_done_title)) },
+                        text = { Text(stringResource(id = R.string.dialog_syncing_done_description), textAlign = TextAlign.Center) },
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.secondary,
+                        textContentColor = MaterialTheme.colorScheme.onSurface,
+                        confirmButton = {
+                            TextButton(
+                                onClick = { finishAffinity() }
+                            ) {
+                                Text(text = stringResource(id = R.string.close_app),)
+                            }
+                        }
+                    )
+                } else if(isSyncing.value) {
                     AlertDialog(
                         onDismissRequest = { /*TODO*/ },
                         icon = {
@@ -127,10 +151,12 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Column(
                             Modifier
-                                .background(MaterialTheme.colorScheme.secondary)
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.tertiary)
                                 .padding(horizontal = 20.dp, vertical = 10.dp)
+                                .padding(bottom = 5.dp)
                         ) {
-                            Text(stringResource(id = R.string.app_name), style = MaterialTheme.typography.bodyLarge)
+                            Text(stringResource(id = R.string.app_name), style = MaterialTheme.typography.titleMedium)
                             Text(stringResource(id = R.string.app_description), style = MaterialTheme.typography.bodySmall)
                         }
 
@@ -155,6 +181,23 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Wearable.getMessageClient(this).addListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Wearable.getMessageClient(this).removeListener(this)
+    }
+
+    override fun onMessageReceived(message: MessageEvent) {
+        if(message.path == Constants.DATA_LAYER_DATA_RECEIVED) {
+            isSyncing.value = false
+            isDone.value = true
         }
     }
 }

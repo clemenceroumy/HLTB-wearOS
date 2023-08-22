@@ -90,6 +90,13 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
 
                 // SETTING THE VALUE OF THE FLOW (LISTEN INSIDE StartApp.kt TO REDIRECT TO HOME)
                 appService.isLoggedIn.value = true
+
+                val phoneNodeId = message.sourceNodeId
+                Wearable.getMessageClient(this@MainActivity).sendMessage(
+                    phoneNodeId,
+                    Constants.DATA_LAYER_DATA_RECEIVED,
+                    "true".toByteArray()
+                ).await()
             }
         }
     }

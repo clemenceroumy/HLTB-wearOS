@@ -5,6 +5,7 @@ class Constants {
         const val DEEPLINK_PHONE = "app://com.croumy.hltbwearos"
 
         const val DATA_LAYER_TOKEN_CHANNEL = "/hltb_token"
+        const val DATA_LAYER_DATA_RECEIVED = "/data_received"
 
         const val PREFERENCES = "com.croumy.hltbwearos_preferences"
         const val PREFERENCES_TOKEN = "hltb_token"
