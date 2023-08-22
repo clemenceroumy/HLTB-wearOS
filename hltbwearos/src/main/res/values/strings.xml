@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">HLTBWearOS</string>
+    <string name="app_description">Companion app to login into the WearOS app</string>
+
+    <string name="close_app">Close this app</string>
+
+    <string name="dialog_syncing_title">Watch sync</string>
+    <string name="dialog_syncing_description">Synchronisation of your account data between the watch application and this application</string>
+    <string name="dialog_syncing_done_title">Success login</string>
+    <string name="dialog_syncing_done_description">Data has been synced, you can now close this application</string>
 </resources>

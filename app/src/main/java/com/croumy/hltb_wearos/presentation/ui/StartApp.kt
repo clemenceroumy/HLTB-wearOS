@@ -10,6 +10,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -39,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -113,9 +115,9 @@ fun StartApp(
                     modifier = Modifier.size(Dimensions.mSize),
                     transitionSpec = {
                         if (targetState) {
-                            scaleIn(initialScale = 0.7f) togetherWith ExitTransition.None
+                            scaleIn(initialScale = 0.8f, animationSpec = tween(220, delayMillis = 90)) togetherWith scaleOut(animationSpec = tween(90))
                         } else {
-                            EnterTransition.None togetherWith ExitTransition.None
+                            EnterTransition.None togetherWith scaleOut(animationSpec = tween(90))
                         }
                     }
                 ) {
@@ -129,7 +131,7 @@ fun StartApp(
                             .padding(Dimensions.xsPadding)
                     ) else
                         Box(
-                            Modifier.size(Dimensions.sSize),
+                            Modifier.size(Dimensions.xsSize),
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(
