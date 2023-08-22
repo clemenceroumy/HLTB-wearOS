@@ -1,4 +1,4 @@
-package com.croumy.hltbwearos
+package com.croumy.hltbwearos.data
 
 class Constants {
     companion object {

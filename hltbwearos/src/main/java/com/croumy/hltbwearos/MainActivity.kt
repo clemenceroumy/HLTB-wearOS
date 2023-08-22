@@ -2,7 +2,6 @@ package com.croumy.hltbwearos
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
@@ -15,12 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.SyncAlt
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.Watch
 import androidx.compose.material3.AlertDialog
@@ -31,17 +27,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.lifecycleScope
 import com.croumy.hltbwearos.components.DotsPulsing
+import com.croumy.hltbwearos.data.Constants
+import com.croumy.hltbwearos.helpers.CookiesHelper
 import com.croumy.hltbwearos.ui.theme.HLTBwearosTheme
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
@@ -50,7 +45,6 @@ import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 
 class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListener {
@@ -64,25 +58,6 @@ class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListene
         setContent {
             val state = rememberWebViewState("https://howlongtobeat.com/login")
 
-            suspend fun sendCookie(token: String) {
-                val nodes = Wearable.getNodeClient(this@MainActivity).connectedNodes.await()
-
-                nodes.forEach { node ->
-                    Wearable.getMessageClient(this).sendMessage(
-                        node.id,
-                        Constants.DATA_LAYER_TOKEN_CHANNEL,
-                        token.toByteArray()
-                    ).apply {
-                        addOnSuccessListener {
-                            Log.i("MainActivity", "sendCookie: $token")
-                        }
-                        addOnFailureListener {
-                            Log.i("MainActivity", "sendCookie error: $it")
-                        }
-                    }
-                }
-            }
-
             val webViewClient: AccompanistWebViewClient = object : AccompanistWebViewClient() {
                 override fun doUpdateVisitedHistory(
                     view: WebView?,
@@ -92,12 +67,12 @@ class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListene
                     super.doUpdateVisitedHistory(view, url, isReload)
 
                     val cookie = CookieManager.getInstance().getCookie(url)
-                    val hltbToken = Uri.decode(Helper.getCookieValueByKey(cookie, "hltb_alive"))
+                    val hltbToken = Uri.decode(CookiesHelper.getCookieValueByKey(cookie, "hltb_alive"))
 
                     if (cookie?.isNotEmpty() == true && hltbToken.isNotEmpty()) {
                         lifecycleScope.launch {
                             isSyncing.value = true
-                            sendCookie(hltbToken)
+                            CookiesHelper.sendCookieToWatch(hltbToken, this@MainActivity)
                         }
                     }
                 }
