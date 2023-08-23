@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.ui
+package com.croumy.hltb_wearos.presentation.ui.startapp
 
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel

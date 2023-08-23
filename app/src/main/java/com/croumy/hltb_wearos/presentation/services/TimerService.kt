@@ -20,19 +20,16 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.lifecycleScope
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
 import com.croumy.hltb_wearos.presentation.MainActivity
 import com.croumy.hltb_wearos.presentation.data.AppService
-import com.croumy.hltb_wearos.presentation.helpers.Constants
-import com.croumy.hltb_wearos.presentation.helpers.Constants.Companion.NOTIFICATION_ID
-import com.croumy.hltb_wearos.presentation.models.TimerState
+import com.croumy.hltb_wearos.presentation.models.Constants
+import com.croumy.hltb_wearos.presentation.models.Constants.Companion.NOTIFICATION_ID
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltbwearos.BuildConfig
 import com.croumy.hltbwearos.R
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 

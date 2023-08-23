@@ -8,7 +8,7 @@ import androidx.navigation.navDeepLink
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.SwipeDismissableNavHostState
 import androidx.wear.compose.navigation.composable
-import com.croumy.hltb_wearos.presentation.ui.StartApp
+import com.croumy.hltb_wearos.presentation.ui.startapp.StartApp
 import com.croumy.hltb_wearos.presentation.ui.game.GameDetails
 import com.croumy.hltb_wearos.presentation.ui.home.HomeScreen
 import com.croumy.hltbwearos.BuildConfig
