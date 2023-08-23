@@ -1,8 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.startapp
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -24,14 +22,12 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.remote.interactions.RemoteActivityHelper
-import androidx.work.await
 import com.croumy.hltb_wearos.presentation.components.LoginItem
 import com.croumy.hltb_wearos.presentation.helpers.Launcher
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.PHONE_CAPABILITY
 import com.croumy.hltb_wearos.presentation.ui.startapp.components.DoingLogin
 import com.croumy.hltb_wearos.presentation.ui.startapp.components.PhoneAppNotFound
-import com.croumy.hltb_wearos.presentation.ui.startapp.components.PhoneNotConnected
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.delay
@@ -51,13 +47,8 @@ fun StartApp(
     val isLoggedIn = viewModel.appService.isLoggedIn.collectAsState()
     val isLoggingIn = viewModel.appService.isLoggingIn.collectAsState()
     val hasPhoneApp = remember { mutableStateOf(true) }
-    val isPhoneConnected = remember { mutableStateOf(true) }
 
     suspend fun checkConditions() {
-        // CHECK IF PHONE IS CONNECTED
-        val nodes = Wearable.getNodeClient(context).connectedNodes.await()
-        isPhoneConnected.value = nodes.isNotEmpty()
-
         //CHECK IF PHONE HAS APP INSTALLED
         val capability = Wearable.getCapabilityClient(context).getCapability(
             PHONE_CAPABILITY,
@@ -93,9 +84,7 @@ fun StartApp(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (!isPhoneConnected.value) {
-                PhoneNotConnected(refresh = { checkConditions() })
-            } else if (!hasPhoneApp.value) {
+            if (!hasPhoneApp.value) {
                 PhoneAppNotFound(refresh = { checkConditions() })
             } else if (!isLoggedIn.value && !isLoggingIn.value) {
                 LoginItem(
@@ -112,7 +101,7 @@ fun StartApp(
                     }
                 )
             } else {
-                DoingLogin(isLoggedIn.value, isLoggingIn.value)
+                DoingLogin(isLoggedIn.value, isLoggingIn.value, cancel = { viewModel.appService.isLoggingIn.value = false })
             }
         }
     }

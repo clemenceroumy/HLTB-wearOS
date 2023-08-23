@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">HLTB</string>
     <string name="refresh">Refresh</string>
+    <string name="cancel">Cancel</string>
 
     <string name="phone_needed">No phone connected</string>
     <string name="phone_needed_description">No phone connected to this watch. A phone is needed to log into your HLTB account</string>

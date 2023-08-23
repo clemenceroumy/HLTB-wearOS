@@ -13,52 +13,73 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Text
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.green
+import com.croumy.hltbwearos.R
 
 @Composable
 fun DoingLogin(
     isLoggedIn: Boolean,
-    isLoggingIn: Boolean
+    isLoggingIn: Boolean,
+    cancel: () -> Unit
 ) {
-    AnimatedContent(
-        targetState = isLoggedIn && isLoggingIn, label = "",
-        modifier = Modifier.size(Dimensions.mSize),
-        transitionSpec = {
-            if (targetState) {
-                scaleIn(initialScale = 0.8f, animationSpec = tween(220, delayMillis = 90)) togetherWith scaleOut(animationSpec = tween(90))
-            } else {
-                EnterTransition.None togetherWith scaleOut(animationSpec = tween(90))
+    Box(
+        Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        AnimatedContent(
+            targetState = isLoggedIn && isLoggingIn, label = "",
+            transitionSpec = {
+                if (targetState) {
+                    scaleIn(initialScale = 0.8f, animationSpec = tween(220, delayMillis = 90)) togetherWith scaleOut(animationSpec = tween(90))
+                } else {
+                    EnterTransition.None togetherWith scaleOut(animationSpec = tween(90))
+                }
+            }
+        ) {
+            if (it) Icon(
+                Icons.Rounded.Check,
+                contentDescription = "Done",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(Dimensions.mSize)
+                    .background(green, CircleShape)
+                    .padding(Dimensions.xsPadding)
+            ) else
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        strokeWidth = Dimensions.xsStrokeSize,
+                        modifier = Modifier
+                            .size(Dimensions.mSize)
+                            .padding(Dimensions.xxsPadding)
+                    )
+                }
+        }
+
+        if(!(isLoggedIn && isLoggingIn)) {
+            TextButton(
+                onClick = { cancel() },
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .clip(CircleShape)
+            ) {
+                Text(stringResource(id = R.string.cancel), style = MaterialTheme.typography.body2)
             }
         }
-    ) {
-        if (it) Icon(
-            Icons.Rounded.Check,
-            contentDescription = "Done",
-            tint = Color.White,
-            modifier = Modifier
-                .size(Dimensions.mSize)
-                .background(green, CircleShape)
-                .padding(Dimensions.xsPadding)
-        ) else
-            Box(
-                Modifier.size(Dimensions.xsSize),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = Color.White,
-                    strokeWidth = Dimensions.xsStrokeSize,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(Dimensions.xxsPadding)
-                )
-            }
     }
 }
