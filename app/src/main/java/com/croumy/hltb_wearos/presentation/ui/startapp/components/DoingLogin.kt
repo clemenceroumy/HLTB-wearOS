@@ -17,10 +17,12 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
@@ -35,6 +37,14 @@ fun DoingLogin(
     isLoggingIn: Boolean,
     cancel: () -> Unit
 ) {
+    val currentView = LocalView.current
+
+    DisposableEffect(Unit) {
+        // KEEP SCREEN ON (APP DONT GO TO SLEEP MODE) WHILE WAITING TO RECEIVE MESSAGE FROM PHONE
+        currentView.keepScreenOn = true
+        onDispose { currentView.keepScreenOn = false }
+    }
+
     Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
