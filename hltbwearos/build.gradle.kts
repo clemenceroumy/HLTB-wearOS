@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+    val appVersionCode = 2
+    val appVersionName = "2.0.0"
     namespace = "com.croumy.hltbwearos"
     compileSdk = 34
 
@@ -11,8 +13,8 @@ android {
         applicationId = "com.croumy.hltbwearos"
         minSdk = 25
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         vectorDrawables {
             useSupportLibrary = true
