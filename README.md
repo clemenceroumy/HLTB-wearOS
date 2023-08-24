@@ -1,4 +1,4 @@
-<img align="center" src="./documentation/logo.webp" alt="application logo"/>
+<div align="center"><img align="center" src="./documentation/logo.webp" alt="application logo"/></div>
 <h1 align="center">HLTB WearOS</h1>
 <p align="center">HowLongToBeat but for wearOS</p>
 
