@@ -2,6 +2,7 @@
 <h1 align="center">HLTB WearOS</h1>
 <p align="center">HowLongToBeat but for wearOS</p>
 
+<br/>
 
 Based on the **HLTB website** https://howlongtobeat.com/
 
