@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.croumy.hltbwearos.BuildConfig
 import com.croumy.hltbwearos.R
 import com.croumy.hltbwearos.components.DotsPulsing
 import com.halilibo.richtext.markdown.Markdown
@@ -87,6 +88,8 @@ fun InfoScreen(
                         Markdown(stringResource(id = R.string.info_legal))
                         Spacer(modifier = Modifier.height(20.dp))
                         Markdown(stringResource(id = R.string.info_app))
+                        Spacer(modifier = Modifier.height(50.dp))
+                        Text(stringResource(id = R.string.info_application_version, BuildConfig.VERSION_NAME), style = MaterialTheme.typography.titleSmall)
                     }
             }
         }

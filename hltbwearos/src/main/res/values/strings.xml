@@ -28,4 +28,5 @@
         The phone application is voluntarily not showed on your phone app list, because its supposed to be opened only by the watch application.
         To remove it, go to your phone settings and search for "HLTBWearOS".
     </string>
+    <string name="info_application_version">Version %1$s</string>
 </resources>
