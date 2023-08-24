@@ -50,6 +50,9 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.navigation:navigation-compose:2.7.0")
+    implementation("com.halilibo.compose-richtext:richtext-commonmark:0.13.0")
+    implementation("com.halilibo.compose-richtext:richtext-ui-material:0.13.0")
     wearApp(project(":app"))
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")

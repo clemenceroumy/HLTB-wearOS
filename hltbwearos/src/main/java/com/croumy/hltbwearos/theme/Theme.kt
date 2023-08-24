@@ -1,4 +1,4 @@
-package com.croumy.hltbwearos.ui.theme
+package com.croumy.hltbwearos.theme
 
 import android.app.Activity
 import android.os.Build
