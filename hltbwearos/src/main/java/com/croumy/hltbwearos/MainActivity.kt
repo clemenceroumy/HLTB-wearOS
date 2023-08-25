@@ -1,5 +1,6 @@
 package com.croumy.hltbwearos
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.CookieManager
@@ -30,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,8 +58,13 @@ class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListene
     val isSyncing = mutableStateOf(false)
     val isDone = mutableStateOf(false)
 
+    companion object {
+        var context: MainActivity? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        context = this
 
         setContent {
             val navController = rememberNavController()

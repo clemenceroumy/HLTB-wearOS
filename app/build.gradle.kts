@@ -28,9 +28,16 @@ android {
 
     buildTypes {
         release {
-            isShrinkResources = true
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        applicationVariants.all {
+            outputs.forEach { output ->
+                if (output is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
+                    output.outputFileName =
+                        "watch-HLTBwearOS-${this.versionName}.apk"
+                }
+            }
         }
     }
     compileOptions {

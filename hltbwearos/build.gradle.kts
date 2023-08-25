@@ -29,6 +29,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+        applicationVariants.all {
+            outputs.forEach { output ->
+                if (output is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
+                    output.outputFileName =
+                        "mobile-HLTBwearOS-${this.versionName}.apk"
+                }
+            }
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

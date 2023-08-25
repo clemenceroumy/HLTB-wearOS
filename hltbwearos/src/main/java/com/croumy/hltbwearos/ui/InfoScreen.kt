@@ -1,6 +1,8 @@
 package com.croumy.hltbwearos.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.croumy.hltbwearos.BuildConfig
 import com.croumy.hltbwearos.R
 import com.croumy.hltbwearos.components.DotsPulsing
+import com.croumy.hltbwearos.helpers.Launcher
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.RichText
 import com.halilibo.richtext.ui.RichTextStyle
@@ -83,6 +87,12 @@ fun InfoScreen(
                         )
                     ) {
                         Markdown(stringResource(id = R.string.info_description))
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.kofi_button),
+                            contentDescription = "ko-fi",
+                            modifier = Modifier.clickable { Launcher.openBrowser("https://ko-fi.com/croumy") }
+                        )
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(stringResource(id = R.string.info_legal_title), style = MaterialTheme.typography.titleMedium)
                         Markdown(stringResource(id = R.string.info_legal))
