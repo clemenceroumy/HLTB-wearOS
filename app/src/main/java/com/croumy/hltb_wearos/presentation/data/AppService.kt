@@ -2,6 +2,7 @@ package com.croumy.hltb_wearos.presentation.data
 
 import SubmitRequest
 import android.content.Context
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.room.Room
 import com.croumy.hltb_wearos.presentation.data.database.AppDatabase
@@ -13,13 +14,20 @@ import com.soywiz.klock.DateTime
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.plus
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.concurrent.fixedRateTimer
 
 @Singleton
-class AppService @Inject constructor(private val logDao: LogDao) {
+class AppService @Inject constructor(
+    private val logDao: LogDao,
+    preferencesService: PreferencesService
+) {
+    val isLoggedIn = MutableStateFlow(preferencesService.token != null && preferencesService.token?.isNotEmpty() == true)
+    val isLoggingIn = MutableStateFlow(false)
+
     val timer = mutableStateOf(Timer())
     private var stopwatch: java.util.Timer = java.util.Timer()
     val submitRequest = mutableStateOf<SubmitRequest?>(null)

@@ -14,9 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.croumy.hltb_wearos.BuildConfig
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
+import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.models.api.Categories
@@ -26,6 +26,7 @@ import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
+import com.croumy.hltbwearos.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -34,12 +35,12 @@ import javax.inject.Inject
 @HiltViewModel
 class GameViewModel @Inject constructor(
     val appService: AppService,
+    private val hltbService: HLTBService,
+    private val preferencesService: PreferencesService,
     private val savedStateHandle: SavedStateHandle,
     @ApplicationContext val context: Context,
 ) : ViewModel() {
    private val gameId: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.GAME_ID) ?: 0
-
-    private val hltbService = HLTBService()
 
     var foregroundOnlyServiceBound = false
     private var foregroundOnlyTimerService: TimerService? = null
@@ -77,7 +78,7 @@ class GameViewModel @Inject constructor(
 
     suspend fun getGame() {
         isLoading.value = true
-        val result = hltbService.getGames(GameRequest().copy(lists = Categories.values().map { it.value }))
+        val result = hltbService.getGames()
         game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
         isLoading.value = false
     }
@@ -103,7 +104,7 @@ class GameViewModel @Inject constructor(
         appService.timer.value = appService.timer.value.copy(state = TimerState.SAVING)
         appService.submitRequest.value = SubmitRequest(
             submissionId = game.value!!.id,
-            userId = BuildConfig.USER_ID.toInt(), // TODO: Get from HLTB
+            userId = preferencesService.userId!!,
             gameId = game.value!!.game_id,
             title = game.value!!.custom_title,
             platform = game.value!!.platform,

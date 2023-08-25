@@ -14,5 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "HLTB-wearos"
-include(":app")
- 
+include(":app", ":hltbwearos")

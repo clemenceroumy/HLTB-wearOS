@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">HLTB</string>
+    <string name="refresh">Refresh</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="phone_needed">No phone connected</string>
+    <string name="phone_needed_description">No phone connected to this watch. A phone is needed to log into your HLTB account</string>
+    <string name="phone_app_needed">App not found</string>
+    <string name="phone_app_needed_description">You need to install the companion app on your phone in order to log in</string>
+    <string name="phone_app_needed_btn">Get the app</string>
+
+    <string name="login_title">Sign in</string>
+    <string name="login_needed">You will be redirected to the phone app to sign into your HLTB account</string>
+    <string name="login_btn">Open on phone</string>
 
     <string name="session_already_launched">1 session in progress</string>
     <string name="session_error_upload">❗️Error uploading</string>

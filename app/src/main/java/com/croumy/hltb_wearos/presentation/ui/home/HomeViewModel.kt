@@ -15,10 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val appService: AppService
+    val appService: AppService,
+    private val hltbService: HLTBService
 ): ViewModel() {
-    private val hltbService = HLTBService()
-
     private val games: MutableState<List<Game>> = mutableStateOf(emptyList())
     val gamesByCategories get(): Map<Categories, List<Game>> {
         val map = mutableMapOf<Categories, List<Game>>()
@@ -35,7 +34,7 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun getGames() {
         isLoading.value = true
-        val result = hltbService.getGames(GameRequest())
+        val result = hltbService.getGames()
         games.value = (result?.data?.gamesList ?: emptyList()).sortedBy { it.invested_pro }.reversed()
         isLoading.value = false
     }

@@ -7,14 +7,15 @@ import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.work.Data
-import com.croumy.hltb_wearos.BuildConfig
 import com.croumy.hltb_wearos.presentation.data.AppService
+import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 import com.croumy.hltb_wearos.presentation.helpers.asString
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
+import com.croumy.hltbwearos.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LogsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val preferencesService: PreferencesService,
     private val logDao: LogDao,
     val appService: AppService
 ): ViewModel() {
@@ -51,7 +53,7 @@ class LogsViewModel @Inject constructor(
         )
         appService.submitRequest.value = SubmitRequest(
             submissionId = log.submissionId,
-            userId = BuildConfig.USER_ID.toInt(), // TODO: Get from HLTB
+            userId = preferencesService.userId!!,
             gameId = log.gameId,
             title = log.title,
             platform = log.platform,

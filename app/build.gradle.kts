@@ -8,15 +8,18 @@ plugins {
 }
 
 android {
-    namespace = "com.croumy.hltb_wearos"
+    val appVersionCode = 2
+    val appVersionName = "2.0.0"
+
+    namespace = "com.croumy.hltbwearos"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.croumy.hltb_wearos"
+        applicationId = "com.croumy.hltbwearos"
         minSdk = 30
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -25,9 +28,16 @@ android {
 
     buildTypes {
         release {
-            isShrinkResources = true
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        applicationVariants.all {
+            outputs.forEach { output ->
+                if (output is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
+                    output.outputFileName =
+                        "watch-HLTBwearOS-${this.versionName}.apk"
+                }
+            }
         }
     }
     compileOptions {
@@ -62,17 +72,22 @@ dependencies {
 
     // CORE
     implementation("androidx.lifecycle:lifecycle-service:2.6.1")
-    implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.core:core-ktx:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // WEAR OS
     implementation("androidx.wear:wear:1.2.0")
     implementation("androidx.wear:wear-ongoing:1.0.0")
+    implementation("androidx.wear:wear-remote-interactions:1.0.0")
+    implementation("androidx.wear:wear-remote-interactions:1.0.0")
+    implementation("com.google.android.gms:play-services-wearable:18.0.0")
 
     // COMPOSE
     implementation("androidx.activity:activity-compose:1.7.1")

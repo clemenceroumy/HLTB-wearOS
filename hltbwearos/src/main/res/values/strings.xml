@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">HLTBWearOS</string>
+
+    <string name="close_app">Close this app</string>
+
+    <string name="dialog_syncing_title">Watch sync</string>
+    <string name="dialog_syncing_description">Synchronisation of your account data between the watch application and this application</string>
+    <string name="dialog_syncing_done_title">Success login</string>
+    <string name="dialog_syncing_done_description">Data has been synced, you can now close this application</string>
+
+    <string name="info_legal_title">Data management</string>
+    <string name="info_legal">
+        This application is a companion app, used only to log in the watch application. Nothing is collected anywhere in any way from this application.\n
+        This phone app is only used to retrieve and send the login session\'s cookie to the watch application.
+        The app is just a webview integrating the **HowLongToBeat** [website](https://howlongtobeat.com/).\n
+        The watch application then store the session info locally on your device to keep you logged in.
+    </string>
+    <string name="info_description">
+        The HLTBWearOS application is not an official application from HowLongToBeat. It is developed by **Clémence Roumy**.
+        \n
+        You can find me on : \n
+        - **Github** :  [https://github.com/clemenceroumy](https://github.com/clemenceroumy) \n
+        - **Instagram** :  [https://www.instagram.com/croumy/](https://www.instagram.com/croumy/) \n
+        \n
+        If you want to give me a tip to support me, you can do it here :
+    </string>
+    <string name="info_app">
+        The phone application is voluntarily not showed on your phone app list, because its supposed to be opened only by the watch application.
+        To remove it, go to your phone settings and search for "HLTBWearOS".
+    </string>
+    <string name="info_application_version">Version %1$s</string>
+</resources>
