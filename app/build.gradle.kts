@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
@@ -62,47 +63,45 @@ android {
 
 
 dependencies {
-    val composeVersion = "1.5.0-alpha04"
-    val wearComposeVersion = "1.1.2"
+    val composeVersion = "1.5.0"
+    val wearComposeVersion = "1.2.0"
     val hiltVersion = "2.46"
     val hiltCoreVersion = "1.0.0"
     val workVersion = "2.8.1"
-    val klockVersion = "2.2.0"
+    val klockVersion = "3.4.0"
     val roomVersion = "2.5.2"
+    val kotlinxVersion = "1.7.3"
 
     // CORE
     implementation("androidx.lifecycle:lifecycle-service:2.6.1")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.core:core-ktx:1.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinxVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // WEAR OS
-    implementation("androidx.wear:wear:1.2.0")
+    implementation("androidx.wear:wear:1.3.0")
     implementation("androidx.wear:wear-ongoing:1.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
 
     // COMPOSE
-    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
     implementation("androidx.wear.compose:compose-material:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-foundation:$wearComposeVersion")
-    implementation("androidx.wear.compose:compose-navigation:1.2.0-rc01")
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation("androidx.wear.compose:compose-navigation:$wearComposeVersion")
+    implementation("androidx.navigation:navigation-compose:2.7.1")
     implementation("androidx.compose.animation:animation:${composeVersion}")
-
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
 
     //HILT
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
@@ -123,7 +122,7 @@ dependencies {
     // ROOM
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     //Picture
     implementation("io.coil-kt:coil-compose:2.3.0")
