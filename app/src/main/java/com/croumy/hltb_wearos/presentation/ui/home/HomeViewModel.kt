@@ -8,7 +8,6 @@ import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.models.api.Categories
 import com.croumy.hltb_wearos.presentation.models.api.Game
-import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +31,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch { getGames() }
     }
 
-    private suspend fun getGames() {
+    suspend fun getGames() {
         isLoading.value = true
         val result = hltbService.getGames()
         games.value = (result?.data?.gamesList ?: emptyList()).sortedBy { it.invested_pro }.reversed()

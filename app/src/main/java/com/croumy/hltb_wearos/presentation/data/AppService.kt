@@ -37,7 +37,6 @@ class AppService @Inject constructor(
         submitRequest.value = null
     }
 
-
      fun startTimer() {
         timer.value = timer.value.copy(state = TimerState.STARTED)
         timer.value = timer.value.copy(time = timer.value.time.plus(10.milliseconds))

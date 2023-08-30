@@ -1,49 +1,46 @@
 package com.croumy.hltb_wearos.presentation
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.fragment.app.FragmentActivity
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHostController
+import androidx.wear.compose.material.SwipeToDismissBoxState
 import androidx.wear.compose.material.rememberSwipeToDismissBoxState
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavHostState
-import androidx.wear.remote.interactions.RemoteActivityHelper
-import androidx.wear.widget.ConfirmationOverlay
-import androidx.work.await
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.DATA_LAYER_TOKEN_CHANNEL
-import com.croumy.hltb_wearos.presentation.models.Constants.Companion.PREFERENCES
 import com.croumy.hltb_wearos.presentation.navigation.NavGraph
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
-import com.google.android.gms.wearable.CapabilityClient
-import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
+
+val LocalNavController = staticCompositionLocalOf<NavHostController> { error("No SwipeDismissableNavHostState found!") }
+val LocalNavSwipeBox = staticCompositionLocalOf<SwipeToDismissBoxState> { error("No SwipeToDismissBoxState found!") }
 
 @AndroidEntryPoint
-class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener {
+class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListener {
 
     // CREATING AN INSTANCE OF THE SERVICE WHEN APP STARTS
     @Inject
     lateinit var appService: AppService
+
     @Inject
     lateinit var hltbService: HLTBService
+
     @Inject
     lateinit var preferencesService: PreferencesService
 
@@ -58,9 +55,11 @@ class MainActivity : FragmentActivity(), MessageClient.OnMessageReceivedListener
             val swipeBoxState = rememberSwipeToDismissBoxState()
             val navState = rememberSwipeDismissableNavHostState(swipeBoxState)
 
-
             HLTBwearosTheme {
-                NavGraph(navController = navController, navState = navState)
+                CompositionLocalProvider(
+                    LocalNavController provides navController,
+                    LocalNavSwipeBox provides swipeBoxState
+                ) { NavGraph(navController = navController, navState = navState) }
             }
         }
     }

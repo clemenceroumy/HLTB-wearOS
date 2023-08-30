@@ -24,13 +24,13 @@ fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHost
     ) {
         composable(NavRoutes.StartApp.route) {
             StartApp(
-                navigateToHome = { actions.navigateToHome()}
+                navigateToHome = { actions.navigateToHome() }
             )
         }
 
         composable(NavRoutes.Home.route) {
             HomeScreen(
-                navigateToGame = { actions.navigateToGameDetails(it)}
+                navigateToGame = { actions.navigateToGameDetails(it) }
             )
         }
 
@@ -41,9 +41,7 @@ fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHost
                 uriPattern = "app://${BuildConfig.APPLICATION_ID}/${NavRoutes.GameDetails.routeWithArgs}"
             }),
         ) {
-            GameDetails(
-                onBack = { actions.navigateToHome() },
-            )
+            GameDetails()
         }
     }
 }
