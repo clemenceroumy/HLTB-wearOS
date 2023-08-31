@@ -59,6 +59,7 @@ fun LogsScreen(
     listState: ScalingLazyListState,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
+    refreshGames: () -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val coroutineScope = lifecycleOwner.lifecycleScope
@@ -78,6 +79,7 @@ fun LogsScreen(
     LaunchedEffect(viewModel.appService.timer.value.state) {
         if (viewModel.appService.timer.value.state == TimerState.SAVED) {
             viewModel.appService.clearTimer()
+            refreshGames()
             coroutineScope.launch { viewModel.getLogs() }
         }
     }

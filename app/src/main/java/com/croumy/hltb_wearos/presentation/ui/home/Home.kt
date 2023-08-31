@@ -117,6 +117,7 @@ fun HomeScreen(
                     modifier = Modifier.width(screenWidth.dp),
                     listState = listStates[0],
                     focusRequester = focusRequester[0],
+                    refreshGames = { coroutineScope.launch { viewModel.getGames() } }
                 )
             }
 
