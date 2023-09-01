@@ -10,7 +10,7 @@ plugins {
 
 android {
     val appVersionCode = 2
-    val appVersionName = "2.0.0"
+    val appVersionName = "2.0.1"
 
     namespace = "com.croumy.hltbwearos"
     compileSdk = 34
