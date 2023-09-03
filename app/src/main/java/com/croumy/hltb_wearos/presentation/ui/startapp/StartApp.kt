@@ -50,6 +50,7 @@ fun StartApp(
 
     suspend fun checkConditions() {
         //CHECK IF PHONE HAS APP INSTALLED
+
         val capability = Wearable.getCapabilityClient(context).getCapability(
             PHONE_CAPABILITY,
             CapabilityClient.FILTER_REACHABLE
@@ -92,11 +93,7 @@ fun StartApp(
                         viewModel.appService.isLoggingIn.value = true
 
                         lifecycleOwner.lifecycleScope.launch {
-                            try {
-                                Launcher.launchRemoteActivity(Constants.DEEPLINK_PHONE, context)
-                            } catch (throwable: RemoteActivityHelper.RemoteIntentException) {
-                                Log.i("StartApp", "Error opening phone app : $throwable")
-                            }
+                            Launcher.launchRemoteActivity(Constants.DEEPLINK_PHONE, context)
                         }
                     }
                 )

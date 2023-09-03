@@ -17,16 +17,13 @@ import androidx.lifecycle.viewModelScope
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
-import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.models.api.Categories
 import com.croumy.hltb_wearos.presentation.models.api.Game
-import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
-import com.croumy.hltbwearos.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -58,6 +55,7 @@ class GameViewModel @Inject constructor(
     }
 
     val game: MutableState<Game?> = mutableStateOf(null)
+    val isInPlayingList: MutableState<Boolean> = mutableStateOf(false)
     val isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     init {
@@ -76,10 +74,11 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    suspend fun getGame() {
+    suspend fun getGame(isRefresh: Boolean = false) {
         isLoading.value = true
         val result = hltbService.getGames()
         game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
+        if(!isRefresh) isInPlayingList.value = game.value?.categories?.contains(Categories.PLAYING) ?: false
         isLoading.value = false
     }
 

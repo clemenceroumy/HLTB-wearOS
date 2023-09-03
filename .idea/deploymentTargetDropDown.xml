@@ -4,18 +4,18 @@
     <value>
       <entry key="app">
         <State>
-          <runningDeviceTargetSelectedWithDropDown>
+          <targetSelectedWithDropDown>
             <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
+              <type value="QUICK_BOOT_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="192.168.1.47:41383" />
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\cleme\.android\avd\Wear_OS_Small_Round_API_30.avd" />
                 </Key>
               </deviceKey>
             </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2023-08-25T07:25:37.613756100Z" />
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2023-08-30T08:38:40.588518400Z" />
         </State>
       </entry>
       <entry key="hltbwearos">
@@ -31,7 +31,7 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2023-08-23T09:01:35.495796100Z" />
+          <timeTargetWasSelectedWithDropDown value="2023-08-30T08:38:32.934472300Z" />
         </State>
       </entry>
     </value>
