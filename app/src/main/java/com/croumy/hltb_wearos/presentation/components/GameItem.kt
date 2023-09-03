@@ -78,8 +78,10 @@ fun GameItem(game: Game, isRunning: Boolean, onClick: () -> Unit, modifier: Modi
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
-            Spacer(Modifier.width(Dimensions.xsPadding))
-            Text(game.platform, style = MaterialTheme.typography.body2)
+            if(game.platform.isNotEmpty()) {
+                Spacer(Modifier.width(Dimensions.xsPadding))
+                Text(game.platform, style = MaterialTheme.typography.body2)
+            }
         }
     }
 }
