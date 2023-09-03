@@ -50,6 +50,7 @@ fun StartApp(
 
     suspend fun checkConditions() {
         //CHECK IF PHONE HAS APP INSTALLED
+
         val capability = Wearable.getCapabilityClient(context).getCapability(
             PHONE_CAPABILITY,
             CapabilityClient.FILTER_REACHABLE

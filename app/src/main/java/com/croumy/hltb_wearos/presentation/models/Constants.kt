@@ -1,11 +1,13 @@
 package com.croumy.hltb_wearos.presentation.models
 
+import com.croumy.hltbwearos.BuildConfig
+
 class Constants {
     companion object {
         const val CHANNEL_ID = "TimerChannel"
         const val NOTIFICATION_ID = 1
 
-        const val DEEPLINK_PHONE = "app://com.croumy.hltbwearos"
+        const val DEEPLINK_PHONE = "app://${BuildConfig.APPLICATION_ID}"
         const val GITHUB_REPO = "https://github.com/clemenceroumy/HLTB-wearOS/releases"
         const val PHONE_CAPABILITY = "verify_remote_example_phone_app"
 
