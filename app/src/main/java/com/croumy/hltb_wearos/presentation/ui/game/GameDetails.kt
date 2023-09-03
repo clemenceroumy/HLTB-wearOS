@@ -39,6 +39,7 @@ import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
 import com.croumy.hltb_wearos.presentation.helpers.asString
+import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.primary
@@ -81,15 +82,15 @@ fun GameDetails(
     }
 
     LaunchedEffect(swipeBoxState.targetValue) {
-        // ON BACK SWIPE, TELL HOME TO REFRESH OR NOT THE GAMES
+        // ON BACK SWIPE, TELL HOME TO REFRESH (OR NOT) THE GAMES
         // IF GAME WAS NOT IN PLAYING LIST, DO REFRESH
         if(swipeBoxState.targetValue == SwipeToDismissValue.Dismissed) {
             val needRefresh = hasSavedSession.value && !viewModel.isInPlayingList.value
 
             navController.previousBackStackEntry
                 ?.savedStateHandle?.apply {
-                    set("needRefresh", needRefresh)
-                    set("previousGameId", viewModel.game.value?.game_id)
+                    set(Constants.HOME_NEED_REFRESH, needRefresh)
+                    set(Constants.HOME_PREVIOUS_GAME_ID, viewModel.game.value?.game_id)
                 }
         }
     }

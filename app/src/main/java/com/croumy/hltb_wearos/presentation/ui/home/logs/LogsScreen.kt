@@ -202,7 +202,10 @@ fun LogsScreen(
                 if (viewModel.logs.value.isEmpty()) Text(
                     stringResource(id = R.string.no_logs),
                     style = MaterialTheme.typography.body1.copy(color = Color.Gray),
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .focusRequester(focusRequester)
+                        .focusable()
                 )
             }
         }

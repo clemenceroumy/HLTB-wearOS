@@ -15,5 +15,8 @@ class Constants {
         const val PREFERENCES = "com.croumy.hltbwearos_preferences"
         const val PREFERENCES_TOKEN = "hltb_token"
         const val PREFERENCES_USER_ID = "user_id"
+
+        const val HOME_NEED_REFRESH = "needRefresh"
+        const val HOME_PREVIOUS_GAME_ID = "previousGameId"
     }
 }
