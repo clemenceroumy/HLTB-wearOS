@@ -1,0 +1,92 @@
+name: Create release with apk
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Create local.properties
+        run: touch local.properties
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+      - name: Set env tag
+        id: vars
+        env:
+          TAG_VERSION: ${{ github.ref_name }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run : |
+          echo "tag_without_v=${TAG_VERSION#v}" >> $GITHUB_OUTPUT
+          echo "${TAG_VERSION#v}"
+      - name: Build APK
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          TAG_VERSION: ${{ steps.vars.outputs.tag_without_v }}
+        run: bash ./gradlew assembleRelease --stacktrace
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: apk
+          path: "app/build/outputs/apk/release/watch-HLTBwearOS-${{ github.ref_name }}.apk"
+  sign-apk:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: "write"
+      contents: "write"
+      packages: "write"
+      pull-requests: "read"
+    steps:
+      - name: Download apk generated from previous build step
+        uses: actions/download-artifact@v3
+        with:
+          name: apk
+          path: "app/build/outputs/apk/release/"
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - uses: ilharp/sign-android-release@v1
+        name: Sign app APK
+        id: sign_app
+        env:
+          ANDROID_SIGNING_KEY: ${{ secrets.SIGNINGKEYBASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTOREPASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.KEYPASSWORD }}
+      - name: Upload signed APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: signed-apk
+          path: ${{ steps.sign_app.outputs.signedFile }}
+  create-release:
+    needs: [build, sign-apk]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: "write"
+      contents: "write"
+      packages: "write"
+      pull-requests: "read"
+    steps:
+      - name: Download signed apk generated from previous build step
+        uses: actions/download-artifact@v3
+        id: signed-apk
+        with:
+          name: signed-apk
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ github.ref_name }}"
+          draft: true
+          prerelease: false
+          files: |
+            ${{ steps.signed-apk.outputs.download-path }}
