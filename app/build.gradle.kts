@@ -9,8 +9,8 @@ plugins {
 }
 
 android {
-    val appVersionCode = 2
-    val appVersionName = "2.0.1"
+    val appVersionCode = System.getenv("BUILD_NUMBER")?.toInt() ?: 1
+    val appVersionName = System.getenv("TAG_VERSION") ?: "1.0.0"
 
     namespace = "com.croumy.hltbwearos"
     compileSdk = 34
@@ -39,7 +39,7 @@ android {
             outputs.forEach { output ->
                 if (output is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
                     output.outputFileName =
-                        "watch-HLTBwearOS-${this.versionName}.apk"
+                        "watch-HLTBwearOS-v${this.versionName}.apk"
                 }
             }
         }
