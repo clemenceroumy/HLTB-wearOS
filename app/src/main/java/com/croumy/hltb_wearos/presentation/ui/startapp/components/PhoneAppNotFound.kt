@@ -44,7 +44,7 @@ import androidx.wear.compose.material.CompactChip
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.croumy.hltb_wearos.presentation.components.RefreshButton
+import com.croumy.hltb_wearos.presentation.ui.components.RefreshButton
 import com.croumy.hltb_wearos.presentation.helpers.Launcher
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.GITHUB_REPO
 import com.croumy.hltb_wearos.presentation.theme.Dimensions

@@ -51,7 +51,9 @@ data class GameInfo(
     val profile_steam: Int,
     val profile_platform: String,
     val release_world: Int
-)
+) {
+    val picture: String get() = "https://howlongtobeat.com/games/$game_image"
+}
 
 data class UserData(
     val game_id: Int,

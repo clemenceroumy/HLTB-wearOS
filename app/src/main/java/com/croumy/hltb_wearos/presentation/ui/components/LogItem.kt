@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.components
+package com.croumy.hltb_wearos.presentation.ui.components
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.Icon

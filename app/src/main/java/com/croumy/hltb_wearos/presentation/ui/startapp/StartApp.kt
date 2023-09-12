@@ -22,7 +22,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.remote.interactions.RemoteActivityHelper
-import com.croumy.hltb_wearos.presentation.components.LoginItem
+import com.croumy.hltb_wearos.presentation.ui.components.LoginItem
 import com.croumy.hltb_wearos.presentation.helpers.Launcher
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.PHONE_CAPABILITY

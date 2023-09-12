@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.components
+package com.croumy.hltb_wearos.presentation.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,17 +36,21 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import coil.compose.AsyncImage
 import com.croumy.hltb_wearos.presentation.models.api.Game
+import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
+import com.croumy.hltb_wearos.presentation.theme.primary
 
 @Composable
-fun GameItem(game: Game, isRunning: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SearchGameItem(
+    game: GameInfo,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .sizeIn(minHeight = Dimensions.lSize)
             .background(MaterialTheme.colors.surface, CircleShape)
             .clip(CircleShape)
-            .clickable(onClick = onClick)
             .padding(horizontal = Dimensions.xsPadding, vertical = Dimensions.xxsPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -53,35 +59,29 @@ fun GameItem(game: Game, isRunning: Boolean, onClick: () -> Unit, modifier: Modi
         ) {
             AsyncImage(
                 model = game.picture,
-                contentDescription = game.custom_title,
+                contentDescription = game.game_name,
                 contentScale = ContentScale.Crop,
-                colorFilter = if(isRunning) ColorFilter.tint(Color.Black.copy(alpha = 0.6f), blendMode = BlendMode.Darken) else null,
                 modifier = Modifier
                     .size(Dimensions.lIcon)
                     .clip(CircleShape)
             )
-            if(isRunning) {
-                Icon(Icons.Rounded.Alarm, contentDescription = "Timer is running", tint = Color.White, modifier = Modifier.size(Dimensions.xsIcon))
-            }
         }
         Spacer(Modifier.width(Dimensions.xsPadding))
         Column(
             Modifier
                 .fillMaxHeight()
+                .weight(1f)
                 .padding(vertical = Dimensions.xxsPadding),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(Modifier.height(0.dp))
             Text(
-                game.custom_title, 
+                game.game_name,
                 style = MaterialTheme.typography.body1.copy(fontWeight= FontWeight.Bold),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
-            if(game.platform.isNotEmpty()) {
-                Spacer(Modifier.width(Dimensions.xsPadding))
-                Text(game.platform, style = MaterialTheme.typography.body2)
-            }
         }
+        Icon(Icons.Rounded.Add, contentDescription = "Add to list")
     }
 }
