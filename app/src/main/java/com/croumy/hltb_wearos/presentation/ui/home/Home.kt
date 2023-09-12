@@ -59,6 +59,7 @@ import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
 import com.croumy.hltb_wearos.presentation.ui.home.logs.LogsScreen
+import com.croumy.hltb_wearos.presentation.ui.home.search.SearchScreen
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -79,12 +80,12 @@ fun HomeScreen(
     val categories = Categories.values().sortedArray()
 
     // CROWN SCROLL CONFIG + LISTS STATES
-    val focusRequester = listOf(FocusRequester()).plus((categories).map { FocusRequester() })
-    val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
+    val focusRequester = listOf(FocusRequester(), FocusRequester()).plus((categories).map { FocusRequester() })
+    val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 2)
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        if(horizontalFirstVisibleIndex.value > 0) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
 
         // RESET PREVIOUS CATEGORY LIST SCROLL POSITION
         val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
@@ -119,10 +120,16 @@ fun HomeScreen(
             flingBehavior = rememberSnapFlingBehavior(lazyListState = horizontalScrollState)
         ) {
             item {
+                SearchScreen(
+                    modifier = Modifier.width(screenWidth.dp)
+                )
+            }
+
+            item {
                 LogsScreen(
                     modifier = Modifier.width(screenWidth.dp),
-                    listState = viewModel.listStates[0],
-                    focusRequester = focusRequester[0],
+                    listState = viewModel.listStates[1],
+                    focusRequester = focusRequester[1],
                     refreshGames = { coroutineScope.launch { viewModel.getGames() } }
                 )
             }
@@ -145,17 +152,17 @@ fun HomeScreen(
                     ) { Text(category.label) }
 
                     ScalingLazyColumn(
-                        state = viewModel.listStates[index + 1],
+                        state = viewModel.listStates[index + 2],
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = Dimensions.xxsPadding)
                             .onRotaryScrollEvent {
                                 coroutineScope.launch {
-                                    viewModel.listStates[index + 1].scrollBy(it.verticalScrollPixels)
+                                    viewModel.listStates[index + 2].scrollBy(it.verticalScrollPixels)
                                 }
                                 true
                             }
-                            .focusRequester(focusRequester[index + 1])
+                            .focusRequester(focusRequester[index + 2])
                             .focusable(),
                         verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
                         contentPadding = PaddingValues(bottom = Dimensions.xsPadding),

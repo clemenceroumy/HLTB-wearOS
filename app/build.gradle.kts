@@ -66,7 +66,7 @@ android {
 
 
 dependencies {
-    val composeVersion = "1.5.0"
+    val composeVersion = "1.5.1"
     val wearComposeVersion = "1.2.0"
     val hiltVersion = "2.46"
     val hiltCoreVersion = "1.0.0"
@@ -76,12 +76,12 @@ dependencies {
     val kotlinxVersion = "1.7.3"
 
     // CORE
-    implementation("androidx.lifecycle:lifecycle-service:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-service:2.6.2")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinxVersion")
@@ -92,7 +92,8 @@ dependencies {
     implementation("androidx.wear:wear-ongoing:1.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
-    implementation("com.google.android.gms:play-services-wearable:18.0.0")
+    implementation("com.google.android.gms:play-services-wearable:18.1.0")
+    implementation("androidx.wear:wear-input:1.2.0-alpha02")
 
     // COMPOSE
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
@@ -105,7 +106,7 @@ dependencies {
     implementation("androidx.wear.compose:compose-material:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-foundation:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-navigation:$wearComposeVersion")
-    implementation("androidx.navigation:navigation-compose:2.7.1")
+    implementation("androidx.navigation:navigation-compose:2.7.2")
     implementation("androidx.compose.animation:animation:${composeVersion}")
 
     //HILT

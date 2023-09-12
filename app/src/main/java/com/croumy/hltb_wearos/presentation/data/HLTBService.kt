@@ -1,8 +1,10 @@
 package com.croumy.hltb_wearos.presentation.data
 
+import SearchRequest
 import SubmitRequest
 import com.croumy.hltb_wearos.presentation.models.api.GameListResponse
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
+import com.croumy.hltb_wearos.presentation.models.api.SearchResponse
 import com.croumy.hltb_wearos.presentation.models.api.UserResponse
 import com.croumy.hltb_wearos.presentation.models.api.UserResponseData
 import com.croumy.hltbwearos.BuildConfig
@@ -40,11 +42,14 @@ class HLTBService @Inject constructor(
 
         @POST("submit")
         suspend fun submitTime(@HeaderMap headers: Map<String, String>, @Body request: SubmitRequest): Response<Any>
+
+        @POST("search")
+        suspend fun searchGame(@HeaderMap headers: Map<String, String>, @Body request: SearchRequest): Response<SearchResponse>
     }
 
     suspend fun getUser(): UserResponse? {
         val response = retrofit.getUser(
-            headers = mapOf("Cookie" to preferencesService.token!!,)
+            headers = mapOf("Cookie" to preferencesService.token!!)
         )
 
         if (response.isSuccessful && response.body() != null) {
@@ -67,13 +72,38 @@ class HLTBService @Inject constructor(
 
     suspend fun submitTime(submitRequest: SubmitRequest) {
         val response = retrofit.submitTime(
-            headers = mapOf("Cookie" to preferencesService.token!!,),
-            request = submitRequest)
+            headers = mapOf("Cookie" to preferencesService.token!!),
+            request = submitRequest
+        )
 
         if (!response.isSuccessful) {
             throw Exception(response.message())
         } else {
             print(response.body())
+        }
+    }
+
+    suspend fun searchGame(searchRequest: SearchRequest): SearchResponse? {
+        val response = retrofit.searchGame(
+            headers = mapOf(
+                "Cookie" to preferencesService.token!!,
+                "Origin" to "https://howlongtobeat.com",
+                "Referer" to "https://howlongtobeat.com/",
+            ),
+            // SET USER ID TO SEARCH REQUEST
+            request = searchRequest.copy(
+                searchOptions = searchRequest.searchOptions.copy(
+                    games = searchRequest.searchOptions.games.copy(
+                        userId = preferencesService.userId!!
+                    )
+                )
+            )
+        )
+
+        if (response.isSuccessful && response.body() != null) {
+            return response.body()!!
+        } else {
+            return null
         }
     }
 }

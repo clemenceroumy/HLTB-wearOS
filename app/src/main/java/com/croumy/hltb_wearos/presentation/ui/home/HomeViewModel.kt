@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
     private val games: MutableState<List<Game>> = mutableStateOf(emptyList())
     val categories = Categories.values().sortedArray()
     // IN VIEWMODEL TO KEEP LIST SCROLLSTATE ON NAVIGATION
-    val listStates = listOf(ScalingLazyListState(initialCenterItemIndex = 0)).plus((categories).map { ScalingLazyListState(initialCenterItemIndex = 0) })
+    val listStates = listOf(ScalingLazyListState(initialCenterItemIndex = 0), ScalingLazyListState(initialCenterItemIndex = 0)).plus((categories).map { ScalingLazyListState(initialCenterItemIndex = 0) })
     val currentListState = mutableStateOf(listStates[1])
 
     val gamesByCategories get(): Map<Categories, List<Game>> {

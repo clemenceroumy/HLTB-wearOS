@@ -21,4 +21,6 @@
     <string name="no_logs">No sessions registered yet</string>
     <string name="logs_clear_all">Clear logs</string>
     <string name="logs_clear_all_confirm">You will delete all local logs. This will not affect your sessions on HLTB.</string>
+
+    <string name="search_title">Search a game</string>
 </resources>
