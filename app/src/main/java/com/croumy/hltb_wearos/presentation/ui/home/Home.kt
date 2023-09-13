@@ -109,6 +109,7 @@ fun HomeScreen(
             item {
                 SearchScreen(
                     modifier = Modifier.width(screenWidth.dp),
+                    isCurrentScreen = horizontalFirstVisibleIndex.value == 0,
                     listState = viewModel.listStates[0],
                     focusRequester = focusRequester[0],
                 )
