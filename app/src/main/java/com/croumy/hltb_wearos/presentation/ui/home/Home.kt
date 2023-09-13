@@ -72,7 +72,7 @@ fun HomeScreen(
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        if(horizontalFirstVisibleIndex.value > 0) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        if(horizontalFirstVisibleIndex.value > 1) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
 
         // RESET PREVIOUS CATEGORY LIST SCROLL POSITION
         val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
@@ -109,7 +109,7 @@ fun HomeScreen(
             item {
                 SearchScreen(
                     modifier = Modifier.width(screenWidth.dp),
-                    isCurrentScreen = horizontalFirstVisibleIndex.value == 0,
+                    isFocusedScreen = horizontalFirstVisibleIndex.value == 0,
                     listState = viewModel.listStates[0],
                     focusRequester = focusRequester[0],
                 )
@@ -118,6 +118,7 @@ fun HomeScreen(
             item {
                 LogsScreen(
                     modifier = Modifier.width(screenWidth.dp),
+                    isFocusedScreen = horizontalFirstVisibleIndex.value == 1,
                     listState = viewModel.listStates[1],
                     focusRequester = focusRequester[1],
                     refreshGames = { coroutineScope.launch { viewModel.getGames() } }

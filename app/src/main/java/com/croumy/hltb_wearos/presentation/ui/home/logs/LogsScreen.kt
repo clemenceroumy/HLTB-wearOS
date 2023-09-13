@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LogsScreen(
     viewModel: LogsViewModel = hiltViewModel(),
+    isFocusedScreen: Boolean = false,
     listState: ScalingLazyListState,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
@@ -66,14 +67,11 @@ fun LogsScreen(
 
     val isClearing = remember { mutableStateOf(false) }
 
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) {
-                viewModel.getLogs()
-            }
+    LaunchedEffect(isFocusedScreen) {
+        if (isFocusedScreen) {
+            focusRequester.requestFocus()
+            viewModel.getLogs()
         }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     LaunchedEffect(viewModel.appService.timer.value.state) {

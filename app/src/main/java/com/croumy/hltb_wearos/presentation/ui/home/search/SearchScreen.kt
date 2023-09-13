@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
@@ -40,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
-    isCurrentScreen: Boolean = false,
+    isFocusedScreen: Boolean = false,
     listState: ScalingLazyListState,
     focusRequester: FocusRequester,
     modifier: Modifier
@@ -48,8 +50,8 @@ fun SearchScreen(
     val coroutineScope = rememberCoroutineScope()
     val firstTimeLoading = remember { mutableStateOf(true) }
 
-    LaunchedEffect(isCurrentScreen) {
-        if (isCurrentScreen) {
+    LaunchedEffect(isFocusedScreen) {
+        if (isFocusedScreen) {
             viewModel.search()
         } else {
             viewModel.searchRequest.value = SearchRequest()
@@ -75,22 +77,7 @@ fun SearchScreen(
                     .size(Dimensions.sIcon)
                     .align(Alignment.Center)
             )
-        }
-        else if(viewModel.resultGames.value.isEmpty() && !viewModel.isSearching.value) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(Dimensions.xsPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.search_no_results, viewModel.searchText.value),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        }
-        else Column(
+        } else Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             SearchButton(onSearchResult = {
@@ -102,7 +89,22 @@ fun SearchScreen(
                 }
             })
             Spacer(Modifier.height(Dimensions.xsPadding))
-            ScalingLazyColumn(
+            if(viewModel.resultGames.value.isEmpty() && !viewModel.isSearching.value) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = Dimensions.xsPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.search_no_results, "\"${viewModel.searchText.value}\""),
+                        textAlign = TextAlign.Center,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.align(Alignment.Center).offset(y = (-Dimensions.sPadding))
+                    )
+                }
+            } else ScalingLazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onRotaryScrollEvent {
