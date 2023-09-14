@@ -18,7 +18,7 @@ import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.models.TimerState
-import com.croumy.hltb_wearos.presentation.models.api.Categories
+import com.croumy.hltb_wearos.presentation.models.api.Category
 import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService
@@ -78,7 +78,7 @@ class GameViewModel @Inject constructor(
         isLoading.value = true
         val result = hltbService.getGames()
         game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
-        if(!isRefresh) isInPlayingList.value = game.value?.categories?.contains(Categories.PLAYING) ?: false
+        if(!isRefresh) isInPlayingList.value = game.value?.categories?.contains(Category.Playing) ?: false
         isLoading.value = false
     }
 
