@@ -42,8 +42,9 @@ import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.ui.components.GameItem
 import com.croumy.hltb_wearos.presentation.models.Constants
-import com.croumy.hltb_wearos.presentation.models.api.Categories
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
+import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.api.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
@@ -65,8 +66,6 @@ fun HomeScreen(
 
     val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("needRefresh")
     val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("previousGameId")
-
-    val categories = Categories.values().sortedArray()
 
     // CROWN SCROLL CONFIG + LISTS STATES
     val focusRequester = listOf(FocusRequester(), FocusRequester()).plus((categories).map { FocusRequester() })
@@ -92,7 +91,7 @@ fun HomeScreen(
             // SCROLL TO PLAYING LIST
             horizontalScrollState.scrollToItem(1)
             //AND SCROLL TO GAME ITEM
-            val gameIndex = viewModel.gamesByCategories[Categories.PLAYING]?.indexOfFirst { it.game_id == previousGameId?.value }
+            val gameIndex = viewModel.gamesByCategories[Category.Playing]?.indexOfFirst { it.game_id == previousGameId?.value }
             viewModel.currentListState.value = viewModel.listStates[1]
             viewModel.currentListState.value.scrollToItem(gameIndex ?: 0)
             navController.currentBackStackEntry?.savedStateHandle?.set(Constants.HOME_PREVIOUS_GAME_ID, null)
@@ -128,7 +127,7 @@ fun HomeScreen(
                 )
             }
 
-            itemsIndexed(viewModel.categories) { index, category ->
+            itemsIndexed(categories) { index, category ->
                 val games = viewModel.gamesByCategories[category] ?: emptyList()
 
                 Column(
@@ -143,7 +142,7 @@ fun HomeScreen(
                                 horizontal = Dimensions.sPadding,
                                 vertical = Dimensions.xxsPadding
                             ),
-                    ) { Text(category.label) }
+                    ) { Text(category.label ?: "") }
 
                     ScalingLazyColumn(
                         state = viewModel.listStates[index + 2],

@@ -10,11 +10,15 @@ import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
+import com.croumy.hltb_wearos.presentation.models.api.Category
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.plus
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,7 +27,8 @@ import kotlin.concurrent.fixedRateTimer
 @Singleton
 class AppService @Inject constructor(
     private val logDao: LogDao,
-    preferencesService: PreferencesService
+    preferencesService: PreferencesService,
+    private val hltbService: HLTBService
 ) {
     val isLoggedIn = MutableStateFlow(preferencesService.token != null && preferencesService.token?.isNotEmpty() == true)
     val isLoggingIn = MutableStateFlow(false)
