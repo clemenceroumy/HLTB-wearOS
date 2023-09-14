@@ -43,6 +43,7 @@ import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.components.GameItem
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.api.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
@@ -64,7 +65,7 @@ fun HomeScreen(
     val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("previousGameId")
 
     // CROWN SCROLL CONFIG + LISTS STATES
-    val focusRequester = listOf(FocusRequester()).plus((Category.all).map { FocusRequester() })
+    val focusRequester = listOf(FocusRequester()).plus((categories).map { FocusRequester() })
     val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
@@ -112,7 +113,7 @@ fun HomeScreen(
                 )
             }
 
-            itemsIndexed(Category.all) { index, category ->
+            itemsIndexed(categories) { index, category ->
                 val games = viewModel.gamesByCategories[category] ?: emptyList()
 
                 Column(

@@ -76,8 +76,8 @@ fun StartApp(
         if (isLoggedIn.value) {
             if (isLoggedIn.value && isLoggingIn.value) {
                 delay(400) // TIME TO SHOW THE CHECK ICON
-                viewModel.initCategories()
             }
+            viewModel.initCategories()
             navigateToHome()
         }
     }
