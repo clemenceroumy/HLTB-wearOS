@@ -7,4 +7,5 @@ open class NavRoutes(val route: String) {
         const val GAME_ID = "game_id"
         val routeWithArgs = "${this.route}/{$GAME_ID}"
     }
+    object AddGame: NavRoutes("AddGame")
 }

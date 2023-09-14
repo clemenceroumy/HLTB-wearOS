@@ -19,6 +19,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Alarm
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,11 +40,13 @@ import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.primary
+import com.croumy.hltb_wearos.presentation.theme.secondary
 
 @Composable
 fun SearchGameItem(
     game: GameInfo,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAddClick: (GameInfo) -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -51,6 +54,9 @@ fun SearchGameItem(
             .sizeIn(minHeight = Dimensions.lSize)
             .background(MaterialTheme.colors.surface, CircleShape)
             .clip(CircleShape)
+            .clickable {
+                if(!game.isInUserList) onAddClick(game)
+            }
             .padding(horizontal = Dimensions.xsPadding, vertical = Dimensions.xxsPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -77,11 +83,22 @@ fun SearchGameItem(
             Spacer(Modifier.height(0.dp))
             Text(
                 game.game_name,
-                style = MaterialTheme.typography.body1.copy(fontWeight= FontWeight.Bold),
+                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Icon(Icons.Rounded.Add, contentDescription = "Add to list")
+        if (game.isInUserList) Icon(
+            Icons.Rounded.Check,
+
+            contentDescription = "Game already in list",
+            tint = secondary,
+            modifier = Modifier.padding(start = Dimensions.xxsPadding)
+        )
+        else Icon(
+            Icons.Rounded.Add,
+            contentDescription = "Add to list",
+            modifier = Modifier.padding(start = Dimensions.xxsPadding)
+        )
     }
 }

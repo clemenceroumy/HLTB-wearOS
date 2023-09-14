@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val hltbService: HLTBService,
 ) : ViewModel() {
     val searchRequest = mutableStateOf(SearchRequest())

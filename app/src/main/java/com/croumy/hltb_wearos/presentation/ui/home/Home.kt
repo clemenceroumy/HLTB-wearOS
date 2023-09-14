@@ -43,6 +43,7 @@ import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.ui.components.GameItem
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.api.Categories
+import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
@@ -55,7 +56,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    navigateToGame: (Int) -> Unit = {}
+    navigateToGame: (Int) -> Unit = {},
+    navigateToAddGame: (GameInfo) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
     val screenWidth = LocalConfiguration.current.screenWidthDp
@@ -112,6 +114,7 @@ fun HomeScreen(
                     isFocusedScreen = horizontalFirstVisibleIndex.value == 0,
                     listState = viewModel.listStates[0],
                     focusRequester = focusRequester[0],
+                    navigateToAddGame = navigateToAddGame
                 )
             }
 

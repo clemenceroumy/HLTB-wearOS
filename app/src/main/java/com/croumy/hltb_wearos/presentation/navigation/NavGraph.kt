@@ -8,9 +8,11 @@ import androidx.navigation.navDeepLink
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.SwipeDismissableNavHostState
 import androidx.wear.compose.navigation.composable
+import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.ui.startapp.StartApp
 import com.croumy.hltb_wearos.presentation.ui.game.GameDetails
 import com.croumy.hltb_wearos.presentation.ui.home.HomeScreen
+import com.croumy.hltb_wearos.presentation.ui.home.addgame.AddGameScreen
 import com.croumy.hltbwearos.BuildConfig
 
 @Composable
@@ -30,7 +32,8 @@ fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHost
 
         composable(NavRoutes.Home.route) {
             HomeScreen(
-                navigateToGame = { actions.navigateToGameDetails(it) }
+                navigateToGame = { actions.navigateToGameDetails(it) },
+                navigateToAddGame = { game -> actions.navigateToAddGame(game) }
             )
         }
 
@@ -42,6 +45,18 @@ fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHost
             }),
         ) {
             GameDetails()
+        }
+
+        composable(
+            NavRoutes.AddGame.route,
+        ) {
+            val game = it.savedStateHandle.get<GameInfo>("game")
+            if(game == null) {
+                actions.navigateBack()
+                return@composable
+            }
+
+            AddGameScreen(game = game, navigateBack = { actions.navigateBack() })
         }
     }
 }

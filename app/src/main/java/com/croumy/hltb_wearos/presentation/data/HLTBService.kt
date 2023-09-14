@@ -101,7 +101,7 @@ class HLTBService @Inject constructor(
         )
 
         if (response.isSuccessful && response.body() != null) {
-            return response.body()!!
+            return SearchResponse(response.body()!!)
         } else {
             return null
         }

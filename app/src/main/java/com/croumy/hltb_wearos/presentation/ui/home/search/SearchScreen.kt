@@ -33,6 +33,7 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.material.Text
+import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.ui.components.SearchGameItem
 import com.croumy.hltb_wearos.presentation.ui.home.search.components.SearchButton
@@ -45,14 +46,17 @@ fun SearchScreen(
     isFocusedScreen: Boolean = false,
     listState: ScalingLazyListState,
     focusRequester: FocusRequester,
-    modifier: Modifier
+    modifier: Modifier = Modifier,
+    navigateToAddGame: (GameInfo) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
     val firstTimeLoading = remember { mutableStateOf(true) }
+    val hasNavigateToAddGame = remember { mutableStateOf(false) }
 
     LaunchedEffect(isFocusedScreen) {
         if (isFocusedScreen) {
-            viewModel.search()
+            if(hasNavigateToAddGame.value) hasNavigateToAddGame.value = false
+            else viewModel.search()
         } else {
             viewModel.searchRequest.value = SearchRequest()
             viewModel.searchText.value = ""
@@ -119,7 +123,13 @@ fun SearchScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 itemsIndexed(viewModel.resultGames.value) { index, game ->
-                    SearchGameItem(game)
+                    SearchGameItem(
+                        game,
+                        onAddClick = {
+                            navigateToAddGame(it)
+                            hasNavigateToAddGame.value = true
+                        }
+                    )
                 }
 
                 if (viewModel.isSearching.value) item {

@@ -26,4 +26,6 @@
     <string name="search_title">Search a game</string>
     <string name="search_clear_input">Clear search</string>
     <string name="search_no_results">No results for search %1$s</string>
+
+    <string name="add_game_platform">Pick a platform</string>
 </resources>
