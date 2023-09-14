@@ -21,20 +21,32 @@ abstract class Category {
 
     object Custom: Category() {
         override val value: String = "custom"
-        override var label: String? = "Paused"
+        override var label: String? = ""
         override val color: Color = Color(0xFF175A53)
+
+        fun updateLabel(newLabel: String?) {
+            label = newLabel
+        }
     }
 
     object Custom2: Category() {
         override val value: String = "custom2"
-        override var label: String? = "Stopped"
+        override var label: String? = ""
         override val color: Color = Color(0xFF175A53)
+
+        fun updateLabel(newLabel: String?) {
+            label = newLabel
+        }
     }
 
     object Custom3: Category() {
         override val value: String = "custom3"
-        override var label: String? = "Let's Play"
+        override var label: String? = ""
         override val color: Color = Color(0xFF175A53)
+
+        fun updateLabel(newLabel: String?) {
+            label = newLabel
+        }
     }
 
     object Completed: Category() {
@@ -48,8 +60,6 @@ abstract class Category {
         override var label: String = "Retired"
         override val color: Color = Color(0xFF9F2A2B)
     }
-
-    companion object {
-        val all = listOf(Playing, Backlog, Custom, Custom2, Custom3, Completed, Retired).filter { it.label != null && it.label?.isNotEmpty() == true }
-    }
 }
+val categories = listOf(Category.Playing, Category.Backlog, Category.Custom, Category.Custom2, Category.Custom3, Category.Completed, Category.Retired)
+    .filter { it.label != null && it.label?.isNotEmpty() == true }
