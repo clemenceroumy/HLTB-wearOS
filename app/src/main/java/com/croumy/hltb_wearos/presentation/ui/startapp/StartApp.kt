@@ -62,7 +62,9 @@ fun StartApp(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                lifecycleOwner.lifecycleScope.launch {checkConditions() }
+                lifecycleOwner.lifecycleScope.launch {
+                    checkConditions()
+                }
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -74,6 +76,7 @@ fun StartApp(
         if (isLoggedIn.value) {
             if (isLoggedIn.value && isLoggingIn.value) {
                 delay(400) // TIME TO SHOW THE CHECK ICON
+                viewModel.initCategories()
             }
             navigateToHome()
         }

@@ -6,5 +6,8 @@ data class UserResponseData(
 
 data class UserResponse(
     val user_id: String,
-    val user_name: String
+    val user_name: String,
+    val set_customtab: String,
+    val set_customtab2: String,
+    val set_customtab3: String,
 )

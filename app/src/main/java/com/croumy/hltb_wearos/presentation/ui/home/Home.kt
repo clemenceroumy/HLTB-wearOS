@@ -1,6 +1,5 @@
 package com.croumy.hltb_wearos.presentation.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -21,11 +20,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -34,33 +30,24 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
-import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.SwipeToDismissBoxState
-import androidx.wear.compose.material.SwipeToDismissValue
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
-import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
 import com.croumy.hltb_wearos.presentation.components.GameItem
 import com.croumy.hltb_wearos.presentation.models.Constants
-import com.croumy.hltb_wearos.presentation.models.api.Categories
+import com.croumy.hltb_wearos.presentation.models.api.Category
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
 import com.croumy.hltb_wearos.presentation.ui.home.logs.LogsScreen
 import com.valentinilk.shimmer.shimmer
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -76,10 +63,8 @@ fun HomeScreen(
     val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("needRefresh")
     val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("previousGameId")
 
-    val categories = Categories.values().sortedArray()
-
     // CROWN SCROLL CONFIG + LISTS STATES
-    val focusRequester = listOf(FocusRequester()).plus((categories).map { FocusRequester() })
+    val focusRequester = listOf(FocusRequester()).plus((Category.all).map { FocusRequester() })
     val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
@@ -102,7 +87,7 @@ fun HomeScreen(
             // SCROLL TO PLAYING LIST
             horizontalScrollState.scrollToItem(1)
             //AND SCROLL TO GAME ITEM
-            val gameIndex = viewModel.gamesByCategories[Categories.PLAYING]?.indexOfFirst { it.game_id == previousGameId?.value }
+            val gameIndex = viewModel.gamesByCategories[Category.Playing]?.indexOfFirst { it.game_id == previousGameId?.value }
             viewModel.currentListState.value = viewModel.listStates[1]
             viewModel.currentListState.value.scrollToItem(gameIndex ?: 0)
             navController.currentBackStackEntry?.savedStateHandle?.set(Constants.HOME_PREVIOUS_GAME_ID, null)
@@ -127,7 +112,7 @@ fun HomeScreen(
                 )
             }
 
-            itemsIndexed(viewModel.categories) { index, category ->
+            itemsIndexed(Category.all) { index, category ->
                 val games = viewModel.gamesByCategories[category] ?: emptyList()
 
                 Column(
@@ -142,7 +127,7 @@ fun HomeScreen(
                                 horizontal = Dimensions.sPadding,
                                 vertical = Dimensions.xxsPadding
                             ),
-                    ) { Text(category.label) }
+                    ) { Text(category.label ?: "") }
 
                     ScalingLazyColumn(
                         state = viewModel.listStates[index + 1],
