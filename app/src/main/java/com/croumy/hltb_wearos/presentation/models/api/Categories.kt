@@ -60,6 +60,21 @@ abstract class Category {
         override var label: String = "Retired"
         override val color: Color = Color(0xFF9F2A2B)
     }
+
+    companion object {
+        fun fromLabel(label: String): Category {
+            return when(label) {
+                Playing.label -> Playing
+                Backlog.label -> Backlog
+                Custom.label -> Custom
+                Custom2.label -> Custom2
+                Custom3.label -> Custom3
+                Completed.label -> Completed
+                Retired.label -> Retired
+                else -> Backlog
+            }
+        }
+    }
 }
 val categories = listOf(Category.Playing, Category.Backlog, Category.Custom, Category.Custom2, Category.Custom3, Category.Completed, Category.Retired)
     .filter { it.label != null && it.label?.isNotEmpty() == true }

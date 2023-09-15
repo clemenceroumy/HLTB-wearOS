@@ -2,6 +2,7 @@ package com.croumy.hltb_wearos.presentation.data
 
 import SearchRequest
 import SubmitRequest
+import com.croumy.hltb_wearos.presentation.models.api.AddGameRequest
 import com.croumy.hltb_wearos.presentation.models.api.GameListResponse
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import com.croumy.hltb_wearos.presentation.models.api.SearchResponse
@@ -45,6 +46,14 @@ class HLTBService @Inject constructor(
 
         @POST("search")
         suspend fun searchGame(@HeaderMap headers: Map<String, String>, @Body request: SearchRequest): Response<SearchResponse>
+
+        @POST("game/{gameId}/user/{userId}/actionAdd")
+        suspend fun addGame(
+            @HeaderMap headers: Map<String, String>,
+            @Path("gameId") gameId: Int,
+            @Path("userId") userId: Int,
+            @Body request: AddGameRequest
+        ): Response<Boolean>
     }
 
     suspend fun getUser(): UserResponse? {
@@ -104,6 +113,23 @@ class HLTBService @Inject constructor(
             return SearchResponse(response.body()!!)
         } else {
             return null
+        }
+    }
+
+    suspend fun addGame(addGameRequest: AddGameRequest): Boolean {
+        val response = retrofit.addGame(
+            headers = mapOf(
+                "Cookie" to preferencesService.token!!,
+            ),
+            gameId = addGameRequest.game.game_id,
+            userId = preferencesService.userId!!,
+            request = addGameRequest
+        )
+
+        if (!response.isSuccessful) {
+            throw Exception(response.message())
+        } else {
+            return response.body()!!
         }
     }
 }

@@ -49,6 +49,9 @@ fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHost
 
         composable(
             NavRoutes.AddGame.route,
+            /*arguments = listOf(
+                navArgument("game") { type = NavType.ParcelableType(GameInfo::class.java) }
+            )*/
         ) {
             val game = it.savedStateHandle.get<GameInfo>("game")
             if(game == null) {
