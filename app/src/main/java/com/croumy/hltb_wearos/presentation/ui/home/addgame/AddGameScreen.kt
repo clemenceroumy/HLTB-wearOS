@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,6 +36,7 @@ import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.primary
 import com.croumy.hltb_wearos.presentation.ui.home.addgame.components.AddGameButtons
 import com.croumy.hltb_wearos.presentation.ui.home.addgame.models.AddGameStep
+import com.croumy.hltbwearos.R
 
 @Composable
 fun AddGameScreen(
@@ -47,7 +49,7 @@ fun AddGameScreen(
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     val pickerItems: List<String> = when (viewModel.currentStep.value) {
-        AddGameStep.PLATFORM -> game.platforms
+        AddGameStep.PLATFORM -> listOf(stringResource(id = R.string.none)).plus(game.platforms)
         AddGameStep.CATEGORY -> categories.map { it.label!! }
     }
     val pickerState = rememberPickerState(

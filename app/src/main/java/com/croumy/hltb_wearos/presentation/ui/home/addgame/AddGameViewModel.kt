@@ -1,5 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.home.addgame
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -14,7 +15,9 @@ import com.croumy.hltb_wearos.presentation.models.api.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.api.QuickAdd
 import com.croumy.hltb_wearos.presentation.ui.home.addgame.models.AddGameStep
+import com.croumy.hltbwearos.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -23,6 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddGameViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val hltbService: HLTBService,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -37,7 +41,7 @@ class AddGameViewModel @Inject constructor(
 
     fun init(game: GameInfo) {
         this.game = MutableStateFlow(game)
-        selectedPlatform.value = game.platforms.first()
+        selectedPlatform.value = context.getString(R.string.none)
         selectedCategory.value = Category.Backlog.label
         addGameRequest.value = AddGameRequest(
             game = game,
