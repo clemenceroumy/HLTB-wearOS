@@ -27,8 +27,12 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Picker
 import androidx.wear.compose.material.Scaffold
+import androidx.wear.compose.material.SwipeToDismissValue
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.rememberPickerState
+import com.croumy.hltb_wearos.presentation.LocalNavController
+import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
+import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Storefront
 import com.croumy.hltb_wearos.presentation.models.api.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
@@ -47,6 +51,8 @@ fun AddGameScreen(
     navigateBack: () -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+    val navController = LocalNavController.current
+    val swipeBoxState = LocalNavSwipeBox.current
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     val pickerItems: List<String> = when (viewModel.currentStep.value) {
@@ -70,13 +76,25 @@ fun AddGameScreen(
                 viewModel.init(game)
             }
         }
-
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
+    LaunchedEffect(swipeBoxState.targetValue) {
+        // ON BACK SWIPE, TELL SEARCH SCREEN TO NOT REDO A SEARCH QUERY
+        if (swipeBoxState.targetValue == SwipeToDismissValue.Dismissed) {
+            navController.previousBackStackEntry?.savedStateHandle?.apply {
+                set(Constants.SEARCH_NEED_REFRESH, false)
+            }
+        }
+    }
+
     LaunchedEffect(viewModel.isAdding.value) {
-        if (viewModel.isAdding.value == false) { navigateBack() }
+        if (viewModel.isAdding.value == false) {
+            // AFTER ADDING GAME, TELL SEARCH SCREEN TO REDO A SEARCH QUERY TO REFRESH DATA
+            navController.previousBackStackEntry?.savedStateHandle?.apply { set(Constants.SEARCH_NEED_REFRESH, true) }
+            navigateBack()
+        }
     }
 
     LaunchedEffect(pickerState.selectedOption) {
@@ -138,7 +156,11 @@ fun AddGameScreen(
                 },
                 onSecondaryAction = {
                     when (viewModel.currentStep.value) {
-                        AddGameStep.PLATFORM -> navigateBack()
+                        AddGameStep.PLATFORM -> {
+                            // ON CANCEL, TELL SEARCH SCREEN TO NOT REDO A SEARCH QUERY
+                            navController.previousBackStackEntry?.savedStateHandle?.apply { set(Constants.SEARCH_NEED_REFRESH, false) }
+                            navigateBack()
+                        }
                         AddGameStep.STOREFRONT -> viewModel.currentStep.value = AddGameStep.PLATFORM
                         AddGameStep.CATEGORY -> viewModel.currentStep.value = AddGameStep.STOREFRONT
                     }

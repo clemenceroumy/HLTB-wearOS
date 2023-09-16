@@ -33,6 +33,9 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.material.Text
+import com.croumy.hltb_wearos.presentation.LocalNavController
+import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
+import com.croumy.hltb_wearos.presentation.models.Constants.Companion.SEARCH_NEED_REFRESH
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.ui.components.SearchGameItem
@@ -50,13 +53,15 @@ fun SearchScreen(
     navigateToAddGame: (GameInfo) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val navController = LocalNavController.current
+
     val firstTimeLoading = remember { mutableStateOf(true) }
     val hasNavigateToAddGame = remember { mutableStateOf(false) }
 
     LaunchedEffect(isFocusedScreen) {
         if (isFocusedScreen) {
-            if(hasNavigateToAddGame.value) hasNavigateToAddGame.value = false
-            else viewModel.search()
+            val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(SEARCH_NEED_REFRESH) ?: true
+            if(needRefresh) viewModel.search()
         } else {
             viewModel.searchRequest.value = SearchRequest()
             viewModel.searchText.value = ""
@@ -73,7 +78,7 @@ fun SearchScreen(
         modifier = modifier.fillMaxHeight()
     ) {
         if (viewModel.isSearching.value && firstTimeLoading.value) {
-            CircularProgressIndicator(
+            if(!hasNavigateToAddGame.value) CircularProgressIndicator(
                 color = Color.White,
                 strokeWidth = Dimensions.xsStrokeSize,
                 modifier = Modifier

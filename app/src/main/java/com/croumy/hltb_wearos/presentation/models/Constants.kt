@@ -20,5 +20,6 @@ class Constants {
 
         const val HOME_NEED_REFRESH = "needRefresh"
         const val HOME_PREVIOUS_GAME_ID = "previousGameId"
+        const val SEARCH_NEED_REFRESH = "searchNeedRefresh"
     }
 }
