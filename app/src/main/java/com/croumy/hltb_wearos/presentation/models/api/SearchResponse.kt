@@ -1,8 +1,11 @@
 package com.croumy.hltb_wearos.presentation.models.api
 
+import android.content.res.Resources
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
+import com.croumy.hltb_wearos.presentation.MainActivity
+import com.croumy.hltbwearos.R
 import com.google.gson.annotations.SerializedName
 
 data class SearchResponse(
@@ -78,7 +81,8 @@ data class GameInfo(
 ) : Parcelable {
     val picture: String get() = "https://howlongtobeat.com/games/$game_image"
     var isInUserList: Boolean = false
-    val platforms get(): List<String> = profile_platform.split(",")
+    private val platforms get(): List<String> = profile_platform.split(",")
+    val platformsWithNoneOption get(): List<String> = listOf(MainActivity.context.getString(R.string.none)).plus(platforms)
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),

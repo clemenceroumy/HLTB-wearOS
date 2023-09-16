@@ -29,6 +29,7 @@ import androidx.wear.compose.material.Picker
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.rememberPickerState
+import com.croumy.hltb_wearos.presentation.models.Storefront
 import com.croumy.hltb_wearos.presentation.models.api.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.api.categories
@@ -49,13 +50,15 @@ fun AddGameScreen(
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     val pickerItems: List<String> = when (viewModel.currentStep.value) {
-        AddGameStep.PLATFORM -> listOf(stringResource(id = R.string.none)).plus(game.platforms)
+        AddGameStep.PLATFORM -> game.platformsWithNoneOption
+        AddGameStep.STOREFRONT -> Storefront.allWithNoneOption
         AddGameStep.CATEGORY -> categories.map { it.label!! }
     }
     val pickerState = rememberPickerState(
         initialNumberOfOptions = pickerItems.size,
         initiallySelectedOption = when (viewModel.currentStep.value) {
             AddGameStep.PLATFORM -> 0
+            AddGameStep.STOREFRONT -> 0
             AddGameStep.CATEGORY -> pickerItems.indexOf(Category.Backlog.label)
         },
         repeatItems = false
@@ -79,6 +82,7 @@ fun AddGameScreen(
     LaunchedEffect(pickerState.selectedOption) {
         when (viewModel.currentStep.value) {
             AddGameStep.PLATFORM -> viewModel.selectedPlatform.value = pickerItems[pickerState.selectedOption]
+            AddGameStep.STOREFRONT -> viewModel.selectedStorefront.value = pickerItems[pickerState.selectedOption]
             AddGameStep.CATEGORY -> viewModel.selectedCategory.value = pickerItems[pickerState.selectedOption]
         }
     }
@@ -127,14 +131,16 @@ fun AddGameScreen(
                 isLoading = viewModel.isAdding.value == true,
                 onAction = {
                     when (viewModel.currentStep.value) {
-                        AddGameStep.PLATFORM -> viewModel.currentStep.value = AddGameStep.CATEGORY
+                        AddGameStep.PLATFORM -> viewModel.currentStep.value = AddGameStep.STOREFRONT
+                        AddGameStep.STOREFRONT -> viewModel.currentStep.value = AddGameStep.CATEGORY
                         AddGameStep.CATEGORY -> viewModel.addGame()
                     }
                 },
                 onSecondaryAction = {
                     when (viewModel.currentStep.value) {
                         AddGameStep.PLATFORM -> navigateBack()
-                        AddGameStep.CATEGORY -> viewModel.currentStep.value = AddGameStep.PLATFORM
+                        AddGameStep.STOREFRONT -> viewModel.currentStep.value = AddGameStep.PLATFORM
+                        AddGameStep.CATEGORY -> viewModel.currentStep.value = AddGameStep.STOREFRONT
                     }
                 }
             )

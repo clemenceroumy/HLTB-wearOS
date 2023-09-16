@@ -12,6 +12,10 @@ enum class AddGameStep {
         override val actionIcon: ImageVector = Icons.Rounded.NavigateNext
         override val secondaryActionIcon: ImageVector = Icons.Rounded.Close
     },
+    STOREFRONT {
+        override val actionIcon: ImageVector = Icons.Rounded.NavigateNext
+        override val secondaryActionIcon: ImageVector = Icons.Rounded.NavigateBefore
+    },
     CATEGORY {
         override val actionIcon: ImageVector = Icons.Rounded.Check
         override val secondaryActionIcon: ImageVector = Icons.Rounded.NavigateBefore

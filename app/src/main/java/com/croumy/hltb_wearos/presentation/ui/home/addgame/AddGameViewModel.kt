@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation.ui.home.addgame
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.croumy.hltb_wearos.presentation.data.HLTBService
+import com.croumy.hltb_wearos.presentation.models.Storefront
 import com.croumy.hltb_wearos.presentation.models.api.AddGameRequest
 import com.croumy.hltb_wearos.presentation.models.api.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
@@ -35,13 +37,15 @@ class AddGameViewModel @Inject constructor(
 
     val currentStep = mutableStateOf(AddGameStep.PLATFORM)
     val selectedPlatform = mutableStateOf("")
+    val selectedStorefront = mutableStateOf("")
     val selectedCategory = mutableStateOf("")
 
     val isAdding: MutableState<Boolean?> = mutableStateOf(null)
 
     fun init(game: GameInfo) {
         this.game = MutableStateFlow(game)
-        selectedPlatform.value = context.getString(R.string.none)
+        selectedPlatform.value = game.platformsWithNoneOption[0]
+        selectedStorefront.value = Storefront.allWithNoneOption[0]
         selectedCategory.value = Category.Backlog.label
         addGameRequest.value = AddGameRequest(
             game = game,
@@ -55,15 +59,11 @@ class AddGameViewModel @Inject constructor(
             addGameRequest.value = addGameRequest.value?.copy(
                 quickAdd = addGameRequest.value!!.quickAdd.copy(
                     platform = selectedPlatform.value,
+                    storefront = selectedStorefront.value,
                     type = selectedCategory.value
                 )
             )
-            delay(1000)
-            /*try {
-                hltbService.addGame(addGameRequest.value!!)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }*/
+            hltbService.addGame(addGameRequest.value!!)
             isAdding.value = false
         }
     }

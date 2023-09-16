@@ -123,13 +123,20 @@ class HLTBService @Inject constructor(
             ),
             gameId = addGameRequest.game.game_id,
             userId = preferencesService.userId!!,
-            request = addGameRequest
+            request = addGameRequest.copy(
+                quickAdd = addGameRequest.quickAdd.copy(
+                    userId = preferencesService.userId!!,
+                    platform = addGameRequest.quickAdd.platformWithoutNoneOption,
+                    storefront = addGameRequest.quickAdd.storefrontWithoutNoneOption,
+                    type = addGameRequest.quickAdd.type
+                )
+            )
         )
 
-        if (!response.isSuccessful) {
-            throw Exception(response.message())
+        return if (!response.isSuccessful) {
+            false
         } else {
-            return response.body()!!
+            response.body()!!
         }
     }
 }

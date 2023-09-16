@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -44,9 +45,14 @@ class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListene
     @Inject
     lateinit var preferencesService: PreferencesService
 
+    companion object {
+        lateinit var context: Context
+    }
+
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        context = applicationContext
 
         Wearable.getMessageClient(this).addListener(this)
 
