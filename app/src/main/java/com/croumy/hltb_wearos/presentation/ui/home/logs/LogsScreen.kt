@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -20,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,11 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
@@ -47,9 +43,9 @@ import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.croumy.hltb_wearos.presentation.ui.components.LogItem
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
+import com.croumy.hltb_wearos.presentation.ui.components.LogItem
 import com.croumy.hltbwearos.R
 import kotlinx.coroutines.launch
 
@@ -69,8 +65,8 @@ fun LogsScreen(
 
     LaunchedEffect(isFocusedScreen) {
         if (isFocusedScreen) {
-            focusRequester.requestFocus()
             viewModel.getLogs()
+            focusRequester.requestFocus()
         }
     }
 
@@ -82,10 +78,14 @@ fun LogsScreen(
         }
     }
 
-    AnimatedContent(targetState = isClearing.value, label = "") {
+    AnimatedContent(
+        targetState = isClearing.value,
+        label = "",
+        modifier = modifier
+    ) {
         if (it) {
             Column(
-                modifier
+                Modifier
                     .fillMaxSize()
                     .padding(horizontal = Dimensions.mPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -123,7 +123,7 @@ fun LogsScreen(
                 Modifier.fillMaxSize()
             ) {
                 Column(
-                    modifier,
+                    Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(

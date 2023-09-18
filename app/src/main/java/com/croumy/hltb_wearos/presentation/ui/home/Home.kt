@@ -1,5 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -28,11 +30,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.PositionIndicator
@@ -61,6 +67,7 @@ fun HomeScreen(
     navigateToAddGame: (GameInfo) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val lifecycleOwner = LocalLifecycleOwner.current
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val navController = LocalNavController.current
 
@@ -73,9 +80,9 @@ fun HomeScreen(
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        if(horizontalFirstVisibleIndex.value > 1) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        if (horizontalFirstVisibleIndex.value > 1) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
 
-        // RESET PREVIOUS CATEGORY LIST SCROLL POSITION
+        // ON CHANGE OF CATEGORY, RESET SCROLL OF PREVIOUS CATEGORY AND GO TO TOP OF LIST
         val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
         if(hasHorizontallyScrolled) viewModel.currentListState.value.scrollToItem(0)
         // SET CURRENT CATEGORY LIST SCROLL STATE
@@ -119,7 +126,7 @@ fun HomeScreen(
 
             item {
                 LogsScreen(
-                    modifier = Modifier.width(screenWidth.dp),
+                    modifier = Modifier.width(screenWidth.dp).background(Color.Red),
                     isFocusedScreen = horizontalFirstVisibleIndex.value == 1,
                     listState = viewModel.listStates[1],
                     focusRequester = focusRequester[1],

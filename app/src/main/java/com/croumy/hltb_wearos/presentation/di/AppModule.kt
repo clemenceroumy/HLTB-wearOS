@@ -23,7 +23,6 @@ object AppModule {
         AppDatabase::class.java,
         "hltbWear.db"
     )
-        .allowMainThreadQueries()
         .build()
 
     @Singleton

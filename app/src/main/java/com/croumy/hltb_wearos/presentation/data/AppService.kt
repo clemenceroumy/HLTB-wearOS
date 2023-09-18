@@ -62,12 +62,14 @@ class AppService @Inject constructor(
     }
 
     fun saveLog(log: LogEntity, isRetrying: Boolean = false) {
-        if(timer.value.gameId == null || submitRequest.value == null) return
+        CoroutineScope(IO).launch {
+            if(timer.value.gameId == null || submitRequest.value == null) return@launch
 
-        if(isRetrying) {
-            logDao.update(log)
-        } else {
-            logDao.insert(log)
+            if(isRetrying) {
+                logDao.update(log)
+            } else {
+                logDao.insert(log)
+            }
         }
     }
 }

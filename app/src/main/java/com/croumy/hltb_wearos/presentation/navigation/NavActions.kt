@@ -11,6 +11,7 @@ class NavActions(private val navController: NavHostController) {
         navController.popBackStack()
     }
     fun navigateToHome() {
+        navController.popBackStack()
         navController.navigate(NavRoutes.Home.route)
     }
 
