@@ -67,7 +67,6 @@ fun HomeScreen(
     navigateToAddGame: (GameInfo) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val lifecycleOwner = LocalLifecycleOwner.current
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val navController = LocalNavController.current
 
@@ -75,17 +74,20 @@ fun HomeScreen(
     val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("previousGameId")
 
     // CROWN SCROLL CONFIG + LISTS STATES
-    val focusRequester = listOf(FocusRequester(), FocusRequester()).plus((categories).map { FocusRequester() })
+    val focusRequester = remember { listOf(FocusRequester(), FocusRequester()).plus((categories).map { FocusRequester() }) }
     val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 2)
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        if (horizontalFirstVisibleIndex.value > 1) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        if (horizontalFirstVisibleIndex.value > 1) {
+            focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
 
-        // ON CHANGE OF CATEGORY, RESET SCROLL OF PREVIOUS CATEGORY AND GO TO TOP OF LIST
-        val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
-        if(hasHorizontallyScrolled) viewModel.currentListState.value.scrollToItem(0)
-        // SET CURRENT CATEGORY LIST SCROLL STATE
+            // ON CHANGE OF CATEGORY, RESET SCROLL OF PREVIOUS CATEGORY AND GO TO TOP OF LIST
+            val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
+            if(hasHorizontallyScrolled) viewModel.currentListState.value.scrollToItem(0)
+        }
+
+        // SET CURRENT SCREEN LIST SCROLL STATE
         viewModel.currentListState.value = viewModel.listStates[horizontalFirstVisibleIndex.value]
     }
 
@@ -126,7 +128,7 @@ fun HomeScreen(
 
             item {
                 LogsScreen(
-                    modifier = Modifier.width(screenWidth.dp).background(Color.Red),
+                    modifier = Modifier.width(screenWidth.dp),
                     isFocusedScreen = horizontalFirstVisibleIndex.value == 1,
                     listState = viewModel.listStates[1],
                     focusRequester = focusRequester[1],

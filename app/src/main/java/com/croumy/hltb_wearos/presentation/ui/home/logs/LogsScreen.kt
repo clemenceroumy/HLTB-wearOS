@@ -1,5 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.home.logs
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,6 +48,7 @@ import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.ui.components.LogItem
 import com.croumy.hltbwearos.R
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -66,7 +68,11 @@ fun LogsScreen(
     LaunchedEffect(isFocusedScreen) {
         if (isFocusedScreen) {
             viewModel.getLogs()
-            focusRequester.requestFocus()
+            if(viewModel.logs.value.isNotEmpty()) {
+                // WAIT FOR THE ScalingLazyColumn TO BE READY
+                delay(100)
+                focusRequester.requestFocus()
+            }
         }
     }
 
@@ -123,7 +129,7 @@ fun LogsScreen(
                 Modifier.fillMaxSize()
             ) {
                 Column(
-                    Modifier.fillMaxWidth(),
+                    Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
@@ -136,61 +142,63 @@ fun LogsScreen(
                             ),
                     ) { Text("Logs") }
 
-                    if (viewModel.logs.value.isNotEmpty()) ScalingLazyColumn(
-                        state = listState,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = Dimensions.xxsPadding)
-                            .onRotaryScrollEvent {
-                                coroutineScope.launch {
-                                    listState.scrollBy(it.verticalScrollPixels)
+                    if (viewModel.logs.value.isNotEmpty()) {
+                        ScalingLazyColumn(
+                            state = listState,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = Dimensions.xxsPadding)
+                                .onRotaryScrollEvent {
+                                    coroutineScope.launch {
+                                        listState.scrollBy(it.verticalScrollPixels)
+                                    }
+                                    true
                                 }
-                                true
-                            }
-                            .focusRequester(focusRequester)
-                            .focusable(),
-                    ) {
-                        if (viewModel.failedLogs.isNotEmpty()) {
-                            item {
-                                Text(
-                                    stringResource(id = R.string.logs_history_errors),
-                                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                                    modifier = Modifier.padding(bottom = Dimensions.xsPadding)
-                                )
-                            }
-                            items(viewModel.failedLogs) { log ->
-                                val isLoading =
-                                    viewModel.appService.timer.value.state == TimerState.SAVING
-
-                                LogItem(
-                                    log,
-                                    isLoading = isLoading,
-                                    onRefresh = { viewModel.resend(log) },
-                                    onCancel = { viewModel.deleteLog(log) })
-                            }
-                            item {
-                                Spacer(Modifier.height(Dimensions.xsPadding))
-                            }
-                        }
-
-                        if (viewModel.succeededLogs.isNotEmpty()) {
-                            item {
-                                Text(
-                                    stringResource(id = R.string.logs_history),
-                                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                                    modifier = Modifier.padding(bottom = Dimensions.xsPadding)
-                                )
-                            }
-                            items(viewModel.succeededLogs) { log ->
-                                LogItem(log)
-                            }
-                            item {
-                                Spacer(Modifier.height(Dimensions.xsPadding))
-                                TextButton(onClick = { isClearing.value = true }) {
+                                .focusRequester(focusRequester)
+                                .focusable(),
+                        ) {
+                            if (viewModel.failedLogs.isNotEmpty()) {
+                                item {
                                     Text(
-                                        stringResource(id = R.string.logs_clear_all),
-                                        style = MaterialTheme.typography.body1,
+                                        stringResource(id = R.string.logs_history_errors),
+                                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                                        modifier = Modifier.padding(bottom = Dimensions.xsPadding)
                                     )
+                                }
+                                items(viewModel.failedLogs) { log ->
+                                    val isLoading =
+                                        viewModel.appService.timer.value.state == TimerState.SAVING
+
+                                    LogItem(
+                                        log,
+                                        isLoading = isLoading,
+                                        onRefresh = { viewModel.resend(log) },
+                                        onCancel = { viewModel.deleteLog(log) })
+                                }
+                                item {
+                                    Spacer(Modifier.height(Dimensions.xsPadding))
+                                }
+                            }
+
+                            if (viewModel.succeededLogs.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        stringResource(id = R.string.logs_history),
+                                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                                        modifier = Modifier.padding(bottom = Dimensions.xsPadding)
+                                    )
+                                }
+                                items(viewModel.succeededLogs) { log ->
+                                    LogItem(log)
+                                }
+                                item {
+                                    Spacer(Modifier.height(Dimensions.xsPadding))
+                                    TextButton(onClick = { isClearing.value = true }) {
+                                        Text(
+                                            stringResource(id = R.string.logs_clear_all),
+                                            style = MaterialTheme.typography.body1,
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -200,10 +208,7 @@ fun LogsScreen(
                 if (viewModel.logs.value.isEmpty()) Text(
                     stringResource(id = R.string.no_logs),
                     style = MaterialTheme.typography.body1.copy(color = Color.Gray),
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .focusRequester(focusRequester)
-                        .focusable()
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }
