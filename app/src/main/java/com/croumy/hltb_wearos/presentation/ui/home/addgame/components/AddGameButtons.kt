@@ -27,12 +27,14 @@ import com.croumy.hltb_wearos.presentation.ui.home.addgame.models.AddGameStep
 
 @Composable
 fun AddGameButtons(
+    modifier: Modifier = Modifier,
     currentStep: AddGameStep,
     isLoading: Boolean,
     onAction: () -> Unit = {},
     onSecondaryAction: () -> Unit = {},
 ) {
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.Center
     ) {
         Box(
@@ -44,8 +46,8 @@ fun AddGameButtons(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                Icons.Rounded.Close,
-                contentDescription = "Cancel",
+                currentStep.secondaryActionIcon,
+                contentDescription = "",
                 modifier = Modifier
                     .padding(Dimensions.xxsPadding)
                     .size(Dimensions.mIcon),

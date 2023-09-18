@@ -23,4 +23,8 @@ enum class AddGameStep {
 
     abstract val actionIcon: ImageVector
     abstract val secondaryActionIcon: ImageVector
+
+    companion object {
+        fun AddGameStep.isNext(currentStep: AddGameStep): Boolean = currentStep.ordinal < this.ordinal
+    }
 }
