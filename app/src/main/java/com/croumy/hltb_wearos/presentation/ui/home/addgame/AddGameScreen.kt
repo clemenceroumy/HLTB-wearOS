@@ -2,6 +2,7 @@ package com.croumy.hltb_wearos.presentation.ui.home.addgame
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -135,13 +136,11 @@ fun AddGameScreen(
                 targetState = viewModel.currentStep.value,
                 transitionSpec = {
                     val isScrollingForward = this.targetState.isNext(this.initialState)
-                    slideInHorizontally(animationSpec = tween(200, easing = FastOutLinearInEasing), initialOffsetX = {
+
+                    slideInHorizontally(animationSpec = tween(150, easing = FastOutLinearInEasing), initialOffsetX = {
                         if (isScrollingForward) screenWidth.value.toInt()
                         else -screenWidth.value.toInt()
-                    }) togetherWith slideOutHorizontally(animationSpec = tween(200, easing = FastOutLinearInEasing), targetOffsetX = {
-                        if (isScrollingForward) -screenWidth.value.toInt()
-                        else screenWidth.value.toInt()
-                    })
+                    }) togetherWith ExitTransition.None
                 },
                 contentKey = { it },
                 label = ""
