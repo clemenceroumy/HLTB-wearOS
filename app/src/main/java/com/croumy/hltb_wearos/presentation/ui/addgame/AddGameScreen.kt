@@ -50,8 +50,8 @@ import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep.Compani
 
 @Composable
 fun AddGameScreen(
-    viewModel: AddGameViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
+    viewModel: AddGameViewModel = hiltViewModel(),
     game: GameInfo,
     navigateBack: () -> Unit = {},
 ) {

@@ -44,12 +44,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(
+    modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
     isFocusedScreen: Boolean = false,
     listState: ScalingLazyListState,
     focusRequester: FocusRequester,
-    modifier: Modifier = Modifier,
-    navigateToAddGame: (GameInfo) -> Unit = {},
+    onGameAdded: () -> Unit,
+    navigateToAddGame: (GameInfo) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
@@ -65,6 +66,7 @@ fun SearchScreen(
                     // NEEDED TO REFRESH LIST ITEMS UI
                     viewModel.resultGames.value = emptyList()
                     viewModel.search()
+                    onGameAdded()
                 }
                 viewModel.hasNavigatedToAddGame.value = false
             }

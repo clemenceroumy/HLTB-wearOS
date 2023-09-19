@@ -116,7 +116,8 @@ fun HomeScreen(
                     isFocusedScreen = horizontalFirstVisibleIndex.value == 0,
                     listState = viewModel.listStates[0],
                     focusRequester = focusRequester[0],
-                    navigateToAddGame = navigateToAddGame
+                    navigateToAddGame = navigateToAddGame,
+                    onGameAdded = { coroutineScope.launch { viewModel.getGames() } }
                 )
             }
 
