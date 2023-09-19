@@ -1,28 +1,21 @@
 package com.croumy.hltb_wearos.presentation.ui.addgame
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.models.Storefront
 import com.croumy.hltb_wearos.presentation.models.api.AddGameRequest
-import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.api.QuickAdd
 import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep
-import com.croumy.hltbwearos.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

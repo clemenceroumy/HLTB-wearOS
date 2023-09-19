@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.models.api
+package com.croumy.hltb_wearos.presentation.models
 
 import androidx.compose.ui.graphics.Color
 

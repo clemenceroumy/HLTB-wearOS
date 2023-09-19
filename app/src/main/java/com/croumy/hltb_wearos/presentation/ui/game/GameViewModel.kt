@@ -18,7 +18,7 @@ import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.models.TimerState
-import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService

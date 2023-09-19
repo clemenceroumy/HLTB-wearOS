@@ -1,5 +1,7 @@
 package com.croumy.hltb_wearos.presentation.models.api
 
+import com.croumy.hltb_wearos.presentation.models.categories
+
 
 data class GameRequest(
     val lists: List<String> = categories.map { it.value },

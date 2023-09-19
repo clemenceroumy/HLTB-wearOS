@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
-import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.Game
-import com.croumy.hltb_wearos.presentation.models.api.categories
+import com.croumy.hltb_wearos.presentation.models.categories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

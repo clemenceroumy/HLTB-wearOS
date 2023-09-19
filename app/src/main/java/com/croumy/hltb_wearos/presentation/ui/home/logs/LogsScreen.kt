@@ -73,7 +73,7 @@ fun LogsScreen(
             viewModel.getLogs()
             if (viewModel.logs.value.isNotEmpty()) {
                 // WAIT FOR THE ScalingLazyColumn TO BE READY
-                delay(100)
+                delay(300)
                 focusRequester.requestFocus()
             }
         }

@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation.models.api
 
 import com.croumy.hltb_wearos.presentation.MainActivity
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltbwearos.R
 
 data class AddGameRequest(

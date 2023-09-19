@@ -39,11 +39,12 @@ import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Storefront
-import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
-import com.croumy.hltb_wearos.presentation.models.api.categories
+import com.croumy.hltb_wearos.presentation.models.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.primary
+import com.croumy.hltb_wearos.presentation.theme.secondary
 import com.croumy.hltb_wearos.presentation.ui.addgame.components.AddGameButtons
 import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep
 import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep.Companion.isNext
@@ -163,7 +164,7 @@ fun AddGameScreen(
                             .defaultMinSize(minWidth = screenWidth / 2)
                             .background(
                                 color = if (currentStep == AddGameStep.CATEGORY) Category.fromLabel(pickerItems[index]).color
-                                else primary,
+                                else secondary,
                                 shape = CircleShape
                             )
                             .padding(vertical = Dimensions.xsPadding, horizontal = Dimensions.sPadding)

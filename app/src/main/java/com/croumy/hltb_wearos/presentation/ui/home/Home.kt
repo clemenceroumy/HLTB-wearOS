@@ -41,9 +41,9 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.models.Constants
-import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
-import com.croumy.hltb_wearos.presentation.models.api.categories
+import com.croumy.hltb_wearos.presentation.models.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor

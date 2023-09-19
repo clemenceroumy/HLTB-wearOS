@@ -1,25 +1,17 @@
 package com.croumy.hltb_wearos.presentation.data
 
 import SubmitRequest
-import android.content.Context
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.room.Room
-import com.croumy.hltb_wearos.presentation.data.database.AppDatabase
 import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
-import com.croumy.hltb_wearos.presentation.models.api.Category
-import com.soywiz.klock.DateTime
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.plus
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.concurrent.fixedRateTimer
