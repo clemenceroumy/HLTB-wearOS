@@ -1,12 +1,10 @@
-package com.croumy.hltb_wearos.presentation.ui.home.addgame
+package com.croumy.hltb_wearos.presentation.ui.addgame
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +20,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
@@ -47,9 +44,9 @@ import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.api.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.primary
-import com.croumy.hltb_wearos.presentation.ui.home.addgame.components.AddGameButtons
-import com.croumy.hltb_wearos.presentation.ui.home.addgame.models.AddGameStep
-import com.croumy.hltb_wearos.presentation.ui.home.addgame.models.AddGameStep.Companion.isNext
+import com.croumy.hltb_wearos.presentation.ui.addgame.components.AddGameButtons
+import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep
+import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep.Companion.isNext
 
 @Composable
 fun AddGameScreen(

@@ -19,6 +19,7 @@ class SearchViewModel @Inject constructor(
     val searchRequest = mutableStateOf(SearchRequest())
     val searchText = mutableStateOf("")
 
+    val hasNavigatedToAddGame = mutableStateOf(false)
     val isSearching = mutableStateOf(false)
     val canLoadMore = mutableStateOf(true)
     val resultGames = mutableStateOf(emptyList<GameInfo>())

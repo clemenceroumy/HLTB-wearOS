@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.ui.home.addgame.models
+package com.croumy.hltb_wearos.presentation.ui.addgame.models
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check

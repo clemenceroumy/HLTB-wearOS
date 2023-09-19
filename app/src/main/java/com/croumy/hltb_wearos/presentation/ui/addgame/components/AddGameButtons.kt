@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.ui.home.addgame.components
+package com.croumy.hltb_wearos.presentation.ui.addgame.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.wear.compose.material.MaterialTheme
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.primary
-import com.croumy.hltb_wearos.presentation.ui.home.addgame.models.AddGameStep
+import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep
 
 @Composable
 fun AddGameButtons(

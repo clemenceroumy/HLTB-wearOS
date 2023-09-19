@@ -1,7 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.home.search
 
 import SearchRequest
-import android.util.Log
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,20 +25,16 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.material.Text
 import com.croumy.hltb_wearos.presentation.LocalNavController
-import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
-import com.croumy.hltb_wearos.presentation.models.Constants.Companion.SEARCH_NEED_REFRESH
+import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.ui.components.SearchGameItem
@@ -58,17 +52,23 @@ fun SearchScreen(
     navigateToAddGame: (GameInfo) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val lifecycleOwner = LocalLifecycleOwner.current
     val navController = LocalNavController.current
 
     val firstTimeLoading = remember { mutableStateOf(true) }
-    val hasNavigateToAddGame = remember { mutableStateOf(false) }
 
     LaunchedEffect(isFocusedScreen) {
         if (isFocusedScreen) {
-            val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(SEARCH_NEED_REFRESH) ?: true
-            if(needRefresh) viewModel.search()
+            // IF BACK FROM GAME
+            if (viewModel.hasNavigatedToAddGame.value) {
+                val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(Constants.SEARCH_NEED_REFRESH)
+                if(needRefresh == true) viewModel.search()
+                viewModel.hasNavigatedToAddGame.value = false
+            }
+            // ON FIRST FOCUS (FROM HORIZONTAL SCROLL)
+            else viewModel.search()
         } else {
+            // WHEN USER SCROLL HORIZONTALLY TO SWITCH PAGE
+            // (DO NOT PASS HERE WHEN NAVIGATING TO ADDGAMESCREEN)
             viewModel.searchRequest.value = SearchRequest()
             viewModel.searchText.value = ""
             viewModel.isSearching.value = false
@@ -77,14 +77,16 @@ fun SearchScreen(
     }
 
     LaunchedEffect(viewModel.resultGames.value) {
-        if(viewModel.resultGames.value.isNotEmpty()) { focusRequester.requestFocus() }
+        if (viewModel.resultGames.value.isNotEmpty()) {
+            focusRequester.requestFocus()
+        }
     }
 
     Box(
         modifier = modifier.fillMaxHeight()
     ) {
         if (viewModel.isSearching.value && firstTimeLoading.value) {
-            if(!hasNavigateToAddGame.value) CircularProgressIndicator(
+            CircularProgressIndicator(
                 color = Color.White,
                 strokeWidth = Dimensions.xsStrokeSize,
                 modifier = Modifier
@@ -104,7 +106,7 @@ fun SearchScreen(
                 }
             })
             Spacer(Modifier.height(Dimensions.xsPadding))
-            if(viewModel.resultGames.value.isEmpty() && !viewModel.isSearching.value) {
+            if (viewModel.resultGames.value.isEmpty() && !viewModel.isSearching.value) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -116,7 +118,9 @@ fun SearchScreen(
                         textAlign = TextAlign.Center,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.align(Alignment.Center).offset(y = (-Dimensions.sPadding))
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .offset(y = (-Dimensions.sPadding))
                     )
                 }
             } else ScalingLazyColumn(
@@ -138,7 +142,7 @@ fun SearchScreen(
                         game,
                         onAddClick = {
                             navigateToAddGame(it)
-                            hasNavigateToAddGame.value = true
+                            viewModel.hasNavigatedToAddGame.value = true
                         }
                     )
                 }
@@ -154,7 +158,7 @@ fun SearchScreen(
                 }
                 item {
                     LaunchedEffect(true) {
-                        if(viewModel.resultGames.value.isNotEmpty() && !viewModel.isSearching.value && viewModel.canLoadMore.value) {
+                        if (viewModel.resultGames.value.isNotEmpty() && !viewModel.isSearching.value && viewModel.canLoadMore.value) {
                             firstTimeLoading.value = false
                             viewModel.search(isPagination = true)
                         }

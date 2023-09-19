@@ -12,7 +12,7 @@ import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.ui.startapp.StartApp
 import com.croumy.hltb_wearos.presentation.ui.game.GameDetails
 import com.croumy.hltb_wearos.presentation.ui.home.HomeScreen
-import com.croumy.hltb_wearos.presentation.ui.home.addgame.AddGameScreen
+import com.croumy.hltb_wearos.presentation.ui.addgame.AddGameScreen
 import com.croumy.hltbwearos.BuildConfig
 
 @Composable

@@ -1,6 +1,5 @@
 package com.croumy.hltb_wearos.presentation.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -21,7 +20,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -30,15 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.PositionIndicator
@@ -46,14 +40,14 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
-import com.croumy.hltb_wearos.presentation.ui.components.GameItem
 import com.croumy.hltb_wearos.presentation.models.Constants
-import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.api.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
+import com.croumy.hltb_wearos.presentation.ui.components.GameItem
 import com.croumy.hltb_wearos.presentation.ui.home.logs.LogsScreen
 import com.croumy.hltb_wearos.presentation.ui.home.search.SearchScreen
 import com.valentinilk.shimmer.shimmer
@@ -70,8 +64,8 @@ fun HomeScreen(
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val navController = LocalNavController.current
 
-    val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("needRefresh")
-    val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("previousGameId")
+    val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(Constants.HOME_NEED_REFRESH)
+    val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>(Constants.HOME_PREVIOUS_GAME_ID)
 
     // CROWN SCROLL CONFIG + LISTS STATES
     val focusRequester = remember { listOf(FocusRequester(), FocusRequester()).plus((categories).map { FocusRequester() }) }
