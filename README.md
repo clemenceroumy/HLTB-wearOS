@@ -6,9 +6,12 @@
 
 Based on the **HLTB website** https://howlongtobeat.com/
 
-**Next** : Optimize code to improve battery saving.
+**Next** :
+- Possibility to search and add game
+- Optimize code to improve battery saving.
 
-HowLongToBeat on WearOS. 
+
+HowLongToBeat, but on WearOS. 
 - Retrieve your HLTB games status by category. 
 - Select a game to start a stopwatch and save your timed session at the end of it.
 - See an history of your sessions.
