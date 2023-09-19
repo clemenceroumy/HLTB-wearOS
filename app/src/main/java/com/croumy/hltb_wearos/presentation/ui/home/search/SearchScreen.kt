@@ -61,7 +61,11 @@ fun SearchScreen(
             // IF BACK FROM GAME
             if (viewModel.hasNavigatedToAddGame.value) {
                 val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(Constants.SEARCH_NEED_REFRESH)
-                if(needRefresh == true) viewModel.search()
+                if(needRefresh == true) {
+                    // NEEDED TO REFRESH LIST ITEMS UI
+                    viewModel.resultGames.value = emptyList()
+                    viewModel.search()
+                }
                 viewModel.hasNavigatedToAddGame.value = false
             }
             // ON FIRST FOCUS (FROM HORIZONTAL SCROLL)
