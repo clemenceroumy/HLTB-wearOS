@@ -18,19 +18,30 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     val appService: AppService,
     private val hltbService: HLTBService
-): ViewModel() {
+) : ViewModel() {
     private val games: MutableState<List<Game>> = mutableStateOf(emptyList())
+
     // IN VIEWMODEL TO KEEP LIST SCROLLSTATE ON NAVIGATION
-    val listStates = listOf(ScalingLazyListState(initialCenterItemIndex = 0), ScalingLazyListState(initialCenterItemIndex = 0)).plus((categories).map { ScalingLazyListState(initialCenterItemIndex = 0) })
+    val listStates =
+        listOf(ScalingLazyListState(initialCenterItemIndex = 0), ScalingLazyListState(initialCenterItemIndex = 0)).plus((categories).map { ScalingLazyListState(initialCenterItemIndex = 0) })
     val currentListState = mutableStateOf(listStates[1])
 
-    val gamesByCategories get(): Map<Category, List<Game>> {
-        val map = mutableMapOf<Category, List<Game>>()
-        categories.forEach { category ->
-            map[category] = games.value.filter { it.categories.contains(category) }.sortedWith(compareBy({ -it.invested_pro }, { it.custom_title }))
+    val gamesByCategories
+        get(): Map<Category, List<Game>> {
+            val map = mutableMapOf<Category, List<Game>>()
+            categories.forEach { category ->
+                map[category] = games.value.filter { it.categories.contains(category) }.sortedWith(
+                    when (category) {
+                        Category.Playing -> compareByDescending { it.invested_pro }
+                        Category.Backlog, Category.Custom, Category.Custom2, Category.Custom3, Category.Retired -> compareBy { it.custom_title }
+                        Category.Completed -> compareByDescending { it.completedDate }
+                        else -> { compareBy { it.custom_title } }
+                    }
+                )
+            }
+            return map
         }
-        return map
-    }
+
     val isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     init {

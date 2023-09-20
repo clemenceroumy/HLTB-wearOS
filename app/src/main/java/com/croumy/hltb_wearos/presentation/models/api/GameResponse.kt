@@ -1,5 +1,7 @@
 package com.croumy.hltb_wearos.presentation.models.api
 
+import com.croumy.hltb_wearos.presentation.helpers.ISO8601_DATE_FORMAT
+import com.croumy.hltb_wearos.presentation.helpers.asDate
 import com.croumy.hltb_wearos.presentation.models.Category
 import com.soywiz.klock.Time
 import com.soywiz.klock.seconds
@@ -60,6 +62,7 @@ data class Game(
 ) {
     val picture: String get() = "https://howlongtobeat.com/games/$game_image"
     val timePlayed get() = Time(invested_pro.seconds)
+    val completedDate get() = date_complete.asDate(ISO8601_DATE_FORMAT)
     val categories get(): List<Category> {
         val categories: MutableList<Category> = mutableListOf()
         when {
