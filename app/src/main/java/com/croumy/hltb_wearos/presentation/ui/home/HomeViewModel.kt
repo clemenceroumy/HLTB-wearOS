@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
     val gamesByCategories get(): Map<Category, List<Game>> {
         val map = mutableMapOf<Category, List<Game>>()
         categories.forEach { category ->
-            map[category] = games.value.filter { it.categories.contains(category) }
+            map[category] = games.value.filter { it.categories.contains(category) }.sortedWith(compareBy({ -it.invested_pro }, { it.custom_title }))
         }
         return map
     }
@@ -40,7 +40,7 @@ class HomeViewModel @Inject constructor(
     suspend fun getGames() {
         isLoading.value = true
         val result = hltbService.getGames()
-        games.value = (result?.data?.gamesList ?: emptyList()).sortedBy { it.invested_pro }.reversed()
+        games.value = (result?.data?.gamesList ?: emptyList())
         isLoading.value = false
     }
 }
