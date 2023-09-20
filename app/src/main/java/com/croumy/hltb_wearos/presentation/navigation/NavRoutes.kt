@@ -4,8 +4,8 @@ open class NavRoutes(val route: String) {
     object StartApp: NavRoutes("StartApp")
     object Home: NavRoutes("Home")
     object GameDetails: NavRoutes("GameDetails") {
-        const val GAME_ID = "game_id"
-        val routeWithArgs = "${this.route}/{$GAME_ID}"
+        const val ID = "game_id"
+        val routeWithArgs = "${this.route}/{$ID}"
     }
     object AddGame: NavRoutes("AddGame") {
         const val GAME = "game"

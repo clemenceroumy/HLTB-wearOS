@@ -50,8 +50,7 @@ class HomeViewModel @Inject constructor(
 
     suspend fun getGames() {
         isLoading.value = true
-        val result = hltbService.getGames()
-        games.value = result
+        games.value = hltbService.getGames()
         isLoading.value = false
     }
 }

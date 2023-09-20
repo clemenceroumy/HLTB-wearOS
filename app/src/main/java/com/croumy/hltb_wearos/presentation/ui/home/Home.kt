@@ -178,8 +178,8 @@ fun HomeScreen(
                             items(games) { game ->
                                 GameItem(
                                     game,
-                                    isRunning = viewModel.appService.timer.value.gameId == game.game_id,
-                                    onClick = { navigateToGame(game.game_id) }
+                                    isRunning = viewModel.appService.timer.value.id == game.id,
+                                    onClick = { navigateToGame(game.id) }
                                 )
                             }
                         }

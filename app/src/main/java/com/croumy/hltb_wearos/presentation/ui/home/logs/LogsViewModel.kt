@@ -58,6 +58,7 @@ class LogsViewModel @Inject constructor(
         appService.timer.value = appService.timer.value.copy(
             state = TimerState.SAVING,
             gameId = log.gameId,
+            id = log.submissionId,
             time = log.timePlayedTime
         )
         appService.submitRequest.value = SubmitRequest(

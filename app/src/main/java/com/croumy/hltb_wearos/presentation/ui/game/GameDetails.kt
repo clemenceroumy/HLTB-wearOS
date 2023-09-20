@@ -64,7 +64,7 @@ fun GameDetails(
     val hasSavedSession = remember { mutableStateOf(false) }
 
     val progressAnimation = animateFloatAsState(timer.progress, label = "")
-    val isActiveSession = timer.gameId == viewModel.game.value?.game_id || timer.gameId == null
+    val isActiveSession = timer.id == viewModel.game.value?.id || timer.id == null
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->

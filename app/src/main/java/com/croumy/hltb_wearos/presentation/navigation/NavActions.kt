@@ -12,8 +12,8 @@ class NavActions(private val navController: NavHostController) {
         navController.navigate(NavRoutes.Home.route)
     }
 
-    fun navigateToGameDetails(gameId: Int) {
-        navController.navigate(NavRoutes.GameDetails.routeWithArgs.replace("{${NavRoutes.GameDetails.GAME_ID}}", gameId.toString()))
+    fun navigateToGameDetails(id: Int) {
+        navController.navigate(NavRoutes.GameDetails.routeWithArgs.replace("{${NavRoutes.GameDetails.ID}}", id.toString()))
     }
 
     fun navigateToAddGame(game: GameInfo) {

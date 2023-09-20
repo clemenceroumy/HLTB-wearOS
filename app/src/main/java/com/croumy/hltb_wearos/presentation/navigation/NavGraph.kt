@@ -39,7 +39,7 @@ fun NavGraph(navController: NavHostController, navState: SwipeDismissableNavHost
 
         composable(
             NavRoutes.GameDetails.routeWithArgs,
-            arguments = listOf(navArgument(NavRoutes.GameDetails.GAME_ID) { type = NavType.IntType }),
+            arguments = listOf(navArgument(NavRoutes.GameDetails.ID) { type = NavType.IntType }),
             deepLinks = listOf(navDeepLink {
                 uriPattern = "app://${BuildConfig.APPLICATION_ID}/${NavRoutes.GameDetails.routeWithArgs}"
             }),

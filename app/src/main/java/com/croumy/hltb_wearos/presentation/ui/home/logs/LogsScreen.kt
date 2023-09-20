@@ -155,10 +155,11 @@ fun LogsScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(
-                                modifier = Modifier.size(Dimensions.xsPadding),
-                                color = Color.Gray,
-                                strokeWidth = 2.dp,
-                                strokeCap = StrokeCap.Round
+                                color = Color.White,
+                                strokeWidth = Dimensions.xsStrokeSize,
+                                modifier = Modifier
+                                    .padding(Dimensions.xsPadding)
+                                    .size(Dimensions.sIcon)
                             )
                         }
                     } else if (viewModel.logs.value.isNotEmpty()) {

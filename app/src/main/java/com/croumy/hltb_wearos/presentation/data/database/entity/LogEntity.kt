@@ -10,7 +10,7 @@ import java.util.Date
 data class LogEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     var gameId: Int,
-    var submissionId: Int,
+    var submissionId: Int, // == GameResponse.id
     var timePlayed: Long, // AS MILLISECONDS
     var date: Date,
     var saved: Boolean,
