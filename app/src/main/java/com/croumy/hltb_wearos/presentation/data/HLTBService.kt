@@ -2,7 +2,10 @@ package com.croumy.hltb_wearos.presentation.data
 
 import SearchRequest
 import SubmitRequest
+import com.croumy.hltb_wearos.presentation.models.Constants.Companion.GET_GAMES_LIMIT
 import com.croumy.hltb_wearos.presentation.models.api.AddGameRequest
+import com.croumy.hltb_wearos.presentation.models.api.Game
+import com.croumy.hltb_wearos.presentation.models.api.GameList
 import com.croumy.hltb_wearos.presentation.models.api.GameListResponse
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import com.croumy.hltb_wearos.presentation.models.api.SearchResponse
@@ -69,14 +72,18 @@ class HLTBService @Inject constructor(
     }
 
 
-    suspend fun getGames(gameRequest: GameRequest = GameRequest()): GameListResponse? {
-        val response = retrofit.getGames(gameRequest, preferencesService.userId!!)
+    suspend fun getGames(gameRequest: GameRequest = GameRequest()): List<Game> {
+        val response: MutableList<GameListResponse> = mutableListOf()
+        var index = 0
 
-        if (response.isSuccessful && response.body() != null) {
-            return response.body()!!
-        } else {
-            throw Exception(response.message())
-        }
+        do {
+            gameRequest.limit = if(index == 0) "$GET_GAMES_LIMIT" else "${GET_GAMES_LIMIT * index},$GET_GAMES_LIMIT"
+            val result = retrofit.getGames(gameRequest, preferencesService.userId!!)
+            result.body()?.let { response.add(it) }
+            index++
+        } while (result.isSuccessful && result.body() != null && result.body()?.data?.count.toString() == GET_GAMES_LIMIT.toString())
+
+        return response.flatMap { it.data.gamesList }
     }
 
     suspend fun submitTime(submitRequest: SubmitRequest) {

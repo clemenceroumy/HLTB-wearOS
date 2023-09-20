@@ -77,7 +77,7 @@ class GameViewModel @Inject constructor(
     suspend fun getGame(isRefresh: Boolean = false) {
         isLoading.value = true
         val result = hltbService.getGames()
-        game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
+        game.value = result.firstOrNull { it.game_id == gameId }
         if(!isRefresh) isInPlayingList.value = game.value?.categories?.contains(Category.Playing) ?: false
         isLoading.value = false
     }

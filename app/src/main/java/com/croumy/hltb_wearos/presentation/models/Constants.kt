@@ -21,5 +21,7 @@ class Constants {
         const val HOME_NEED_REFRESH = "homeNeedRefresh"
         const val HOME_PREVIOUS_GAME_ID = "previousGameId"
         const val SEARCH_NEED_REFRESH = "searchNeedRefresh"
+
+        const val GET_GAMES_LIMIT = 1000
     }
 }
