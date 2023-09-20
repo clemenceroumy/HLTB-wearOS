@@ -32,9 +32,12 @@ class LogsViewModel @Inject constructor(
     val logs = mutableStateOf(emptyList<LogEntity>())
     val succeededLogs: List<LogEntity> get() = logs.value.filter { it.saved }
     val failedLogs: List<LogEntity> get() = logs.value.filter { !it.saved }
+    val isLoading = mutableStateOf(false)
 
     suspend fun getLogs() {
+        isLoading.value = true
         logs.value = logDao.getAll().sortedBy { it.date }.reversed()
+        isLoading.value = false
     }
 
     fun deleteLog(log: LogEntity) {

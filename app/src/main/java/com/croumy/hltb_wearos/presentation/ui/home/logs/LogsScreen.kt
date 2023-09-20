@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -31,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -49,6 +52,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
+import com.croumy.hltb_wearos.presentation.theme.primary
 import com.croumy.hltb_wearos.presentation.ui.components.LogItem
 import com.croumy.hltbwearos.R
 import kotlinx.coroutines.delay
@@ -119,7 +123,7 @@ fun LogsScreen(
                             viewModel.deleteAllLogs()
                             isClearing.value = false
                         }
-                        .background(MaterialTheme.colors.surface, CircleShape)
+                        .background(primary, CircleShape)
                         .padding(Dimensions.xsPadding)
                     ) {
                         Icon(Icons.Default.Check, "confirm clear")
@@ -145,7 +149,19 @@ fun LogsScreen(
                             ),
                     ) { Text("Logs") }
 
-                    if (viewModel.logs.value.isNotEmpty()) {
+                    if (viewModel.isLoading.value) {
+                        Box(
+                            Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(Dimensions.xsPadding),
+                                color = Color.Gray,
+                                strokeWidth = 2.dp,
+                                strokeCap = StrokeCap.Round
+                            )
+                        }
+                    } else if (viewModel.logs.value.isNotEmpty()) {
                         ScalingLazyColumn(
                             state = listState,
                             modifier = Modifier
@@ -208,7 +224,7 @@ fun LogsScreen(
                     }
                 }
 
-                if (viewModel.logs.value.isEmpty()) Text(
+                if (viewModel.logs.value.isEmpty() && !viewModel.isLoading.value) Text(
                     stringResource(id = R.string.no_logs),
                     style = MaterialTheme.typography.body1.copy(color = Color.Gray),
                     modifier = Modifier.align(Alignment.Center)
