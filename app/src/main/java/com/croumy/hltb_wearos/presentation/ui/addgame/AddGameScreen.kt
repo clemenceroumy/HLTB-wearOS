@@ -1,5 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.addgame
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -7,6 +8,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +21,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +56,7 @@ import com.croumy.hltb_wearos.presentation.theme.secondary
 import com.croumy.hltb_wearos.presentation.ui.addgame.components.AddGameButtons
 import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep
 import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep.Companion.isNext
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddGameScreen(
@@ -56,10 +65,12 @@ fun AddGameScreen(
     game: GameInfo,
     navigateBack: () -> Unit = {},
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
     val navController = LocalNavController.current
     val swipeBoxState = LocalNavSwipeBox.current
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val focusRequesters = remember { (0..2).map { FocusRequester() }}
 
     // 3 PICKER STATES TO WORK WITH ANIMATION
     val platformPickerState = rememberPickerState(
@@ -130,7 +141,9 @@ fun AddGameScreen(
                 modifier = Modifier.padding(horizontal = Dimensions.xsPadding)
             )
             AnimatedContent(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
                 targetState = viewModel.currentStep.value,
                 transitionSpec = {
                     val isScrollingForward = this.targetState.isNext(this.initialState)
@@ -153,9 +166,20 @@ fun AddGameScreen(
                     AddGameStep.STOREFRONT -> Storefront.allWithNoneOption
                     AddGameStep.CATEGORY -> categories.map { it.label!! }
                 }
+                val focusRequester = focusRequesters[viewModel.currentStep.value.ordinal]
+                LaunchedEffect(true) { focusRequester.requestFocus() }
 
                 Picker(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onRotaryScrollEvent {
+                            coroutineScope.launch {
+                                state.scrollBy(it.verticalScrollPixels)
+                            }
+                            true
+                        }
+                        .focusRequester(focusRequester)
+                        .focusable(),
                     state = state,
                     contentDescription = "",
                 ) { index ->
