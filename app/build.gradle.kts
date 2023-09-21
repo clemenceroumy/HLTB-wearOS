@@ -74,6 +74,7 @@ dependencies {
     val klockVersion = "3.4.0"
     val roomVersion = "2.5.2"
     val kotlinxVersion = "1.7.3"
+    val horlogistVersion = "0.5.0"
 
     // CORE
     implementation("androidx.lifecycle:lifecycle-service:2.6.2")
@@ -94,6 +95,9 @@ dependencies {
     implementation("androidx.wear:wear-remote-interactions:1.0.0")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
     implementation("androidx.wear:wear-input:1.2.0-alpha02")
+
+    // HORLOGIST
+    implementation("com.google.android.horologist:horologist-compose-layout:$horlogistVersion")
 
     // COMPOSE
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")

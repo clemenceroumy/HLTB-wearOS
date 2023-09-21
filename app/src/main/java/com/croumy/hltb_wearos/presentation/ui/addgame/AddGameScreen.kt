@@ -14,19 +14,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -45,17 +48,17 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.rememberPickerState
 import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Storefront
-import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
-import com.croumy.hltb_wearos.presentation.theme.primary
 import com.croumy.hltb_wearos.presentation.theme.secondary
 import com.croumy.hltb_wearos.presentation.ui.addgame.components.AddGameButtons
 import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep
 import com.croumy.hltb_wearos.presentation.ui.addgame.models.AddGameStep.Companion.isNext
+import com.google.android.horologist.compose.layout.fillMaxRectangle
 import kotlinx.coroutines.launch
 
 @Composable
@@ -91,7 +94,9 @@ fun AddGameScreen(
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) { viewModel.init(game) }
+            if (event == Lifecycle.Event.ON_START) {
+                viewModel.init(game)
+            }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
@@ -125,86 +130,97 @@ fun AddGameScreen(
     }
 
     Scaffold {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(vertical = Dimensions.xsPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                game.game_name,
-                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = Dimensions.xsPadding)
-            )
-            AnimatedContent(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                targetState = viewModel.currentStep.value,
-                transitionSpec = {
-                    val isScrollingForward = this.targetState.isNext(this.initialState)
-
-                    slideInHorizontally(animationSpec = tween(150, easing = FastOutLinearInEasing), initialOffsetX = {
-                        if (isScrollingForward) screenWidth.value.toInt()
-                        else -screenWidth.value.toInt()
-                    }) togetherWith ExitTransition.None
-                },
-                contentKey = { it },
-                label = ""
-            ) { currentStep ->
-                val state = when (currentStep) {
-                    AddGameStep.PLATFORM -> platformPickerState
-                    AddGameStep.STOREFRONT -> storefrontPickerState
-                    AddGameStep.CATEGORY -> categoryPickerState
-                }
-                val pickerItems: List<String> = when (currentStep) {
-                    AddGameStep.PLATFORM -> game.platformsWithNoneOption
-                    AddGameStep.STOREFRONT -> Storefront.allWithNoneOption
-                    AddGameStep.CATEGORY -> categories.map { it.label!! }
-                }
-                val focusRequester = focusRequesters[viewModel.currentStep.value.ordinal]
-                LaunchedEffect(true) { focusRequester.requestFocus() }
-
-                Picker(
+        Box {
+            Column(
+                modifier = modifier
+                    .fillMaxRectangle(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    game.game_name,
+                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = if(LocalConfiguration.current.isScreenRound) 0.dp else Dimensions.xsPadding),
+                )
+                AnimatedContent(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .onRotaryScrollEvent {
-                            coroutineScope.launch {
-                                state.scrollBy(it.verticalScrollPixels)
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    targetState = viewModel.currentStep.value,
+                    transitionSpec = {
+                        val isScrollingForward = this.targetState.isNext(this.initialState)
+
+                        slideInHorizontally(animationSpec = tween(150, easing = FastOutLinearInEasing), initialOffsetX = {
+                            if (isScrollingForward) screenWidth.value.toInt()
+                            else -screenWidth.value.toInt()
+                        }) togetherWith ExitTransition.None
+                    },
+                    contentKey = { it },
+                    label = ""
+                ) { currentStep ->
+                    val state = when (currentStep) {
+                        AddGameStep.PLATFORM -> platformPickerState
+                        AddGameStep.STOREFRONT -> storefrontPickerState
+                        AddGameStep.CATEGORY -> categoryPickerState
+                    }
+                    val pickerItems: List<String> = when (currentStep) {
+                        AddGameStep.PLATFORM -> game.platformsWithNoneOption
+                        AddGameStep.STOREFRONT -> Storefront.allWithNoneOption
+                        AddGameStep.CATEGORY -> categories.map { it.label!! }
+                    }
+                    val focusRequester = focusRequesters[viewModel.currentStep.value.ordinal]
+                    LaunchedEffect(true) { focusRequester.requestFocus() }
+
+                    Picker(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onRotaryScrollEvent {
+                                coroutineScope.launch {
+                                    state.scrollBy(it.verticalScrollPixels)
+                                }
+                                true
                             }
-                            true
-                        }
-                        .focusRequester(focusRequester)
-                        .focusable(),
-                    state = state,
-                    contentDescription = "",
-                ) { index ->
-                    Box(
-                        modifier = if (index == state.selectedOption) Modifier
-                            .defaultMinSize(minWidth = screenWidth / 2)
-                            .background(
-                                color = if (currentStep == AddGameStep.CATEGORY) Category.fromLabel(pickerItems[index]).color
-                                else secondary,
-                                shape = CircleShape
+                            .focusRequester(focusRequester)
+                            .focusable(),
+                        state = state,
+                        contentDescription = "",
+                    ) { index ->
+                        Box(
+                            modifier = if (index == state.selectedOption) Modifier
+                                .defaultMinSize(minWidth = screenWidth / 2)
+                                .background(
+                                    color = if (currentStep == AddGameStep.CATEGORY) Category.fromLabel(pickerItems[index]).color
+                                    else secondary,
+                                    shape = CircleShape
+                                )
+                                .padding(vertical = Dimensions.xsPadding, horizontal = Dimensions.sPadding)
+                            else Modifier,
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = pickerItems[index],
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                             )
-                            .padding(vertical = Dimensions.xsPadding, horizontal = Dimensions.sPadding)
-                        else Modifier,
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = pickerItems[index],
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                        )
+                        }
                     }
                 }
+                Box(
+                    Modifier.height(
+                        if (LocalConfiguration.current.isScreenRound) Dimensions.mIcon / 2
+                        else Dimensions.mIcon
+                    )
+                )
             }
+
             AddGameButtons(
-                modifier = Modifier.padding(horizontal = Dimensions.xsPadding),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(horizontal = Dimensions.xsPadding)
+                    .padding(bottom = if(LocalConfiguration.current.isScreenRound) Dimensions.xsPadding else 0.dp),
                 currentStep = viewModel.currentStep.value,
                 isLoading = viewModel.isAdding.value == true,
                 onAction = {
