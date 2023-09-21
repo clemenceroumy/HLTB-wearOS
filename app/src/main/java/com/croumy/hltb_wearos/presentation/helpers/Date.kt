@@ -6,6 +6,7 @@ import java.util.Date
 
 const val DATE_FORMAT = "dd/MM/yyyy"
 const val DATETIME_FORMAT = "dd/MM/yyyy HH:mm"
+const val ISO8601_DATE_FORMAT = "yyyy-MM-dd"
 
 fun Time.asString(
     withSeconds: Boolean = false,
@@ -27,6 +28,6 @@ fun Date.asString(): String {
     return SimpleDateFormat(DATETIME_FORMAT).format(this)
 }
 
-fun String.asDate(): Date {
-    return SimpleDateFormat(DATETIME_FORMAT).parse(this)
+fun String.asDate(format: String = DATETIME_FORMAT): Date {
+    return SimpleDateFormat(format).parse(this)
 }

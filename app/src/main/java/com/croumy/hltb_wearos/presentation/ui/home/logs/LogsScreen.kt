@@ -1,5 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.home.logs
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,10 +12,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -29,14 +33,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -47,15 +50,18 @@ import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.croumy.hltb_wearos.presentation.components.LogItem
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
+import com.croumy.hltb_wearos.presentation.theme.primary
+import com.croumy.hltb_wearos.presentation.ui.components.LogItem
 import com.croumy.hltbwearos.R
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun LogsScreen(
     viewModel: LogsViewModel = hiltViewModel(),
+    isFocusedScreen: Boolean = false,
     listState: ScalingLazyListState,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
@@ -66,14 +72,15 @@ fun LogsScreen(
 
     val isClearing = remember { mutableStateOf(false) }
 
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) {
-                viewModel.getLogs()
+    LaunchedEffect(isFocusedScreen) {
+        if (isFocusedScreen) {
+            viewModel.getLogs()
+            if (viewModel.logs.value.isNotEmpty()) {
+                // WAIT FOR THE ScalingLazyColumn TO BE READY
+                delay(300)
+                focusRequester.requestFocus()
             }
         }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     LaunchedEffect(viewModel.appService.timer.value.state) {
@@ -84,10 +91,14 @@ fun LogsScreen(
         }
     }
 
-    AnimatedContent(targetState = isClearing.value, label = "") {
+    AnimatedContent(
+        targetState = isClearing.value,
+        label = "",
+        modifier = modifier
+    ) {
         if (it) {
             Column(
-                modifier
+                Modifier
                     .fillMaxSize()
                     .padding(horizontal = Dimensions.mPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -112,7 +123,7 @@ fun LogsScreen(
                             viewModel.deleteAllLogs()
                             isClearing.value = false
                         }
-                        .background(MaterialTheme.colors.surface, CircleShape)
+                        .background(primary, CircleShape)
                         .padding(Dimensions.xsPadding)
                     ) {
                         Icon(Icons.Default.Check, "confirm clear")
@@ -125,7 +136,7 @@ fun LogsScreen(
                 Modifier.fillMaxSize()
             ) {
                 Column(
-                    modifier,
+                    Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
@@ -138,74 +149,86 @@ fun LogsScreen(
                             ),
                     ) { Text("Logs") }
 
-                    if (viewModel.logs.value.isNotEmpty()) ScalingLazyColumn(
-                        state = listState,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = Dimensions.xxsPadding)
-                            .onRotaryScrollEvent {
-                                coroutineScope.launch {
-                                    listState.scrollBy(it.verticalScrollPixels)
-                                }
-                                true
-                            }
-                            .focusRequester(focusRequester)
-                            .focusable(),
-                    ) {
-                        if (viewModel.failedLogs.isNotEmpty()) {
-                            item {
-                                Text(
-                                    stringResource(id = R.string.logs_history_errors),
-                                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                                    modifier = Modifier.padding(bottom = Dimensions.xsPadding)
-                                )
-                            }
-                            items(viewModel.failedLogs) { log ->
-                                val isLoading =
-                                    viewModel.appService.timer.value.state == TimerState.SAVING
-
-                                LogItem(
-                                    log,
-                                    isLoading = isLoading,
-                                    onRefresh = { viewModel.resend(log) },
-                                    onCancel = { viewModel.deleteLog(log) })
-                            }
-                            item {
-                                Spacer(Modifier.height(Dimensions.xsPadding))
-                            }
+                    if (viewModel.isLoading.value) {
+                        Box(
+                            Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                strokeWidth = Dimensions.xsStrokeSize,
+                                modifier = Modifier
+                                    .padding(Dimensions.xsPadding)
+                                    .size(Dimensions.sIcon)
+                            )
                         }
-
-                        if (viewModel.succeededLogs.isNotEmpty()) {
-                            item {
-                                Text(
-                                    stringResource(id = R.string.logs_history),
-                                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                                    modifier = Modifier.padding(bottom = Dimensions.xsPadding)
-                                )
-                            }
-                            items(viewModel.succeededLogs) { log ->
-                                LogItem(log)
-                            }
-                            item {
-                                Spacer(Modifier.height(Dimensions.xsPadding))
-                                TextButton(onClick = { isClearing.value = true }) {
+                    } else if (viewModel.logs.value.isNotEmpty()) {
+                        ScalingLazyColumn(
+                            state = listState,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = Dimensions.xxsPadding)
+                                .onRotaryScrollEvent {
+                                    coroutineScope.launch {
+                                        listState.scrollBy(it.verticalScrollPixels)
+                                    }
+                                    true
+                                }
+                                .focusRequester(focusRequester)
+                                .focusable(),
+                        ) {
+                            if (viewModel.failedLogs.isNotEmpty()) {
+                                item {
                                     Text(
-                                        stringResource(id = R.string.logs_clear_all),
-                                        style = MaterialTheme.typography.body1,
+                                        stringResource(id = R.string.logs_history_errors),
+                                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                                        modifier = Modifier.padding(bottom = Dimensions.xsPadding)
                                     )
+                                }
+                                items(viewModel.failedLogs) { log ->
+                                    val isLoading =
+                                        viewModel.appService.timer.value.state == TimerState.SAVING
+
+                                    LogItem(
+                                        log,
+                                        isLoading = isLoading,
+                                        onRefresh = { viewModel.resend(log) },
+                                        onCancel = { viewModel.deleteLog(log) })
+                                }
+                                item {
+                                    Spacer(Modifier.height(Dimensions.xsPadding))
+                                }
+                            }
+
+                            if (viewModel.succeededLogs.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        stringResource(id = R.string.logs_history),
+                                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                                        modifier = Modifier.padding(bottom = Dimensions.xsPadding)
+                                    )
+                                }
+                                items(viewModel.succeededLogs) { log ->
+                                    LogItem(log)
+                                }
+                                item {
+                                    Spacer(Modifier.height(Dimensions.xsPadding))
+                                    TextButton(onClick = { isClearing.value = true }) {
+                                        Text(
+                                            stringResource(id = R.string.logs_clear_all),
+                                            style = MaterialTheme.typography.body1,
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                if (viewModel.logs.value.isEmpty()) Text(
+                if (viewModel.logs.value.isEmpty() && !viewModel.isLoading.value) Text(
                     stringResource(id = R.string.no_logs),
                     style = MaterialTheme.typography.body1.copy(color = Color.Gray),
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .focusRequester(focusRequester)
-                        .focusable()
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }

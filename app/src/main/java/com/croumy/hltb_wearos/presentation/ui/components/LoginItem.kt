@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.components
+package com.croumy.hltb_wearos.presentation.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

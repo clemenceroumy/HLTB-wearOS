@@ -41,7 +41,6 @@ class SaveTimeWorker @AssistedInject constructor(
         )
 
         return try {
-            Log.i("SaveTimeWorker", "Saving time: ${appService.submitRequest.value!!}")
             hltbService.submitTime(appService.submitRequest.value!!)
 
             appService.timer.value = appService.timer.value.copy(state = TimerState.SAVED)

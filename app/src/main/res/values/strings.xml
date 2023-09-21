@@ -2,6 +2,8 @@
     <string name="app_name">HLTB</string>
     <string name="refresh">Refresh</string>
     <string name="cancel">Cancel</string>
+    <string name="clear">Clear</string>
+    <string name="none">None</string>
 
     <string name="phone_needed">No phone connected</string>
     <string name="phone_needed_description">No phone connected to this watch. A phone is needed to log into your HLTB account</string>
@@ -21,4 +23,10 @@
     <string name="no_logs">No sessions registered yet</string>
     <string name="logs_clear_all">Clear logs</string>
     <string name="logs_clear_all_confirm">You will delete all local logs. This will not affect your sessions on HLTB.</string>
+
+    <string name="search_title">Search a game</string>
+    <string name="search_clear_input">Clear search</string>
+    <string name="search_no_results">No results for search %1$s</string>
+
+    <string name="add_game_platform">Pick a platform</string>
 </resources>

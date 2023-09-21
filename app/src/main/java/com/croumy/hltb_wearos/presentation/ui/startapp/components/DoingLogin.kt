@@ -81,7 +81,7 @@ fun DoingLogin(
                 }
         }
 
-        if(!(isLoggedIn && isLoggingIn)) {
+        if(!isLoggedIn && isLoggingIn) {
             TextButton(
                 onClick = { cancel() },
                 Modifier

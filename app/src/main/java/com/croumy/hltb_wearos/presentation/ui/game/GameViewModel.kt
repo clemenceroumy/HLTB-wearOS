@@ -18,7 +18,7 @@ import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.models.TimerState
-import com.croumy.hltb_wearos.presentation.models.api.Category
+import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService
@@ -37,7 +37,7 @@ class GameViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     @ApplicationContext val context: Context,
 ) : ViewModel() {
-   private val gameId: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.GAME_ID) ?: 0
+   private val id: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.ID) ?: 0
 
     var foregroundOnlyServiceBound = false
     private var foregroundOnlyTimerService: TimerService? = null
@@ -77,13 +77,16 @@ class GameViewModel @Inject constructor(
     suspend fun getGame(isRefresh: Boolean = false) {
         isLoading.value = true
         val result = hltbService.getGames()
-        game.value = result?.data?.gamesList?.firstOrNull { it.game_id == gameId }
+        game.value = result.firstOrNull { it.id == id }
         if(!isRefresh) isInPlayingList.value = game.value?.categories?.contains(Category.Playing) ?: false
         isLoading.value = false
     }
 
     fun startTimer() {
-        appService.timer.value = appService.timer.value.copy(gameId = game.value?.game_id)
+        appService.timer.value = appService.timer.value.copy(
+            gameId = game.value?.game_id,
+            id = game.value?.id,
+        )
         foregroundOnlyTimerService?.startTimer()
     }
 

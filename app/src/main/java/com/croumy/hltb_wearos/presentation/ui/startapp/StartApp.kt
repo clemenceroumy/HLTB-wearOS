@@ -1,7 +1,6 @@
 package com.croumy.hltb_wearos.presentation.ui.startapp
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,8 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.remote.interactions.RemoteActivityHelper
-import com.croumy.hltb_wearos.presentation.components.LoginItem
+import com.croumy.hltb_wearos.presentation.ui.components.LoginItem
 import com.croumy.hltb_wearos.presentation.helpers.Launcher
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.PHONE_CAPABILITY
@@ -77,7 +75,7 @@ fun StartApp(
             if (isLoggedIn.value && isLoggingIn.value) {
                 delay(400) // TIME TO SHOW THE CHECK ICON
             }
-            viewModel.initCategories()
+            viewModel.initWithUserData()
             navigateToHome()
         }
     }

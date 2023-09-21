@@ -134,7 +134,7 @@ class TimerService : LifecycleService() {
         val notificationChannel = NotificationChannel(Constants.CHANNEL_ID, "TimerChannel", NotificationManager.IMPORTANCE_DEFAULT)
         notificationManager.createNotificationChannel(notificationChannel)
 
-        val route = NavRoutes.GameDetails.routeWithArgs.replace("{${NavRoutes.GameDetails.GAME_ID}}", appService.timer.value.gameId.toString())
+        val route = NavRoutes.GameDetails.routeWithArgs.replace("{${NavRoutes.GameDetails.ID}}", appService.timer.value.id.toString())
 
         val intent = Intent(
             Intent.ACTION_VIEW,

@@ -40,14 +40,16 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
-import com.croumy.hltb_wearos.presentation.components.GameItem
 import com.croumy.hltb_wearos.presentation.models.Constants
-import com.croumy.hltb_wearos.presentation.models.api.Category
-import com.croumy.hltb_wearos.presentation.models.api.categories
+import com.croumy.hltb_wearos.presentation.models.Category
+import com.croumy.hltb_wearos.presentation.models.api.GameInfo
+import com.croumy.hltb_wearos.presentation.models.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.HLTBwearosTheme
 import com.croumy.hltb_wearos.presentation.theme.shimmerColor
+import com.croumy.hltb_wearos.presentation.ui.components.GameItem
 import com.croumy.hltb_wearos.presentation.ui.home.logs.LogsScreen
+import com.croumy.hltb_wearos.presentation.ui.home.search.SearchScreen
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.launch
 
@@ -55,27 +57,31 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    navigateToGame: (Int) -> Unit = {}
+    navigateToGame: (Int) -> Unit = {},
+    navigateToAddGame: (GameInfo) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val navController = LocalNavController.current
 
-    val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("needRefresh")
-    val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("previousGameId")
+    val needRefresh = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(Constants.HOME_NEED_REFRESH)
+    val previousGameId = navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Int>(Constants.HOME_PREVIOUS_GAME_ID)
 
     // CROWN SCROLL CONFIG + LISTS STATES
-    val focusRequester = listOf(FocusRequester()).plus((categories).map { FocusRequester() })
-    val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
+    val focusRequester = remember { listOf(FocusRequester(), FocusRequester()).plus((categories).map { FocusRequester() }) }
+    val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 2)
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        if (horizontalFirstVisibleIndex.value > 1) {
+            focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
 
-        // RESET PREVIOUS CATEGORY LIST SCROLL POSITION
-        val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
-        if(hasHorizontallyScrolled) viewModel.currentListState.value.scrollToItem(0)
-        // SET CURRENT CATEGORY LIST SCROLL STATE
+            // ON CHANGE OF CATEGORY, RESET SCROLL OF PREVIOUS CATEGORY AND GO TO TOP OF LIST
+            val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
+            if(hasHorizontallyScrolled) viewModel.currentListState.value.scrollToItem(0)
+        }
+
+        // SET CURRENT SCREEN LIST SCROLL STATE
         viewModel.currentListState.value = viewModel.listStates[horizontalFirstVisibleIndex.value]
     }
 
@@ -105,10 +111,22 @@ fun HomeScreen(
             flingBehavior = rememberSnapFlingBehavior(lazyListState = horizontalScrollState)
         ) {
             item {
-                LogsScreen(
+                SearchScreen(
                     modifier = Modifier.width(screenWidth.dp),
+                    isFocusedScreen = horizontalFirstVisibleIndex.value == 0,
                     listState = viewModel.listStates[0],
                     focusRequester = focusRequester[0],
+                    navigateToAddGame = navigateToAddGame,
+                    onGameAdded = { coroutineScope.launch { viewModel.getGames() } }
+                )
+            }
+
+            item {
+                LogsScreen(
+                    modifier = Modifier.width(screenWidth.dp),
+                    isFocusedScreen = horizontalFirstVisibleIndex.value == 1,
+                    listState = viewModel.listStates[1],
+                    focusRequester = focusRequester[1],
                     refreshGames = { coroutineScope.launch { viewModel.getGames() } }
                 )
             }
@@ -131,17 +149,17 @@ fun HomeScreen(
                     ) { Text(category.label ?: "") }
 
                     ScalingLazyColumn(
-                        state = viewModel.listStates[index + 1],
+                        state = viewModel.listStates[index + 2],
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = Dimensions.xxsPadding)
                             .onRotaryScrollEvent {
                                 coroutineScope.launch {
-                                    viewModel.listStates[index + 1].scrollBy(it.verticalScrollPixels)
+                                    viewModel.listStates[index + 2].scrollBy(it.verticalScrollPixels)
                                 }
                                 true
                             }
-                            .focusRequester(focusRequester[index + 1])
+                            .focusRequester(focusRequester[index + 2])
                             .focusable(),
                         verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
                         contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
@@ -160,8 +178,8 @@ fun HomeScreen(
                             items(games) { game ->
                                 GameItem(
                                     game,
-                                    isRunning = viewModel.appService.timer.value.gameId == game.game_id,
-                                    onClick = { navigateToGame(game.game_id) }
+                                    isRunning = viewModel.appService.timer.value.id == game.id,
+                                    onClick = { navigateToGame(game.id) }
                                 )
                             }
                         }
