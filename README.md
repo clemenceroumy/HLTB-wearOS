@@ -6,16 +6,10 @@
 
 Based on the **HLTB website** https://howlongtobeat.com/
 
+HowLongToBeat, but on WearOS.
+
 **Next** :
-- Possibility to search and add game
 - Optimize code to improve battery saving.
-
-
-HowLongToBeat, but on WearOS. 
-- Retrieve your HLTB games status by category. 
-- Select a game to start a stopwatch and save your timed session at the end of it.
-- See an history of your sessions.
-- If an error occurs while sending a session to HLTB, a log is saved locally and you will be able to try sending it later (or upload it manually to HLTB and remove it from the logs).
 
 ## Installation
 
@@ -29,7 +23,7 @@ There's one for the actual wearOS app and an another one for the phone app (need
 4. Have fun beating your games !😁
 
 
-## Screenshots
+## Features
 
 ### Login
 
@@ -37,13 +31,25 @@ There's one for the actual wearOS app and an another one for the phone app (need
 
 ### Display games by categories
 
+Retrieve your HLTB games status by category.
+
 ![HomePlayingCategory](./documentation/home_playing.png)
 ![HomeBacklogCategory](./documentation/home_backlog.png)
 
 ### Launch a gaming session
 
+Select a game to start a stopwatch and save your timed session at the end of it.
+
 ![TimedSession](./documentation/saving_time.gif)
 
 ### Logs of sessions
 
+See an history of your game sessions. 
+If an error occurred while sending a session to HLTB, a log is saved locally and you will be able to try sending it from here (or upload it manually to HLTB and remove it from the logs).
+
 ![Logs](./documentation/logs.gif)
+
+### Searching and adding games
+#### Search
+
+![Search](./documentation/search.gif)
