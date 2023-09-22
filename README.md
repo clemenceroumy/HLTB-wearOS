@@ -51,4 +51,11 @@ If an error occurred while sending a session to HLTB, a log is saved locally and
 
 ### Searching and adding games
 
+Search for a game on HLTB. By default, the search is ordered by most popular games.
+You can search a game either by vocal or keyboard input.
+
+Add a game from search view. You can add a game several times, as on the website. If you already have the game
+in (at least) one of your list, you'll see a check mark on the game item.
+
 ![Search](./documentation/search.gif)
+![AddGame](./documentation/addgame.gif)
