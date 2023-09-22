@@ -50,6 +50,5 @@ If an error occurred while sending a session to HLTB, a log is saved locally and
 ![Logs](./documentation/logs.gif)
 
 ### Searching and adding games
-#### Search
 
 ![Search](./documentation/search.gif)
