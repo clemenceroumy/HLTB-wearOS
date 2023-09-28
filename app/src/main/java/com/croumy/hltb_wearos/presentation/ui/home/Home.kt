@@ -92,10 +92,10 @@ fun HomeScreen(
             viewModel.getGames()
             navController.currentBackStackEntry?.savedStateHandle?.set(Constants.HOME_NEED_REFRESH, false)
             // SCROLL TO PLAYING LIST
-            horizontalScrollState.scrollToItem(1)
+            horizontalScrollState.scrollToItem(2)
             //AND SCROLL TO GAME ITEM
             val gameIndex = viewModel.gamesByCategories[Category.Playing]?.indexOfFirst { it.game_id == previousGameId?.value }
-            viewModel.currentListState.value = viewModel.listStates[1]
+            viewModel.currentListState.value = viewModel.listStates[2]
             viewModel.currentListState.value.scrollToItem(gameIndex ?: 0)
             navController.currentBackStackEntry?.savedStateHandle?.set(Constants.HOME_PREVIOUS_GAME_ID, null)
         }
