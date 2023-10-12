@@ -81,7 +81,7 @@ data class GameInfo(
 ) : Parcelable {
     val picture: String get() = "https://howlongtobeat.com/games/$game_image"
     var isInUserList: Boolean = false
-    private val platforms get(): List<String> = profile_platform.split(",")
+    private val platforms get(): List<String> = profile_platform.split(",").map { it.trim() }
     val platformsWithNoneOption get(): List<String> = listOf(MainActivity.context.getString(R.string.none)).plus(platforms)
 
     constructor(parcel: Parcel) : this(
