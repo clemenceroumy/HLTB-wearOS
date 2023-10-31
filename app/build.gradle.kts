@@ -25,6 +25,7 @@ android {
             useSupportLibrary = true
         }
 
+        testInstrumentationRunner = "com.croumy.hltb_wearos.helpers.CustomTestRunner"
     }
 
     buildTypes {
@@ -103,7 +104,6 @@ dependencies {
 
     // COMPOSE
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.activity:activity-compose:1.8.0")
@@ -148,7 +148,11 @@ dependencies {
     implementation("com.soywiz.korlibs.klock:klock:$klockVersion")
 
     // Tests
+    implementation("androidx.test:runner:1.5.2")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.46")
 }
 
 kapt {

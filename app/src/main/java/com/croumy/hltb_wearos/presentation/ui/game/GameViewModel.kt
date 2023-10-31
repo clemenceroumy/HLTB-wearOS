@@ -14,9 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
+import com.croumy.hltb_wearos.presentation.data.interfaces.IAppService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
+import com.croumy.hltb_wearos.presentation.data.interfaces.IHLTBService
+import com.croumy.hltb_wearos.presentation.data.interfaces.IPreferenceService
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.models.Category
 import com.croumy.hltb_wearos.presentation.models.api.Game
@@ -31,9 +33,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    val appService: AppService,
-    private val hltbService: HLTBService,
-    private val preferencesService: PreferencesService,
+    val appService: IAppService,
+    private val hltbService: IHLTBService,
+    private val preferencesService: IPreferenceService,
     private val savedStateHandle: SavedStateHandle,
     @ApplicationContext val context: Context,
 ) : ViewModel() {

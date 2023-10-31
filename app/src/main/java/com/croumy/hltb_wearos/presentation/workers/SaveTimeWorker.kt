@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
-import com.croumy.hltb_wearos.presentation.helpers.asDate
+import com.croumy.hltb_wearos.presentation.helpers.extensions.asDate
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject

@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.helpers
+package com.croumy.hltb_wearos.presentation.helpers.extensions
 
 import com.soywiz.klock.Time
 import java.text.SimpleDateFormat

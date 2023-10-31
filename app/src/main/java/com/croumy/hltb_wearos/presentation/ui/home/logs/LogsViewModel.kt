@@ -12,11 +12,10 @@ import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
-import com.croumy.hltb_wearos.presentation.helpers.asString
+import com.croumy.hltb_wearos.presentation.helpers.extensions.asString
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
-import com.croumy.hltbwearos.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch

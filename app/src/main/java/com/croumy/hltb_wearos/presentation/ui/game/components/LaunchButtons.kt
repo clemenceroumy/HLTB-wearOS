@@ -1,9 +1,5 @@
 package com.croumy.hltb_wearos.presentation.ui.game.components
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,15 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.testTag
 import androidx.wear.compose.material.MaterialTheme
+import com.croumy.hltb_wearos.presentation.constants.TestTags
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
 import com.croumy.hltb_wearos.presentation.theme.Dimensions.Companion.mIcon
 import com.croumy.hltb_wearos.presentation.theme.Dimensions.Companion.sIcon
-import com.croumy.hltb_wearos.presentation.theme.Dimensions.Companion.xsIcon
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun LaunchButtons(
     timer: Timer,
@@ -54,6 +50,7 @@ fun LaunchButtons(
         if (timer.state == TimerState.STOPPED || timer.state == TimerState.SAVING) {
             Box(
                 Modifier
+                    .testTag(TestTags.SESSION_CANCEL_BTN)
                     .size(sIcon)
                     .background(MaterialTheme.colors.surface, CircleShape)
                     .clip(CircleShape)
@@ -72,6 +69,7 @@ fun LaunchButtons(
 
             Box(
                 Modifier
+                    .testTag(TestTags.SESSION_SAVE_BTN)
                     .offset(x = Dimensions.xsPadding)
                     .size(mIcon)
                     .background(MaterialTheme.colors.primary, CircleShape)
@@ -102,6 +100,7 @@ fun LaunchButtons(
         } else {
             Box(
                 Modifier
+                    .testTag(TestTags.SESSION_PLAY_BTN)
                     .size(mIcon)
                     .background(MaterialTheme.colors.primary, CircleShape)
                     .clip(CircleShape)
@@ -114,33 +113,32 @@ fun LaunchButtons(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                //AnimatedContent(targetState = (timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED), label = "") { isInactive ->
-                    if ((timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED)) {
-                        Icon(
-                            Icons.Filled.PlayArrow,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .padding(Dimensions.xxsPadding)
-                                .size(mIcon),
-                            tint = Color.White
-                        )
-                    } else {
-                        Icon(
-                            Icons.Filled.Pause,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .padding(Dimensions.xsPadding)
-                                .size(mIcon),
-                            tint = Color.White
-                        )
-                    }
-                //}
+                if ((timer.state == TimerState.IDLE || timer.state == TimerState.PAUSED)) {
+                    Icon(
+                        Icons.Filled.PlayArrow,
+                        contentDescription = "play",
+                        modifier = Modifier
+                            .padding(Dimensions.xxsPadding)
+                            .size(mIcon),
+                        tint = Color.White
+                    )
+                } else {
+                    Icon(
+                        Icons.Filled.Pause,
+                        contentDescription = "pause",
+                        modifier = Modifier
+                            .padding(Dimensions.xsPadding)
+                            .size(mIcon),
+                        tint = Color.White
+                    )
+                }
             }
         }
 
-        if(timer.state == TimerState.PAUSED) {
+        if (timer.state == TimerState.PAUSED) {
             Box(
                 Modifier
+                    .testTag(TestTags.SESSION_STOP_BTN)
                     .offset(x = Dimensions.xsPadding)
                     .size(sIcon)
                     .background(MaterialTheme.colors.surface, CircleShape)

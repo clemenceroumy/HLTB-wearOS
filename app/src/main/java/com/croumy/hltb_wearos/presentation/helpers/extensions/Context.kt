@@ -1,4 +1,4 @@
-package com.croumy.hltb_wearos.presentation.helpers
+package com.croumy.hltb_wearos.presentation.helpers.extensions
 
 import android.app.Activity
 import android.content.Context
