@@ -150,7 +150,7 @@ fun LaunchButtons(
             ) {
                 Icon(
                     Icons.Filled.Stop,
-                    contentDescription = "",
+                    contentDescription = "stop",
                     modifier = Modifier
                         .padding(Dimensions.xxsPadding)
                         .size(sIcon),

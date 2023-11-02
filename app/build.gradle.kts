@@ -148,7 +148,12 @@ dependencies {
     implementation("com.soywiz.korlibs.klock:klock:$klockVersion")
 
     // Tests
+    implementation("androidx.test.espresso:espresso-idling-resource:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("androidx.test:runner:1.5.2")
+    implementation("androidx.test:rules:1.5.0")
+    debugImplementation("androidx.test:core:1.5.0")
+    debugImplementation("androidx.test:monitor:1.6.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")

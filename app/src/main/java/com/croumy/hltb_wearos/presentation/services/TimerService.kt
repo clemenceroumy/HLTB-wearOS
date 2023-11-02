@@ -23,7 +23,6 @@ import androidx.lifecycle.LifecycleService
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
 import com.croumy.hltb_wearos.presentation.MainActivity
-import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.interfaces.IAppService
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.NOTIFICATION_ID

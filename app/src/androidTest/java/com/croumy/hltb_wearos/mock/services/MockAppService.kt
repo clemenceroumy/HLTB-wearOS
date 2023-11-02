@@ -10,6 +10,7 @@ import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.plus
+import com.soywiz.klock.seconds
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
@@ -29,11 +30,9 @@ class MockAppService : IAppService {
     override fun startTimer() {
         Log.i("MockAppService", "startTimer()")
         timer.value = timer.value.copy(state = TimerState.STARTED)
-        timer.value = timer.value.copy(time = timer.value.time.plus(10.milliseconds))
-
-        stopwatch = fixedRateTimer(initialDelay = 10L, period = 10L) {
-            timer.value = timer.value.copy(time = timer.value.time.plus(10.milliseconds))
-        }
+        /* TODO: Using `fixedRateTimer(initialDelay = 10L, period = 10L)` (as in AppService) causes test to loop
+         temp while checking how to use it (if possible) */
+        timer.value = timer.value.copy(time = timer.value.time.plus(2.seconds))
     }
 
     override fun pauseTimer() {
