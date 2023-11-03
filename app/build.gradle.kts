@@ -150,6 +150,7 @@ dependencies {
     // Tests
     implementation("androidx.test.espresso:espresso-idling-resource:3.5.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.work:work-testing:$workVersion")
     implementation("androidx.test:runner:1.5.2")
     implementation("androidx.test:rules:1.5.0")
     debugImplementation("androidx.test:core:1.5.0")

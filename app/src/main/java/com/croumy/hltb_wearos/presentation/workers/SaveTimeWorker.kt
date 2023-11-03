@@ -8,6 +8,8 @@ import androidx.work.WorkerParameters
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.HLTBService
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
+import com.croumy.hltb_wearos.presentation.data.interfaces.IAppService
+import com.croumy.hltb_wearos.presentation.data.interfaces.IHLTBService
 import com.croumy.hltb_wearos.presentation.helpers.extensions.asDate
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import dagger.assisted.Assisted
@@ -18,8 +20,8 @@ import java.util.Calendar
 class SaveTimeWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val hltbService: HLTBService,
-    private val appService: AppService
+    private val hltbService: IHLTBService,
+    private val appService: IAppService
 ) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
         val isRetrying = inputData.getBoolean("IS_RETRYING", false)

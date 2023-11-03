@@ -1,6 +1,7 @@
 package com.croumy.hltb_wearos.presentation.workers
 
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -17,16 +18,14 @@ class WorkerHelper {
                 .build()
 
             val uploadWorkRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<W>()
+                .addTag(name)
                 .setInputData(data ?: Data.EMPTY)
                 .setConstraints(constraints)
                 .build()
 
-            MainScope().launch {
-                WorkManager
-                    .getInstance(context)
-                    .enqueue(uploadWorkRequest)
-            }
+            WorkManager
+                .getInstance(context)
+                .enqueue(uploadWorkRequest)
         }
-
     }
 }

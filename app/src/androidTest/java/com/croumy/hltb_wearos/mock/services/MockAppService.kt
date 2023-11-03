@@ -25,6 +25,8 @@ class MockAppService : IAppService {
 
     override fun clearTimer() {
         Log.i("MockAppService", "clearTimer()")
+        timer.value = Timer()
+        submitRequest.value = null
     }
 
     override fun startTimer() {
@@ -50,5 +52,4 @@ class MockAppService : IAppService {
     override fun saveLog(log: LogEntity, isRetrying: Boolean) {
         Log.i("MockAppService", "saveLog()")
     }
-
 }
