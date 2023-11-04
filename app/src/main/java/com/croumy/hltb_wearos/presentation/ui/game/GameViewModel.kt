@@ -26,6 +26,7 @@ import com.croumy.hltb_wearos.presentation.navigation.NavRoutes
 import com.croumy.hltb_wearos.presentation.services.TimerService
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
+import com.croumy.hltb_wearos.presentation.workers.interfaces.IWorkerHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -37,6 +38,7 @@ class GameViewModel @Inject constructor(
     private val hltbService: IHLTBService,
     private val preferencesService: IPreferenceService,
     private val savedStateHandle: SavedStateHandle,
+    private val workerHelper: IWorkerHelper,
     @ApplicationContext val context: Context,
 ) : ViewModel() {
    private val id: Int = savedStateHandle.get<Int>(NavRoutes.GameDetails.ID) ?: 0
@@ -120,6 +122,6 @@ class GameViewModel @Inject constructor(
             )
         )
 
-        WorkerHelper.launchWorker<SaveTimeWorker>(context = context, name = "saveTime")
+        workerHelper.launchWorker(workerClass = SaveTimeWorker::class.java,context = context, name = "saveTime")
     }
 }

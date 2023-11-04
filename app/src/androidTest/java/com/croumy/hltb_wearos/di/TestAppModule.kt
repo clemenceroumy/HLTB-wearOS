@@ -5,12 +5,15 @@ import androidx.room.Room
 import com.croumy.hltb_wearos.mock.services.MockAppService
 import com.croumy.hltb_wearos.mock.services.MockHLTBService
 import com.croumy.hltb_wearos.mock.services.MockPreferenceService
+import com.croumy.hltb_wearos.mock.workers.SaveTimeWorkerFactory
+import com.croumy.hltb_wearos.mock.workers.TestWorkHelper
 import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.database.AppDatabase
 import com.croumy.hltb_wearos.presentation.data.interfaces.IAppService
 import com.croumy.hltb_wearos.presentation.data.interfaces.IHLTBService
 import com.croumy.hltb_wearos.presentation.data.interfaces.IPreferenceService
 import com.croumy.hltb_wearos.presentation.di.AppModule
+import com.croumy.hltb_wearos.presentation.workers.interfaces.IWorkerHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -55,5 +58,11 @@ object TestAppModule {
     @Singleton
     fun provideHLTBService(): IHLTBService {
         return MockHLTBService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkerHelper(workerFactory: SaveTimeWorkerFactory): IWorkerHelper {
+        return TestWorkHelper(workerFactory)
     }
 }

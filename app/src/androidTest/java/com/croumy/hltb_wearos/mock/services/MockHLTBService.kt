@@ -10,6 +10,7 @@ import com.croumy.hltb_wearos.presentation.models.api.Game
 import com.croumy.hltb_wearos.presentation.models.api.GameRequest
 import com.croumy.hltb_wearos.presentation.models.api.SearchResponse
 import com.croumy.hltb_wearos.presentation.models.api.UserResponse
+import kotlinx.coroutines.delay
 
 class MockHLTBService: IHLTBService {
     override suspend fun getUser(): UserResponse? {
@@ -24,6 +25,7 @@ class MockHLTBService: IHLTBService {
 
     override suspend fun submitTime(request: SubmitRequest) {
         Log.i("MockHLTBService", "submitTime()")
+        delay(2000)
     }
 
     override suspend fun searchGame(request: SearchRequest): SearchResponse? {

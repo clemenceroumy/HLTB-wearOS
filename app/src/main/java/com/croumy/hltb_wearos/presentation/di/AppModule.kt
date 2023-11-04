@@ -11,6 +11,8 @@ import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.interfaces.IAppService
 import com.croumy.hltb_wearos.presentation.data.interfaces.IHLTBService
 import com.croumy.hltb_wearos.presentation.data.interfaces.IPreferenceService
+import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
+import com.croumy.hltb_wearos.presentation.workers.interfaces.IWorkerHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,5 +57,11 @@ object AppModule {
     @Singleton
     fun provideHLTBService(preferencesService: PreferencesService): IHLTBService {
         return HLTBService(preferencesService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkerHelper(): IWorkerHelper {
+        return WorkerHelper()
     }
 }
