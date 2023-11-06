@@ -6,8 +6,8 @@ import com.croumy.hltb_wearos.mock.services.MockAppService
 import com.croumy.hltb_wearos.mock.services.MockHLTBService
 import com.croumy.hltb_wearos.mock.services.MockPreferenceService
 import com.croumy.hltb_wearos.mock.workers.SaveTimeWorkerFactory
-import com.croumy.hltb_wearos.mock.workers.TestWorkHelper
-import com.croumy.hltb_wearos.presentation.data.AppService
+import com.croumy.hltb_wearos.mock.workers.helpers.BindWorkerToFactory
+import com.croumy.hltb_wearos.mock.workers.helpers.TestWorkHelper
 import com.croumy.hltb_wearos.presentation.data.database.AppDatabase
 import com.croumy.hltb_wearos.presentation.data.interfaces.IAppService
 import com.croumy.hltb_wearos.presentation.data.interfaces.IHLTBService
@@ -62,7 +62,13 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideWorkerHelper(workerFactory: SaveTimeWorkerFactory): IWorkerHelper {
-        return TestWorkHelper(workerFactory)
+    fun provideWorkerHelper(bindWorkerToFactory: BindWorkerToFactory): IWorkerHelper {
+        return TestWorkHelper(bindWorkerToFactory)
+    }
+
+    @Provides
+    @Singleton
+    fun providesBindWorkerToFactory(saveTimeWorkerFactory: SaveTimeWorkerFactory): BindWorkerToFactory {
+        return BindWorkerToFactory(saveTimeWorkerFactory)
     }
 }

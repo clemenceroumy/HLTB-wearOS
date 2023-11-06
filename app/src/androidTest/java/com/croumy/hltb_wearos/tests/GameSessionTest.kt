@@ -55,13 +55,13 @@ class GameSessionTest {
     @Inject
     lateinit var workerFactory: SaveTimeWorkerFactory
     @Inject
+    lateinit var workerHelper: IWorkerHelper
+    @Inject
     lateinit var appService: IAppService
     @Inject
     lateinit var hltbService: IHLTBService
     @Inject
     lateinit var preferenceService: IPreferenceService
-    @Inject
-    lateinit var workerHelper: IWorkerHelper
     private val savedState = SavedStateHandle(mapOf(NavRoutes.GameDetails.ID to CULTOFTHELAMB.id))
 
     // UI
@@ -176,7 +176,7 @@ class GameSessionTest {
         saveButton.performClick() // LAUNCH WORKER AND WAIT FOR THE FLOW TO FINISH
         assert(gameViewModel.appService.timer.value.state == TimerState.SAVED)
         // WAIT FOR LAUNCHEFFECT OF THE VIEW TO TREAT SAVED STATE
-        test.waitUntil(2000) { gameViewModel.appService.timer.value.state == TimerState.IDLE }
+        test.waitForIdle()
         assert(gameViewModel.appService.timer.value.state == TimerState.IDLE)
     }
 }
