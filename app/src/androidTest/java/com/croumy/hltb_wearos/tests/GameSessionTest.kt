@@ -45,21 +45,26 @@ class GameSessionTest {
     val scenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
     @get:Rule(order = 2)
-    val test = createComposeRule()
+    val composableScreen = createComposeRule()
 
     @Inject
     @ApplicationContext
     lateinit var context: Context
 
     private lateinit var gameViewModel: GameViewModel
+
     @Inject
     lateinit var workerFactory: SaveTimeWorkerFactory
+
     @Inject
     lateinit var workerHelper: IWorkerHelper
+
     @Inject
     lateinit var appService: IAppService
+
     @Inject
     lateinit var hltbService: IHLTBService
+
     @Inject
     lateinit var preferenceService: IPreferenceService
     private val savedState = SavedStateHandle(mapOf(NavRoutes.GameDetails.ID to CULTOFTHELAMB.id))
@@ -90,14 +95,14 @@ class GameSessionTest {
 
         WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
 
-        // SET GAME SESSION VIEW & CHECK THAT DATA IS CORRECT
-        test.setContent { UISetup { GameDetailsScreen(gameViewModel) } }
-        test.onNodeWithText(CULTOFTHELAMB.custom_title).assertExists()
+        // SET GAME SESSION VIEW
+        composableScreen.setContent { UISetup { GameDetailsScreen(gameViewModel) } }
+        composableScreen.onNodeWithText(CULTOFTHELAMB.custom_title).assertExists()
 
-        playButton = test.onNodeWithTag(TestTags.SESSION_PLAY_BTN, useUnmergedTree = true)
-        stopButton = test.onNodeWithTag(TestTags.SESSION_STOP_BTN, useUnmergedTree = true)
-        cancelButton = test.onNodeWithTag(TestTags.SESSION_CANCEL_BTN, useUnmergedTree = true)
-        saveButton = test.onNodeWithTag(TestTags.SESSION_SAVE_BTN, useUnmergedTree = true)
+        playButton = composableScreen.onNodeWithTag(TestTags.SESSION_PLAY_BTN, useUnmergedTree = true)
+        stopButton = composableScreen.onNodeWithTag(TestTags.SESSION_STOP_BTN, useUnmergedTree = true)
+        cancelButton = composableScreen.onNodeWithTag(TestTags.SESSION_CANCEL_BTN, useUnmergedTree = true)
+        saveButton = composableScreen.onNodeWithTag(TestTags.SESSION_SAVE_BTN, useUnmergedTree = true)
     }
 
     @Test
@@ -117,7 +122,7 @@ class GameSessionTest {
         //playButton.performClick()
         playButton.performClick()
         // SESSION STARTED
-        test.waitForIdle()
+        composableScreen.waitForIdle()
         assert(gameViewModel.appService.timer.value.state == TimerState.STARTED)
         Thread.sleep(2000)
         // PLAY BTN IS DISPLAYED AS PAUSE ACTION
@@ -153,7 +158,7 @@ class GameSessionTest {
         // CLICK ON BTN TO START SESSION
         playButton.performClick()
         // SESSION STARTED
-        test.waitForIdle()
+        composableScreen.waitForIdle()
         assert(gameViewModel.appService.timer.value.state == TimerState.STARTED)
         Thread.sleep(2000)
         // PLAY BTN IS DISPLAYED AS PAUSE ACTION
@@ -176,7 +181,7 @@ class GameSessionTest {
         saveButton.performClick() // LAUNCH WORKER AND WAIT FOR THE FLOW TO FINISH
         assert(gameViewModel.appService.timer.value.state == TimerState.SAVED)
         // WAIT FOR LAUNCHEFFECT OF THE VIEW TO TREAT SAVED STATE
-        test.waitForIdle()
+        composableScreen.waitForIdle()
         assert(gameViewModel.appService.timer.value.state == TimerState.IDLE)
     }
 }
