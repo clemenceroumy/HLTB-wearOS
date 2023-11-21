@@ -16,6 +16,7 @@
     <string name="login_btn">Open on phone</string>
     <string name="notifications_denied">As you refused notification, the app may behave inappropriately. To accept notification, go to your watch settings</string>
 
+    <string name="session_error_game">Can\'t retrieve game</string>
     <string name="session_already_launched">1 session in progress</string>
     <string name="session_error_upload">❗️Error uploading</string>
 

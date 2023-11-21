@@ -1,7 +1,7 @@
 package com.croumy.hltb_wearos.presentation.models.api
 
-import com.croumy.hltb_wearos.presentation.helpers.ISO8601_DATE_FORMAT
-import com.croumy.hltb_wearos.presentation.helpers.asDate
+import com.croumy.hltb_wearos.presentation.helpers.extensions.ISO8601_DATE_FORMAT
+import com.croumy.hltb_wearos.presentation.helpers.extensions.asDate
 import com.croumy.hltb_wearos.presentation.models.Category
 import com.soywiz.klock.Time
 import com.soywiz.klock.seconds

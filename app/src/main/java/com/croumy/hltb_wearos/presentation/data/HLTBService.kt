@@ -2,6 +2,7 @@ package com.croumy.hltb_wearos.presentation.data
 
 import SearchRequest
 import SubmitRequest
+import com.croumy.hltb_wearos.presentation.data.interfaces.IHLTBService
 import com.croumy.hltb_wearos.presentation.models.Constants.Companion.GET_GAMES_LIMIT
 import com.croumy.hltb_wearos.presentation.models.api.AddGameRequest
 import com.croumy.hltb_wearos.presentation.models.api.Game
@@ -27,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class HLTBService @Inject constructor(
     val preferencesService: PreferencesService
-) {
+): IHLTBService {
     private val okHttpClient = OkHttpClient.Builder().build()
 
     private val retrofit = Retrofit.Builder()
@@ -59,7 +60,7 @@ class HLTBService @Inject constructor(
         ): Response<Boolean>
     }
 
-    suspend fun getUser(): UserResponse? {
+    override suspend fun getUser(): UserResponse? {
         val response = retrofit.getUser(
             headers = mapOf("Cookie" to preferencesService.token!!)
         )
@@ -72,7 +73,7 @@ class HLTBService @Inject constructor(
     }
 
 
-    suspend fun getGames(gameRequest: GameRequest = GameRequest()): List<Game> {
+    override suspend fun getGames(gameRequest: GameRequest): List<Game> {
         val response: MutableList<GameListResponse> = mutableListOf()
         var index = 0
 
@@ -86,7 +87,7 @@ class HLTBService @Inject constructor(
         return response.flatMap { it.data.gamesList }
     }
 
-    suspend fun submitTime(submitRequest: SubmitRequest) {
+    override suspend fun submitTime(submitRequest: SubmitRequest) {
         val response = retrofit.submitTime(
             headers = mapOf("Cookie" to preferencesService.token!!),
             request = submitRequest
@@ -99,7 +100,7 @@ class HLTBService @Inject constructor(
         }
     }
 
-    suspend fun searchGame(searchRequest: SearchRequest): SearchResponse? {
+    override suspend fun searchGame(searchRequest: SearchRequest): SearchResponse? {
         val response = retrofit.searchGame(
             headers = mapOf(
                 "Cookie" to preferencesService.token!!,
@@ -123,7 +124,7 @@ class HLTBService @Inject constructor(
         }
     }
 
-    suspend fun addGame(addGameRequest: AddGameRequest): Boolean {
+    override suspend fun addGame(addGameRequest: AddGameRequest): Boolean {
         val response = retrofit.addGame(
             headers = mapOf(
                 "Cookie" to preferencesService.token!!,

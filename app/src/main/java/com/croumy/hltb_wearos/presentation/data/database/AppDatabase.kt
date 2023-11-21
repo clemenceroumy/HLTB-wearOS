@@ -6,9 +6,8 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
-import com.croumy.hltb_wearos.presentation.helpers.DATETIME_FORMAT
-import com.croumy.hltb_wearos.presentation.helpers.DATE_FORMAT
-import com.croumy.hltb_wearos.presentation.helpers.asString
+import com.croumy.hltb_wearos.presentation.helpers.extensions.DATETIME_FORMAT
+import com.croumy.hltb_wearos.presentation.helpers.extensions.asString
 import java.text.SimpleDateFormat
 import java.util.Date
 

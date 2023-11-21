@@ -12,11 +12,11 @@ import com.croumy.hltb_wearos.presentation.data.AppService
 import com.croumy.hltb_wearos.presentation.data.PreferencesService
 import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
-import com.croumy.hltb_wearos.presentation.helpers.asString
+import com.croumy.hltb_wearos.presentation.helpers.extensions.asString
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.workers.SaveTimeWorker
 import com.croumy.hltb_wearos.presentation.workers.WorkerHelper
-import com.croumy.hltbwearos.BuildConfig
+import com.croumy.hltb_wearos.presentation.workers.interfaces.IWorkerHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -27,7 +27,8 @@ class LogsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val preferencesService: PreferencesService,
     private val logDao: LogDao,
-    val appService: AppService
+    val appService: AppService,
+    private val workerHelper: IWorkerHelper
 ) : ViewModel() {
     val logs = mutableStateOf(emptyList<LogEntity>())
     val succeededLogs: List<LogEntity> get() = logs.value.filter { it.saved }
@@ -80,6 +81,6 @@ class LogsViewModel @Inject constructor(
         data.putInt("LOG_ID", log.id)
         data.putString("DATE", log.date.asString())
 
-        WorkerHelper.launchWorker<SaveTimeWorker>(data = data.build(), context = context, name = "saveTime")
+        workerHelper.launchWorker(SaveTimeWorker::class.java, data = data.build(), context = context, name = "saveTime")
     }
 }

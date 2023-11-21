@@ -4,6 +4,7 @@ import SubmitRequest
 import androidx.compose.runtime.mutableStateOf
 import com.croumy.hltb_wearos.presentation.data.database.dao.LogDao
 import com.croumy.hltb_wearos.presentation.data.database.entity.LogEntity
+import com.croumy.hltb_wearos.presentation.data.interfaces.IAppService
 import com.croumy.hltb_wearos.presentation.models.Timer
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.soywiz.klock.milliseconds
@@ -20,21 +21,20 @@ import kotlin.concurrent.fixedRateTimer
 class AppService @Inject constructor(
     private val logDao: LogDao,
     preferencesService: PreferencesService,
-    private val hltbService: HLTBService
-) {
-    val isLoggedIn = MutableStateFlow(preferencesService.token != null && preferencesService.token?.isNotEmpty() == true)
-    val isLoggingIn = MutableStateFlow(false)
+): IAppService {
+    override val isLoggedIn = MutableStateFlow(preferencesService.token != null && preferencesService.token?.isNotEmpty() == true)
+    override val isLoggingIn = MutableStateFlow(false)
 
-    val timer = mutableStateOf(Timer())
-    private var stopwatch: java.util.Timer = java.util.Timer()
-    val submitRequest = mutableStateOf<SubmitRequest?>(null)
+    override val timer = mutableStateOf(Timer())
+    override var stopwatch: java.util.Timer = java.util.Timer()
+    override val submitRequest = mutableStateOf<SubmitRequest?>(null)
 
-    fun clearTimer() {
+    override fun clearTimer() {
         timer.value = Timer()
         submitRequest.value = null
     }
 
-     fun startTimer() {
+     override fun startTimer() {
         timer.value = timer.value.copy(state = TimerState.STARTED)
         timer.value = timer.value.copy(time = timer.value.time.plus(10.milliseconds))
 
@@ -43,17 +43,17 @@ class AppService @Inject constructor(
         }
     }
 
-    fun pauseTimer() {
+    override fun pauseTimer() {
         stopwatch.cancel()
         timer.value = timer.value.copy(state = TimerState.PAUSED)
     }
 
-     fun stopTimer() {
+     override fun stopTimer() {
         stopwatch.cancel()
         timer.value = timer.value.copy(state = TimerState.STOPPED)
     }
 
-    fun saveLog(log: LogEntity, isRetrying: Boolean = false) {
+    override fun saveLog(log: LogEntity, isRetrying: Boolean) {
         CoroutineScope(IO).launch {
             if(timer.value.id == null || submitRequest.value == null) return@launch
 

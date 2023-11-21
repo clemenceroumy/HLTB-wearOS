@@ -38,7 +38,7 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
 import com.croumy.hltb_wearos.presentation.LocalNavSwipeBox
-import com.croumy.hltb_wearos.presentation.helpers.asString
+import com.croumy.hltb_wearos.presentation.helpers.extensions.asString
 import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.TimerState
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
@@ -49,7 +49,7 @@ import com.croumy.hltbwearos.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun GameDetails(
+fun GameDetailsScreen(
     viewModel: GameViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -141,7 +141,7 @@ fun GameDetails(
                         LoadingGame()
                     } else if (viewModel.game.value == null) {
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text("Can't retrieve game")
+                            stringResource(R.string.session_error_game)
                         }
                     } else {
                         //PLATFORM
