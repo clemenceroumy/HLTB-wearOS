@@ -72,17 +72,15 @@ fun HomeScreen(
     val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 2)
     val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
 
-    LaunchedEffect(horizontalFirstVisibleIndex.value) {
-        if (horizontalFirstVisibleIndex.value > 1) {
-            focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
-
-            // ON CHANGE OF CATEGORY, RESET SCROLL OF PREVIOUS CATEGORY AND GO TO TOP OF LIST
-            val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
-            if(hasHorizontallyScrolled) viewModel.currentListState.value.scrollToItem(0)
-        }
+    LaunchedEffect(horizontalFirstVisibleIndex.value, viewModel.currentListState.value) {
+        // ON CHANGE OF CATEGORY, RESET SCROLL OF PREVIOUS CATEGORY AND GO TO TOP OF LIST
+        val hasHorizontallyScrolled = viewModel.listStates.indexOf(viewModel.currentListState.value) != horizontalFirstVisibleIndex.value
+        if(hasHorizontallyScrolled) viewModel.currentListState.value.scrollToItem(0)
 
         // SET CURRENT SCREEN LIST SCROLL STATE
         viewModel.currentListState.value = viewModel.listStates[horizontalFirstVisibleIndex.value]
+
+        if (horizontalFirstVisibleIndex.value > 1) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
     }
 
     LaunchedEffect(needRefresh?.value) {
