@@ -60,7 +60,7 @@ class HLTBService @Inject constructor(
         ): Response<Boolean>
     }
 
-    override suspend fun getUser(): UserResponse? {
+    override suspend fun getUser(): UserResponse {
         val response = retrofit.getUser(
             headers = mapOf("Cookie" to preferencesService.token!!)
         )

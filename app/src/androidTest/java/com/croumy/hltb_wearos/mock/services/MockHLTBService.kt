@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 class MockHLTBService: IHLTBService {
     override suspend fun getUser(): UserResponse? {
         Log.i("MockHLTBService", "getUser()")
-        return null;
+        return null
     }
 
     override suspend fun getGames(gameRequest: GameRequest): List<Game> {
@@ -30,11 +30,11 @@ class MockHLTBService: IHLTBService {
 
     override suspend fun searchGame(request: SearchRequest): SearchResponse? {
         Log.i("MockHLTBService", "searchGame()")
-        return null;
+        return null
     }
 
     override suspend fun addGame(addGameRequest: AddGameRequest): Boolean  {
         Log.i("MockHLTBService", "addGame()")
-        return false;
+        return false
     }
 }

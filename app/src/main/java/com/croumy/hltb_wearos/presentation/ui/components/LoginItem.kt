@@ -1,18 +1,14 @@
 package com.croumy.hltb_wearos.presentation.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.SendToMobile
+import androidx.compose.material.icons.automirrored.rounded.SendToMobile
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,7 +41,7 @@ fun LoginItem(
         )
         Chip(
             label = { Text(text = stringResource(id = R.string.login_btn), style = MaterialTheme.typography.body2) },
-            icon = { Icon(Icons.Rounded.SendToMobile, contentDescription = "Send to mobile") },
+            icon = { Icon(Icons.AutoMirrored.Rounded.SendToMobile, contentDescription = "Send to mobile") },
             colors = ChipDefaults.primaryChipColors(
                 backgroundColor = MaterialTheme.colors.surface,
                 contentColor = MaterialTheme.colors.onSurface

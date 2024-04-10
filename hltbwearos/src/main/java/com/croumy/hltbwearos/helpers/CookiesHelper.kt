@@ -9,7 +9,7 @@ import kotlinx.coroutines.tasks.await
 class CookiesHelper {
     companion object {
         fun getCookieValueByKey(cookieString: String?, searchedKey: String): String {
-            var value = "";
+            var value = ""
             val cookiesValues = cookieString?.split("; ")
             cookiesValues?.forEach { cookie ->
                 val keyValue = cookie.split("=")

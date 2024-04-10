@@ -77,7 +77,7 @@ class GameSessionTest {
 
     @Before
     fun setup() {
-        hiltRule.inject();
+        hiltRule.inject()
         gameViewModel = GameViewModel(
             appService,
             hltbService,

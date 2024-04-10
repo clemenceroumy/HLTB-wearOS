@@ -56,7 +56,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
     packaging {
         resources {
@@ -67,23 +67,23 @@ android {
 
 
 dependencies {
-    val composeVersion = "1.5.4"
-    val wearComposeVersion = "1.3.0-alpha08"
-    val hiltVersion = "2.46"
-    val hiltCoreVersion = "1.0.0"
-    val workVersion = "2.8.1"
+    val composeVersion = "1.6.5"
+    val wearComposeVersion = "1.3.1"
+    val hiltVersion = "2.50"
+    val hiltCoreVersion = "1.2.0"
+    val workVersion = "2.9.0"
     val klockVersion = "3.4.0"
-    val roomVersion = "2.5.2"
-    val kotlinxVersion = "1.7.3"
+    val roomVersion = "2.6.1"
+    val kotlinxVersion = "1.8.0"
     val horlogistVersion = "0.5.0"
-    val accompanistVersion = "0.33.2-alpha"
+    val accompanistVersion = "0.34.0"
 
     // CORE
-    implementation("androidx.lifecycle:lifecycle-service:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-service:2.7.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
@@ -105,8 +105,8 @@ dependencies {
     // COMPOSE
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation(platform("androidx.compose:compose-bom:2024.04.00"))
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
@@ -130,7 +130,7 @@ dependencies {
     // Data
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // ROOM
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -139,7 +139,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     //Picture
-    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     // Shimmer
     implementation("com.valentinilk.shimmer:compose-shimmer:1.0.4")
@@ -158,7 +158,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.46")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
 }
 
 kapt {
