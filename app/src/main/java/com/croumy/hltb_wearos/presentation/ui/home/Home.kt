@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,8 +38,8 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.croumy.hltb_wearos.presentation.LocalNavController
-import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.Category
+import com.croumy.hltb_wearos.presentation.models.Constants
 import com.croumy.hltb_wearos.presentation.models.api.GameInfo
 import com.croumy.hltb_wearos.presentation.models.categories
 import com.croumy.hltb_wearos.presentation.theme.Dimensions
@@ -69,8 +67,8 @@ fun HomeScreen(
 
     // CROWN SCROLL CONFIG + LISTS STATES
     val focusRequester = remember { listOf(FocusRequester(), FocusRequester()).plus((categories).map { FocusRequester() }) }
-    val horizontalScrollState = rememberLazyListState(initialFirstVisibleItemIndex = 2)
-    val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.firstVisibleItemIndex } }
+    val horizontalScrollState = rememberPagerState(pageCount = { categories.size + 2 }, initialPage = 2)
+    val horizontalFirstVisibleIndex = remember { derivedStateOf { horizontalScrollState.currentPage } }
 
     LaunchedEffect(horizontalFirstVisibleIndex.value, viewModel.currentListState.value) {
         // ON CHANGE OF CATEGORY, RESET SCROLL OF PREVIOUS CATEGORY AND GO TO TOP OF LIST
@@ -90,26 +88,26 @@ fun HomeScreen(
             viewModel.getGames()
             navController.currentBackStackEntry?.savedStateHandle?.set(Constants.HOME_NEED_REFRESH, false)
             // SCROLL TO PLAYING LIST
-            horizontalScrollState.scrollToItem(2)
+            horizontalScrollState.scrollToPage(2)
             //AND SCROLL TO GAME ITEM
-            val gameIndex = viewModel.gamesByCategories[Category.Playing]?.indexOfFirst { it.game_id == previousGameId?.value }
+            val gameIndex = viewModel.gamesByCategories.value[Category.Playing]?.indexOfFirst { it.game_id == previousGameId?.value }
             viewModel.currentListState.value = viewModel.listStates[2]
             viewModel.currentListState.value.scrollToItem(gameIndex ?: 0)
             navController.currentBackStackEntry?.savedStateHandle?.set(Constants.HOME_PREVIOUS_GAME_ID, null)
         }
     }
 
+
     Scaffold(
         positionIndicator = { PositionIndicator(scalingLazyListState = viewModel.currentListState.value) },
         timeText = { TimeText() },
     ) {
-        LazyRow(
+        HorizontalPager(
             modifier = Modifier.padding(top = Dimensions.mPadding),
             state = horizontalScrollState,
-            flingBehavior = rememberSnapFlingBehavior(lazyListState = horizontalScrollState)
-        ) {
-            item {
-                SearchScreen(
+        ) { page ->
+            when (page) {
+                0 -> SearchScreen(
                     modifier = Modifier.width(screenWidth.dp),
                     isFocusedScreen = horizontalFirstVisibleIndex.value == 0,
                     listState = viewModel.listStates[0],
@@ -117,68 +115,67 @@ fun HomeScreen(
                     navigateToAddGame = navigateToAddGame,
                     onGameAdded = { coroutineScope.launch { viewModel.getGames() } }
                 )
-            }
 
-            item {
-                LogsScreen(
+                1 -> LogsScreen(
                     modifier = Modifier.width(screenWidth.dp),
                     isFocusedScreen = horizontalFirstVisibleIndex.value == 1,
                     listState = viewModel.listStates[1],
                     focusRequester = focusRequester[1],
                     refreshGames = { coroutineScope.launch { viewModel.getGames() } }
                 )
-            }
 
-            itemsIndexed(categories) { index, category ->
-                val games = viewModel.gamesByCategories[category] ?: emptyList()
+                else -> {
+                    val category = categories[page - 2]
+                    val games = viewModel.gamesByCategories.value[category] ?: emptyList()
 
-                Column(
-                    Modifier.width(screenWidth.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Row(
-                        Modifier
-                            .padding(bottom = Dimensions.xxsPadding)
-                            .background(category.color, CircleShape)
-                            .padding(
-                                horizontal = Dimensions.sPadding,
-                                vertical = Dimensions.xxsPadding
-                            ),
-                    ) { Text(category.label ?: "") }
-
-                    ScalingLazyColumn(
-                        state = viewModel.listStates[index + 2],
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = Dimensions.xxsPadding)
-                            .onRotaryScrollEvent {
-                                coroutineScope.launch {
-                                    viewModel.listStates[index + 2].scrollBy(it.verticalScrollPixels)
-                                }
-                                true
-                            }
-                            .focusRequester(focusRequester[index + 2])
-                            .focusable(),
-                        verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
-                        contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
+                    Column(
+                        Modifier.width(screenWidth.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        if (viewModel.isLoading.value) {
-                            items(2) {
-                                Box(
-                                    modifier = Modifier
-                                        .shimmer()
-                                        .height(Dimensions.lSize)
-                                        .fillMaxWidth()
-                                        .background(shimmerColor, CircleShape)
-                                )
-                            }
-                        } else {
-                            items(games) { game ->
-                                GameItem(
-                                    game,
-                                    isRunning = viewModel.appService.timer.value.id == game.id,
-                                    onClick = { navigateToGame(game.id) }
-                                )
+                        Row(
+                            Modifier
+                                .padding(bottom = Dimensions.xxsPadding)
+                                .background(category.color, CircleShape)
+                                .padding(
+                                    horizontal = Dimensions.sPadding,
+                                    vertical = Dimensions.xxsPadding
+                                ),
+                        ) { Text(category.label ?: "") }
+
+                        ScalingLazyColumn(
+                            state = viewModel.listStates[page],
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = Dimensions.xxsPadding)
+                                .onRotaryScrollEvent {
+                                    coroutineScope.launch {
+                                        viewModel.listStates[page].scrollBy(it.verticalScrollPixels)
+                                    }
+                                    true
+                                }
+                                .focusRequester(focusRequester[page])
+                                .focusable(),
+                            verticalArrangement = Arrangement.spacedBy(Dimensions.xsPadding),
+                            contentPadding = PaddingValues(bottom = Dimensions.xsPadding),
+                        ) {
+                            if (viewModel.isLoading.value) {
+                                items(2) {
+                                    Box(
+                                        modifier = Modifier
+                                            .shimmer()
+                                            .height(Dimensions.lSize)
+                                            .fillMaxWidth()
+                                            .background(shimmerColor, CircleShape)
+                                    )
+                                }
+                            } else {
+                                items(games) { game ->
+                                    GameItem(
+                                        game,
+                                        isRunning = viewModel.appService.timer.value.id == game.id,
+                                        onClick = { navigateToGame(game.id) }
+                                    )
+                                }
                             }
                         }
                     }
