@@ -23,7 +23,6 @@ class HomeViewModel @Inject constructor(
     private val hltbService: HLTBService
 ) : ViewModel() {
     private val _games = MutableStateFlow<List<Game>>(emptyList())
-    val games: StateFlow<List<Game>> = _games.asStateFlow()
 
     // IN VIEWMODEL TO KEEP LIST SCROLLSTATE ON NAVIGATION
     val listStates by lazy {

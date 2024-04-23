@@ -49,6 +49,7 @@ import com.croumy.hltb_wearos.presentation.ui.components.GameItem
 import com.croumy.hltb_wearos.presentation.ui.home.logs.LogsScreen
 import com.croumy.hltb_wearos.presentation.ui.home.search.SearchScreen
 import com.valentinilk.shimmer.shimmer
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -78,7 +79,10 @@ fun HomeScreen(
         // SET CURRENT SCREEN LIST SCROLL STATE
         viewModel.currentListState.value = viewModel.listStates[horizontalFirstVisibleIndex.value]
 
-        if (horizontalFirstVisibleIndex.value > 1) focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        if (horizontalFirstVisibleIndex.value > 1) {
+            delay(500)
+            focusRequester[horizontalFirstVisibleIndex.value].requestFocus()
+        }
     }
 
     LaunchedEffect(needRefresh?.value) {
